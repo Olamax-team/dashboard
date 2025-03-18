@@ -8,6 +8,8 @@ import Layout from './layout/layout.tsx'
 import Authenticate from './components/pages/auth/authenticate.tsx'
 import Passphrase from './components/pages/auth/passphrase.tsx'
 import DashboardHome from './components/pages/dash-board/home.tsx'
+import Escrow from './components/pages/dash-board/escrow.tsx'
+
 
 const router = createBrowserRouter([
   
@@ -29,6 +31,10 @@ const router = createBrowserRouter([
       {
         path: '/dashboard',
         element: <DashboardHome/>
+      },
+      {
+        path: '/dashboard/escrow-deals',
+        element: <Escrow/>
       },
     ]
   }
