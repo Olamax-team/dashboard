@@ -7,8 +7,10 @@ import { createBrowserRouter , RouterProvider} from 'react-router-dom'
 import Layout from './layout/layout.tsx'
 import Authenticate from './components/pages/auth/authenticate.tsx'
 import Passphrase from './components/pages/auth/passphrase.tsx'
-import DashboardHome from './components/pages/dash-board/home.tsx'
+
 import Escrow from './components/pages/dash-board/escrow.tsx'
+import DashboardLayout from './layout/dash-board-layout.tsx'
+import DashboardHome from './components/pages/dash-board/pending/home.tsx'
 
 
 const router = createBrowserRouter([
@@ -30,7 +32,7 @@ const router = createBrowserRouter([
       },
       {
         path: '/dashboard',
-        element: <DashboardHome/>
+        element: <DashboardLayout><DashboardHome/> </DashboardLayout>
       },
       {
         path: '/dashboard/escrow-deals',
