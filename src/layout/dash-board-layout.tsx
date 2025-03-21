@@ -111,8 +111,8 @@ const DashboardLayout = ({children}:{children:React.ReactNode}) => {
   };
   
   return (
-    <div className='flex'>
-      <div className="lg:w-[15%] hidden lg:flex sticky top-0 h-[calc(100vh_+_200px)] bg-black overflow-hidden flex-col pr-6">
+    <div className='flex min-h-screen'>
+      <div className="lg:w-[15%] hidden lg:flex sticky top-0 bg-black overflow-hidden flex-col pr-6 h-full">
         <div className="h-[80px] w-full flex items-center justify-center">
           <div className="w-[138px] h-[24px]">
             <img src='/images/OLAMAX_logo_3.png' alt='logo_black' className='object-contain object-center'/>
@@ -120,7 +120,7 @@ const DashboardLayout = ({children}:{children:React.ReactNode}) => {
         </div>
         <SidebarMenu/>
       </div>
-      <div className="lg:w-[85%] w-full min-h-screen flex-1 pt-[60px] lg:pt-0">
+      <div className="lg:w-[85%] w-full flex-1 pt-[60px] lg:pt-0">
         <div className="w-full h-[60px] shadow-md lg:hidden flex items-center gap-3 px-6 fixed left-0 top-0 bg-white" onClick={() => setIsOpen(true)}>
           <MenuIcon/>
           <div className="lg:w-[154px] lg:h-[40px] w-[80px]">
