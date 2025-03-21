@@ -44,11 +44,11 @@ const EscrowTable: React.FC<EscrowTableProps> = ({ columns, rows }) => {
       {/* Mobile View: Convert Rows to Columns */}
       <div className="md:hidden">
         {rows.map((row, rowIndex) => (
-          <div key={rowIndex} className="border bg-white pt-2 my-2 rounded-t-sm">
+          <div key={rowIndex} className="border bg-black pt-2 my-2 rounded-t-sm">
             {row.map((cell, cellIndex) => (
               <div key={cellIndex} className="flex justify-between">
-                <span className="px-4 font-bold border  bg-[#F5F5F5] w-1/2 flex items-center justify-start text-wrap">{columns[cellIndex]}</span>
-                <span className = "border w-1/2 px-4 flex flex-wrap items-center justify-center">
+                <span className="px-4 font-bold border bg-[#F5F5F5] w-1/2 flex items-center justify-start text-wrap">{columns[cellIndex]}</span>
+                <span className = "border w-1/2 px-4 bg-white flex flex-wrap items-center justify-center">
                   {Array.isArray(cell) ? (
                     <div>
                       {cell[0]}<br />

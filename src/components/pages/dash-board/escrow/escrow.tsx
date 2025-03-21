@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import DashboardLayout from "@/layout/dash-board-layout";
-import PageHeader from "@/components/pages/dash-board/pageHeader";
-import EscrowTable from "./escrowTable";
+import PageHeader from "@/components/pages/dash-board/escrow/pageHeader";
+import EscrowTable from "../escrow/escrowTable";
 
 const dealsColumns = [
   "User (Seller)",
