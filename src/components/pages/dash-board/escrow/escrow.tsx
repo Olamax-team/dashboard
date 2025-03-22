@@ -1,10 +1,47 @@
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
 import DashboardLayout from "@/layout/dash-board-layout";
 import PageHeader from "@/components/pages/dash-board/escrow/pageHeader";
-import EscrowTable from "../escrow/escrowTable";
-
-const dealsColumns = [
+import TabSwitcher from "./tabs";
+type DealsRows = {
+  user: string;
+  uid: string;
+  coin: string;
+  coinShort: string;
+  blockchain: string;
+  amount: number;
+  coinPriceUsd: number;
+  dollarRate: number;
+  networkFees: string;
+  nairaAmount: string;
+  networkFeesRepeat: string;
+  walletAddress: string;
+  steem: string;
+  method: string;
+  paymentStatus: "pending" | "Successful";
+  referrer: string;
+  Timestamp: string;
+  finish: string;
+};
+type WithdrawRows = {
+  user: string;
+  uid: string;
+  coin: string;
+  coinShort: string;
+  blockchain: string;
+  amount: number;
+  coinPriceUsd: number;
+  dollarRate: number;
+  networkFees: string;
+  nairaAmount: string;
+  networkFeesRepeat: string;
+  walletAddress: string;
+  steem: string;
+  method: string;
+  paymentStatus: "pending" | "Successful";
+  referrer: string;
+  Timestamp: string;
+  finish: string;
+};
+const Columns = [
   "User (Seller)",
   "Coin",
   "Blockchain",
@@ -14,34 +51,133 @@ const dealsColumns = [
   "Netw Fees ($)",
   "Naira Amount + N/Fees",
   "Netw Fees ($)",
+  "Wallet Address",
+  "Steem Username",
+  "Method",
+  "Payment Status",
+  "Referrer",
+  "Time Stamp",
+  "Finish",
 ];
-
-const dealsRows: (string | number | [string, string])[][] = [
-  [["Mason Mount", "UID 22110976"], ["BITCOIN", "BTC"], "TRON(TRC 20)", "-", "20,000.00", "19,800.00", "0.5", "-", "0.5"],
-  [["John Doe", "UID 22110976"], ["BITCOIN", "BTC"], "TRON(TRC 20)", "-", "2,500.00", "2,400.00", "0.3", "-", "0.5"],
+const dealsRows: DealsRows[] = [
+  {
+    user: "Mason Mount",
+    uid: "22110976",
+    coin: "BITCOIN",
+    coinShort: "BTC",
+    blockchain: "TRON(TRC 20)",
+    amount: 20000.00,
+    coinPriceUsd: 20000.00,
+    dollarRate: 19800.00,
+    networkFees: "0.5",
+    nairaAmount: "-",
+    networkFeesRepeat: "0.5",
+    walletAddress: "1a1zple23eydhg467cb39d8f8f7DivfNa",
+    steem: "Mikey0071",
+    method: "",
+    paymentStatus: "pending",
+    referrer: "Marcus Ademola",
+    Timestamp: "2025-03-12T10:09:00Z",
+    finish: "",
+  },
 ];
-
-const withdrawColumns = [
-  "User (Seller)",
-  "Coin",
-  "Blockchain",
-  "Amount",
-  "Coin Price (USD)",
-  "Dollar Rate",
-  "Netw Fees ($)",
-  "Naira Amount + N/Fees",
-  "Netw Fees ($)",
-];
-
-const withdrawRows: (string | number | [string, string])[][] = [
-  [["Mason Mount", "UID 22110978"], ["BITCOIN", "BTC"], "TRON(TRC 20)", "-", "20,000.00", "19,800.00", "0.5", "-", "0.5"],
+const withdrawRows: WithdrawRows[] = [
+  {
+    user: "Mason Mount",
+    uid: "22110976",
+    coin: "BITCOIN",
+    coinShort: "BTC",
+    blockchain: "TRON(TRC 20)",
+    amount: 20000.00,
+    coinPriceUsd: 20000.00,
+    dollarRate: 19800.00,
+    networkFees: "0.5",
+    nairaAmount: "-",
+    networkFeesRepeat: "0.5",
+    walletAddress: "1a1zple23eydhg467cb39d8f8f7DivfNa",
+    steem: "Mikey0071",
+    method: "",
+    paymentStatus: "pending",
+    referrer: "Marcus Ademola",
+    Timestamp: "2025-03-12T10:09:00Z",
+    finish: "",
+  },
+  {
+    user: "Mason Mounta",
+    uid: "22110976",
+    coin: "BITCOIN",
+    coinShort: "BTC",
+    blockchain: "TRON(TRC 20)",
+    amount: 21000.00,
+    coinPriceUsd: 20000.00,
+    dollarRate: 19800.00,
+    networkFees: "0.5",
+    nairaAmount: "-",
+    networkFeesRepeat: "0.5",
+    walletAddress: "1a1zple23eydhg467cb39d8f8f7DivfNa",
+    steem: "Mikey0071",
+    method: "",
+    paymentStatus: "pending",
+    referrer: "Marcus Ademola",
+    Timestamp: "2025-03-12T10:09:00Z",
+    finish: "",
+  },
 ];
 
 const Escrow = () => {
-  const [activeTab, setActiveTab] = useState<"deals" | "withdraw">("deals");
-
-  const columns = activeTab === "deals" ? dealsColumns : withdrawColumns;
-  const rows = activeTab === "deals" ? dealsRows : withdrawRows;
+  const tabs = [
+  {
+    key: "deals",
+    label: "Deals",
+    data: {
+      columns: Columns,
+      rows: dealsRows.map((deal) => [
+        [deal.user, deal.uid] as [string, string],
+        [deal.coin, deal.coinShort] as [string, string],
+        deal.blockchain,
+        deal.amount,
+        deal.coinPriceUsd,
+        deal.dollarRate,
+        deal.networkFees,
+        deal.nairaAmount,
+        deal.networkFeesRepeat,
+        deal.walletAddress,
+        deal.steem,
+        deal.method,
+        deal.paymentStatus,
+        deal.referrer,
+        deal.Timestamp,
+        deal.finish,
+      ]),
+    },
+  },
+  {
+    key: "withdraw",
+    label: "Withdraw Request",
+    data: {
+      columns: Columns,
+      rows: withdrawRows.map((withdraw) => [
+        [withdraw.user, withdraw.uid] as [string, string],
+        [withdraw.coin, withdraw.coinShort] as [string, string],
+        withdraw.blockchain,
+        withdraw.amount,
+        withdraw.coinPriceUsd,
+        withdraw.dollarRate,
+        withdraw.networkFees,
+        withdraw.nairaAmount,
+        withdraw.networkFeesRepeat,
+        withdraw.walletAddress,
+        withdraw.steem,
+        withdraw.method,
+        withdraw.paymentStatus,
+        withdraw.referrer,
+        withdraw.Timestamp,
+        withdraw.finish,
+      ]),
+    },
+    notificationCount: 1,
+  },
+];
 
   return (
     <DashboardLayout>
@@ -49,42 +185,7 @@ const Escrow = () => {
         <PageHeader title="Escrow Deals" />
         <div className="w-full h-full px-4 py-2 md:px-10 md:py-4 bg-[#F8F9FA] space-y-16 md:space-y-0">
           {/* Tabs */}
-          <div className="flex flex-row flex-wrap justify-between items-center w-full h-[48px] space-y-2 md:space-y-0">
-            <div className="flex gap-9 bg-white px-2 py-1 w-fit rounded-sm items-center">
-              <Button
-                className={`px-4 py-2 w-[96px] h-[40px] rounded-sm shadow-none hover:bg-secondary ${
-                  activeTab === "deals" ? "bg-primary text-white" : "bg-white text-black"
-                }`}
-                onClick={() => setActiveTab("deals")}
-              >
-                Deals
-              </Button>
-              <Button
-                className={`py-2 w-[150px] h-[40px] rounded-sm relative shadow-none hover:bg-secondary ${
-                  activeTab === "withdraw" ? "bg-primary text-white" : "bg-white text-black"
-                }`}
-                onClick={() => setActiveTab("withdraw")}
-              >
-                Withdraw Request
-                <span className="absolute top-0 right-0 text-xs bg-primary text-white w-4 h-4 flex items-center justify-center rounded-full">
-                  1
-                </span>
-              </Button>
-            </div>
-            <div className="flex justify-center items-center space-x-6 py-1">
-              <span className="text-black">Sort by descending</span>
-              <div className="flex items-center justify-center space-x-6">
-                <button className="cursor-pointer text-black">Filter</button>
-                <Button className="cursor-pointer rounded-sm bg-primary hover:bg-secondary text-white w-[96px] h-[40px]">
-                  Export
-                </Button>
-              </div>
-            </div>
-          </div>
-          {/* Table */}
-          <div>
-            <EscrowTable columns={columns} rows={rows} />
-          </div>
+          <TabSwitcher tabs={tabs} />
         </div>
       </section>
     </DashboardLayout>
