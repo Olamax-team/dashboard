@@ -50,7 +50,6 @@ const Columns = [
   "Dollar Rate",
   "Netw Fees ($)",
   "Naira Amount + N/Fees",
-  "Netw Fees ($)",
   "Wallet Address",
   "Steem Username",
   "Method",
@@ -181,7 +180,7 @@ const Escrow = () => {
 
   return (
     <DashboardLayout>
-      <section className="w-full h-full mx-auto">
+      <section className="w-full h-full mx-auto font-Inter">
         <PageHeader title="Escrow Deals" />
         <div className="w-full h-full px-4 py-2 md:px-10 md:py-4 bg-[#F8F9FA] space-y-16 md:space-y-0">
           {/* Tabs */}

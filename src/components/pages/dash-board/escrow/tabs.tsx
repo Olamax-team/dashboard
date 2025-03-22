@@ -26,7 +26,7 @@ const TabSwitcher: React.FC<TabSwitcherProps> = ({ tabs }) => {
     rows: [],
   };
 
-  // Initialize visibleColumns state with all columns checked by default
+  // Initializing visibleColumns state with all columns checked by default
   useState(() => {
     if (Object.keys(visibleColumns).length === 0) {
       const initialVisibility = activeData.columns.reduce((acc, column) => {
@@ -52,20 +52,20 @@ const TabSwitcher: React.FC<TabSwitcherProps> = ({ tabs }) => {
 
   return (
     <div>
-      <div className="flex justify-between">
+      <div className="flex justify-between font-Inter flex-wrap space-y-4">
         {/* Tab Buttons */}
         <div className="flex gap-9 bg-white px-2 py-1 w-fit rounded-sm items-center">
           {tabs.map((tab) => (
             <Button
               key={tab.key}
-              className={`cursor-pointer px-4 py-2 w-[150px] h-[40px] rounded-sm shadow-none hover:bg-secondary hover:text-white ${
+              className={`relative cursor-pointer px-4 py-2 w-fit xl:w-[150px] text-wrap xl:text-nowrap h-[40px] rounded-sm shadow-none hover:bg-secondary hover:text-white ${
                 activeTab === tab.key ? "bg-primary text-white" : "bg-white text-black"
               }`}
               onClick={() => setActiveTab(tab.key)}
             >
               {tab.label}
               {tab.notificationCount && (
-                <span className="absolute top-0 right-0 text-xs bg-primary text-white w-4 h-4 flex items-center justify-center rounded-full">
+                <span className={`absolute top-0 right-0 text-xs ${ activeTab === tab.key? "bg-white text-primary": "bg-primary text-white"} w-4 h-4 px-2 flex items-center justify-center rounded-full`}>
                   {tab.notificationCount}
                 </span>
               )}
