@@ -14,6 +14,7 @@ const dealsColumns = [
   "Netw Fees ($)",
   "Naira Amount + N/Fees",
   "Netw Fees ($)",
+  
 ];
 
 const dealsRows: (string | number | [string, string])[][] = [

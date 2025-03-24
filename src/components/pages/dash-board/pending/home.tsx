@@ -44,23 +44,23 @@ const DashboardHome = () => {
 
       <div className="flex items-center justify-between sticky top-0 p-5 h-[80px] w-full bg-[#f5f5f5] gap-5 shadow-lg z-50">
         <div className="">
-          <h2 className="font-inter font-bold text-[12px] xl:text-[16px] leading-[150%] text-[#121826]">
+          <h2 className="font-inter  font-bold text-[12px] lg:text-[16px] leading-[150%] text-[#121826]">
             Pending Deals
           </h2>
         </div>
 
-        <div className="flex items-center justify-between bg-[#F1F1F1] rounded-sm w-full xl:w-[440px] p-2">
+        <div className="flex items-center justify-between bg-[#F1F1F1] rounded-sm w-full lg:w-[430px] p-2">
           <div className="flex items-center justify-center mr-2">
             <Search className="text-[#121826] size-6" />
           </div>
           <input
             placeholder="Search Users, Transactions..."
-            className="font-normal xl:text-[16px] text-[12px] leading-[150%] text-[#000000] opacity-80 placeholder:text-[#121826] w-full bg-transparent border-none focus:outline-none"
+            className="font-normal lg:text-[16px] text-[12px] leading-[150%] text-[#000000] opacity-80 placeholder:text-[#121826] w-full bg-transparent border-none focus:outline-none"
           />
         </div>
 
-        <div className="flex items-center justify-between ">
-          <div className="flex items-center gap-3">
+        <div className="flex items-center justify-between p-5 ">
+          <div className="flex items-center gap-3 mr-2">
            <div className='h-[40px] w-[40px]  '> <img src={rectangle} alt="User Avatar" className="w-[40px] h-[40px]" /></div>
             <span className="font-inter hidden lg:flex font-semibold text-[14px]">
               David Aluko
@@ -87,7 +87,7 @@ const DashboardHome = () => {
             <HiLogout className="size-6 text-[#E41D03]" />
           </div>
 
-          <button className=" hidden lg:block px-4 py-2 border-2 w-[80px] xl:w-[96px] h-[40px] border-[#039AE4] text-[#039AE4] leading-[150%] rounded-sm bg-[#f5f5f5] font-medium text-[10px] xl:text-[14px] hover:bg-[#039AE4] focus:outline-none cursor-pointer transition-all duration-200">
+          <button className=" hidden lg:block px-4 py-2 border-2 w-[80px] lg:w-[96px] h-[40px] border-[#039AE4] text-[#039AE4] leading-[150%] rounded-sm bg-[#f5f5f5] font-medium text-[10px] xl:text-[14px] hover:bg-[#039AE4] focus:outline-none cursor-pointer transition-all duration-200">
           Regularize
           </button>
         </div>
