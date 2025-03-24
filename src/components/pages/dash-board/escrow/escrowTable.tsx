@@ -7,7 +7,7 @@ interface EscrowTableProps {
 
 const EscrowTable: React.FC<EscrowTableProps> = ({ columns, rows }) => {
   return (
-    <div className="w-full my-10 overflow-x-auto md:bg-white md:border rounded-t-sm">
+    <div className="font-Inter w-full my-10 overflow-x-auto md:bg-white md:border rounded-t-sm">
       {/* Desktop View */}
       <div className="hidden md:block">
         <Table className="w-full border-collapse">
@@ -42,20 +42,21 @@ const EscrowTable: React.FC<EscrowTableProps> = ({ columns, rows }) => {
       </div>
 
       {/* Mobile View: Convert Rows to Columns */}
-      <div className="md:hidden">
+      <div className="md:hidden overflow-x-auto">
         {rows.map((row, rowIndex) => (
-          <div key={rowIndex} className="border bg-white pt-2 my-2 rounded-t-sm">
+          <div key={rowIndex} className="border bg-black pt-2 my-2 rounded-t-sm">
             {row.map((cell, cellIndex) => (
               <div key={cellIndex} className="flex justify-between">
-                <span className="px-4 font-bold border  bg-[#F5F5F5] w-1/2 flex items-center justify-start text-wrap">{columns[cellIndex]}</span>
-                <span className = "border w-1/2 px-4 flex flex-wrap items-center justify-center">
+                <span className="px-4 font-bold border bg-[#F5F5F5] w-1/2 flex items-center justify-start break-words whitespace-normal">{columns[cellIndex]}</span>
+                <span className = "border w-1/2 px-4 bg-white flex flex-wrap items-center justify-start break-words whitespace-normal overflow-hidden text-ellipsis">
                   {Array.isArray(cell) ? (
-                    <div>
+                    <div className="w-full break-words overflow-hidden text-ellipsis">
                       {cell[0]}<br />
                       <span className="text-[10px] text-dark">{cell[1]}</span>
                     </div>
                   ) : (
-                    cell
+                    <div className="w-full break-words overflow-hidden">
+                    {cell}</div>
                   )}
                 </span>
               </div>
