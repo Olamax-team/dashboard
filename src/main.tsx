@@ -8,7 +8,7 @@ import Layout from './layout/layout.tsx'
 import Authenticate from './components/pages/auth/authenticate.tsx'
 import Passphrase from './components/pages/auth/passphrase.tsx'
 
-import Escrow from './components/pages/dash-board/escrow.tsx'
+import Escrow from './components/pages/dash-board/escrow/escrow.tsx'
 import DashboardLayout from './layout/dash-board-layout.tsx'
 import DashboardHome from './components/pages/dash-board/pending/home.tsx'
 
