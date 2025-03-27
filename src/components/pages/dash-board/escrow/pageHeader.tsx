@@ -5,7 +5,7 @@ import { useState } from "react";
 import { ChevronDown, Search } from "lucide-react";
 import { HiMail, HiLogout, HiX } from "react-icons/hi";
 import { IoIosSettings } from "react-icons/io";
-import NotificationsPanel from "../pending/notfication";
+import NotificationsPanel from "../emailNotification/notfication";
 
 type UserDetails = {
   name: string;

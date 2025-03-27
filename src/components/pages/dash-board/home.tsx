@@ -1,11 +1,144 @@
-import DashboardLayout from '@/layout/dash-board-layout'
+import { Search, ChevronDown } from 'lucide-react';
+import rectangle from'../../../assets/Rectangle 4871.svg';
+import { HiMail,  HiX, HiLogout } from "react-icons/hi";
+import { IoIosSettings } from "react-icons/io";
+import PendingButton from './pending/pendingButton';
+import { useState } from 'react';
+import NotificationsPanel from './emailNotification/notfication';
 
 const DashboardHome = () => {
-  return (
-    <DashboardLayout>
-      Lorem ipsum dolor sit, amet consectetur adipisicing elit. Minima dignissimos quis iusto cumque unde nesciunt, asperiores quas temporibus ea atque veniam optio, harum laboriosam sit alias cupiditate minus architecto labore laudantium. Quaerat, maiores quidem officia maxime quisquam eos placeat ducimus magni aperiam qui cum ipsum sit dolorem expedita dignissimos, ea laborum et iure laboriosam praesentium totam reiciendis nobis suscipit cupiditate? In dolores iure labore voluptatum reiciendis, at nobis? Maxime tempora autem ut error, cum explicabo dicta culpa dolor qui dignissimos ratione. In molestias deserunt, voluptas fugit consequuntur laboriosam ullam veniam accusantium aspernatur nulla ratione praesentium eligendi facere dicta incidunt, exercitationem architecto est? Inventore, id error sit ducimus odit debitis dolores nemo officiis omnis consequuntur illum, quidem laudantium placeat, accusantium labore et ratione nam nesciunt dolore rem. Quis obcaecati repellat aspernatur! Soluta nobis quo, nihil sunt atque repellat reprehenderit odit esse. Atque quos repellendus incidunt beatae repudiandae quas blanditiis eum alias adipisci, sed dolor quibusdam sunt? Impedit repudiandae blanditiis consectetur tempore quod odio minus dicta minima autem a cupiditate, qui reiciendis enim iure error magni ipsam vel delectus ad at, corporis unde vero. Ex reiciendis doloremque dolore fugit blanditiis doloribus rem placeat laboriosam quos aut, laudantium labore quo voluptate cumque error, vel sequi minima provident, tempora vitae commodi expedita ab? Quod molestias tempora, est quisquam explicabo iste modi molestiae repellat cupiditate, pariatur reprehenderit harum iusto debitis aut nisi ut. Expedita consequatur qui voluptas ipsa debitis, aliquid corrupti minus maiores illum, quae reiciendis recusandae enim magnam adipisci odit earum eum eligendi vel sequi perferendis explicabo. Tempora cum unde praesentium reiciendis quas deserunt consectetur minus amet ducimus. Ex, accusantium provident porro pariatur architecto eius modi maiores incidunt, quae ipsa dolores dignissimos illum amet exercitationem nam vitae saepe. Alias aut odio, pariatur modi blanditiis deleniti suscipit quam repudiandae non ea iste harum vitae quia, fugiat, dolor molestiae numquam deserunt dolorem sequi assumenda laboriosam perspiciatis. Doloremque, dolores. Neque voluptas et corporis facere expedita ipsa vitae maxime maiores architecto. Praesentium repellendus, dolores corporis possimus facilis quod illo mollitia unde ipsa veniam perspiciatis laboriosam dolorum eius! Tenetur magnam architecto vero mollitia fugit neque non qui obcaecati, rem deserunt. Mollitia, aliquid blanditiis facere, eius commodi aut expedita quis consequuntur harum illo repellendus esse quos minus tempore? Ipsum dolor, quibusdam molestiae modi libero maiores ex, maxime laboriosam ab ducimus natus saepe labore, totam similique sed repellat veritatis aliquam explicabo sint unde ut accusamus! Dolorum, quaerat soluta. Dolor provident inventore necessitatibus quasi. Magnam saepe rem corporis, doloremque, nemo eligendi ad quod repellat optio eos incidunt consectetur dignissimos ipsam sed eius consequuntur error. Mollitia sunt ut doloribus culpa libero? Quaerat obcaecati beatae fuga voluptatum unde asperiores sapiente consectetur, consequuntur vel soluta placeat ipsam quo repellat harum nam provident earum architecto distinctio quibusdam? Quaerat quos sequi numquam illo necessitatibus voluptatibus accusamus harum facilis odit, facere, quae ullam consequatur? Harum in quas excepturi similique incidunt eveniet, assumenda vel ipsam, obcaecati laudantium voluptatem praesentium perspiciatis sapiente dignissimos, nihil mollitia blanditiis illum? Ratione officia ea laboriosam harum eos pariatur fuga, aliquam dolorum amet tempora sit corrupti praesentium commodi. Hic, totam corrupti? Quod delectus iusto inventore cum adipisci eligendi quaerat debitis optio, ea ullam, dolore dolores minus mollitia, quam eveniet sequi explicabo molestiae ipsa. Cum neque id magni illum nulla placeat vero sunt earum modi doloremque? Impedit reiciendis at dolores nam neque odit vero magnam totam veniam, ullam qui nobis, voluptatem aliquam consequatur enim ducimus beatae laborum fuga maiores laboriosam ea veritatis repellendus? Ducimus, dolor quisquam ad ipsa officiis nisi. Cumque molestiae nostrum, impedit inventore at vitae aut perferendis consectetur. Error beatae praesentium asperiores perferendis eaque necessitatibus, excepturi inventore officiis voluptatem enim hic magni aliquid assumenda animi, consequatur vitae autem nemo odio laudantium dicta! Magnam dignissimos libero nemo voluptatum expedita perferendis rerum nulla magni assumenda velit, quasi doloribus quo obcaecati corporis ipsum, sint illo debitis eveniet pariatur. Nisi praesentium rerum iure porro fuga tempore, cupiditate esse corporis excepturi unde cumque distinctio officiis recusandae? Qui facilis inventore delectus velit molestias hic cumque, iste dignissimos vero ad eaque cum alias necessitatibus itaque suscipit quae quasi, quaerat exercitationem modi. Illum consequuntur facilis itaque, quae quis pariatur voluptatem provident vitae reiciendis alias magnam expedita ut, obcaecati eligendi dolorem recusandae? Voluptates aut autem ullam est architecto, nam perspiciatis non accusamus quo nesciunt adipisci consequuntur laudantium ipsa libero nemo culpa magnam soluta maxime. Optio officia ipsum ratione corporis magni architecto tempore ducimus enim doloribus consequuntur, qui neque autem molestias pariatur fugit eum? Pariatur, aperiam voluptate magnam doloribus dolorem tenetur. Placeat amet dicta perferendis accusantium quam, quas esse eligendi iusto neque nisi quibusdam, ipsum necessitatibus, et laudantium odio labore voluptatem quis dignissimos repellendus! Quasi quis neque culpa distinctio sit, dignissimos dolores tenetur dolorum tempora veritatis commodi. Nobis debitis ipsum exercitationem sunt id inventore fuga unde consectetur maiores dicta, dolores distinctio saepe sed quisquam autem aliquam impedit quis? Eum a veniam repudiandae blanditiis explicabo, nam nesciunt molestias unde delectus accusamus iusto temporibus natus dolorem nostrum aut! Suscipit incidunt quibusdam consequuntur consectetur fugit maxime qui. Repellendus unde, nulla placeat dicta, maiores voluptatem modi voluptas magni provident magnam repudiandae perferendis esse laudantium, consequatur asperiores dolore eius cumque incidunt sit ut. Sunt qui eos a, dicta et praesentium! Pariatur fugit explicabo consequatur itaque fuga deleniti sequi repellat excepturi ullam autem! Eius amet nesciunt quo, praesentium quod, ad labore, eveniet voluptate itaque neque reiciendis? Perspiciatis dolorem delectus qui maxime accusamus earum iure laboriosam vero quos nulla. Aspernatur dolores inventore rem tempore eaque? Nostrum eos ut laboriosam tenetur magnam facilis non. Laboriosam ipsum repellendus, necessitatibus quo doloremque qui cum quam aspernatur eum, inventore ratione iste, quibusdam a similique? Itaque ipsa explicabo consectetur rerum, fuga adipisci eaque? Impedit ducimus pariatur autem voluptate quod ipsam placeat enim, in consectetur nemo voluptatibus et hic? Quod ipsum quae labore? Tempore ad similique temporibus recusandae quis officiis aspernatur, doloribus rerum ea placeat reiciendis porro, perferendis, harum dolore soluta debitis quas voluptatum in aut? Aut ipsa dolores magni, quia harum suscipit culpa doloremque saepe, libero nemo iusto, quibusdam quo nobis unde ullam expedita. Dolorum a officiis et ipsam in voluptatum autem vel velit? Quam quo, doloribus fugiat odit voluptas soluta, quae voluptatem iusto voluptate repudiandae ipsa cum quod distinctio eum! Voluptatibus dolorum officiis dolorem ut asperiores rerum repudiandae, illum, minima corrupti ex, vero earum non hic nemo ad quisquam quae. Voluptatem ducimus expedita sequi ea impedit incidunt praesentium. Nisi quis tempora ea inventore eveniet nulla officiis soluta facilis, voluptatum fuga iure nobis, nam aliquam dicta. Mollitia ipsum expedita rerum laborum consequatur inventore sequi natus recusandae itaque. Dolore rerum excepturi velit fugit. Distinctio, architecto amet. Perspiciatis sequi tempora inventore dignissimos, architecto in repudiandae placeat voluptatum eius beatae? Assumenda ullam explicabo impedit veniam ea quae expedita ipsa cupiditate rerum ratione repellendus necessitatibus exercitationem hic quod quasi quisquam, porro optio atque possimus nisi, provident, labore eveniet. Rem omnis suscipit expedita ea dolor dolorum. Neque enim ratione dignissimos quaerat tenetur accusantium ex molestias quidem, tempora expedita amet ipsa est cupiditate dolore incidunt eos? Necessitatibus rem quod animi iste velit ipsa temporibus perferendis odit voluptatem, consequatur quia, placeat laborum. Maxime tempore autem molestiae provident numquam asperiores porro dolorum! Possimus unde vero maiores omnis libero dignissimos distinctio ullam dolorum aperiam eveniet quam, rerum minima excepturi voluptatibus odit consequatur quisquam vel doloribus. Eos voluptate, excepturi ipsa reiciendis quidem unde magni vel voluptas doloremque quaerat ex recusandae. Necessitatibus rerum fuga fugiat inventore ipsa, obcaecati beatae libero minus quaerat. Corporis sunt optio aut est nemo soluta placeat ducimus esse debitis, accusantium commodi facere earum quas explicabo aliquid ullam voluptatem? Quisquam excepturi similique obcaecati! Maxime quidem quis illo blanditiis quibusdam natus necessitatibus consequatur delectus cum nam dolor quo aperiam, aliquid iusto fuga alias impedit. Facere ducimus consequuntur accusantium repellendus, ipsam autem aliquid hic enim libero suscipit quaerat facilis deleniti officia laborum reiciendis voluptates atque voluptatibus. Eveniet modi provident eos repellendus sed eligendi aliquid perferendis aut ullam. Repudiandae tempora ipsum autem, velit saepe ea officiis sint nam reiciendis? Itaque similique optio dicta? A mollitia aliquid culpa quis reprehenderit vitae eaque quibusdam? Maiores rem ullam nulla sed impedit, voluptatibus non nesciunt ipsam corporis minus in sequi voluptate amet quam ratione quidem soluta, inventore, facere adipisci accusantium optio eius nostrum iusto. Eaque, facere sed, ut blanditiis perferendis quod dolore accusamus labore veniam ea praesentium nesciunt accusantium sapiente! Enim delectus perferendis hic, repudiandae ea facere sequi eius placeat aspernatur dolorum accusantium excepturi fugit tenetur iure aliquam aperiam. Explicabo molestiae quam incidunt iusto! Aliquid cumque consectetur reiciendis, dolorum, sint numquam quibusdam fugiat nesciunt quae veniam facilis neque dolore, necessitatibus ut iure corrupti eum recusandae iusto itaque accusamus deleniti soluta sequi voluptatum ratione. Perspiciatis error consequuntur unde. Dicta libero id quod, illo optio adipisci esse exercitationem beatae, quas aliquid pariatur! Minus, consequuntur voluptatum fugiat voluptas magni libero dolore delectus ipsam, sit dolorem cum modi voluptatibus inventore corrupti itaque quod deserunt ad, eveniet fuga laboriosam laudantium doloremque! Rerum quasi, obcaecati vero ex deserunt fugiat temporibus nihil ducimus itaque corrupti expedita laboriosam unde animi aliquam, adipisci error vitae, consequuntur suscipit. Cum, consectetur neque eum ipsum voluptatibus ea nam sit adipisci atque voluptate perferendis sapiente ex repellendus beatae fugiat sed nihil. Nostrum odit quis, nisi iure dolores perspiciatis quidem! Nemo provident voluptate corrupti omnis dolorum at! Non enim qui impedit, aliquid nostrum quaerat beatae at! Consequatur sint iure provident. Nihil labore accusantium ea? Deserunt, assumenda facilis et quaerat fugiat repellat? Repellat ducimus mollitia quidem? Inventore laborum rerum similique quasi vel repellat ea, illum sint aliquam veniam possimus nesciunt magni? Corporis eaque labore id iste ducimus a odit quisquam ratione beatae voluptatibus, amet facilis dolore cum accusantium quis minus minima eligendi doloremque impedit expedita. Ratione reiciendis consectetur amet quia optio consequuntur voluptate ut quis sapiente error quam, ea commodi iste. Sed accusamus modi dicta error?
-    </DashboardLayout>
-  )
-}
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [emailIsOpen, setEmailIsOpen] = useState(false)
 
-export default DashboardHome
+  const exchangeType = [
+    { label: "BTC", amount: "$87375" },
+    { label: "ETH", amount: "$3155.2" },
+    { label: "LTC", amount: "$77.2" },
+    { label: "STEEM", amount: "$0.2135" },
+    { label: "SDB", amount: "$3155.2" },
+    { label: "DOGE", amount: "$0.3746" },
+    { label: "HIVE", amount: "$0.2786" },
+    { label: "HBD", amount: "$3155.2" },
+    { label: "BNB", amount: "$3155.2" },
+  ];
+
+  return (
+    <div>
+      <div className="bg-[#039AE4] lg:flex items-center justify-center hidden w-full h-[50px] flex-wrap"> 
+        {exchangeType.map((exchange, index) => (
+          <div key={index} className="flex items-center space-x-2">
+            <p className="flex items-center justify-between gap-1 w-full">
+              <span className="font-medium font-inter text-[13px] lg:text-[16px] leading-[150%] text-[#121826]">
+                {exchange.label}
+              </span>
+              <span className="text-[#ffffff] font-medium font-inter text-[13px] lg:text-[16px] leading-[150%]">
+                {exchange.amount}
+              </span>
+              {index !== exchangeType.length - 1 && (
+                <span className="border-l-2 border-[#ffffff] h-6 mx-2"></span>
+              )}
+            </p>
+          </div>
+        ))}
+      </div>
+
+      <div className="flex items-center justify-between sticky top-0 p-5 h-[80px] w-full bg-[#f5f5f5] gap-5 shadow-lg z-50">
+        <div className="">
+          <h2 className="font-inter xl:text-nowrap font-bold text-[12px] lg:text-[16px] leading-[150%] text-[#121826]">
+            Pending Deals
+          </h2>
+        </div>
+
+        <div className="flex items-center justify-between bg-[#F1F1F1] rounded-sm w-full lg:w-[430px] p-2">
+          <div className="flex items-center justify-center mr-2">
+            <Search className="text-[#121826] size-6" />
+          </div>
+          <input
+            placeholder="Search Users, Transactions..."
+            className="font-normal lg:text-[16px] text-[12px] leading-[150%] text-[#000000] opacity-80 placeholder:text-[#121826] w-full bg-transparent border-none focus:outline-none"
+          />
+        </div>
+
+        <div className="flex items-center gap-5 justify-center bg-white p-5 ">
+          <div className="flex items-center gap-3 mr-2">
+           <div className='h-[40px] w-[40px]  '> <img src={rectangle} alt="User Avatar" className="w-[40px] h-[40px]" /></div>
+            <span className="font-inter hidden lg:flex font-semibold text-[14px]">
+              David Aluko
+            </span>
+            <span className="border-l-2 hidden  lg:block border-gray-400 h-[30px]" />            
+          </div>
+
+          <div className="relative flex items-center justify-center w-[40px] h-[40px] rounded-full bg-[#f5f5f5] cursor-pointer transition-all duration-200"
+             onClick={() => setEmailIsOpen(true)}
+          >
+            <HiMail className="size-6" />
+            <div className="absolute top-0 right-0 w-[16px] h-[16px] bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center">
+              1
+            </div>
+            { emailIsOpen &&  <NotificationsPanel setEmailIsOpen = {setEmailIsOpen}  /> }
+
+          </div>
+
+          <div className="w-[40px]  hidden    h-[40px] lg:flex items-center justify-center rounded-full bg-[#f5f5f5] cursor-pointer transition-all duration-200">
+            <IoIosSettings className="size-6 text-[#121826]" />
+          </div>
+
+          <div className="w-[40px] h-[40px]  hidden  lg:flex items-center justify-center rounded-full bg-[#f5f5f5] cursor-pointer transition-all duration-200">
+            <HiLogout className="size-6 text-[#E41D03]" />
+          </div>
+
+          <button className=" hidden lg:block px-4 py-2 border-2 w-[80px] lg:w-[96px] h-[40px] border-[#039AE4] text-[#039AE4] leading-[150%] rounded-sm bg-[#f5f5f5] font-medium text-[10px] xl:text-[14px] hover:bg-[#039AE4] focus:outline-none cursor-pointer transition-all duration-200">
+          Regularize
+          </button>
+        </div>
+
+
+        
+        <div className="lg:hidden ">
+          <button
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            className="text-[#121826] text-2xl focus:outline-none"
+          >
+            {isMenuOpen ? <HiX className="size-6 text-white" /> : <ChevronDown  className="size-6 text-[#039AE4]" />}
+          </button>
+        </div>      
+
+      </div>
+
+      {isMenuOpen && (
+        <>
+          <div className="fixed inset-0 bg-white bg-opacity-50 z-40" onClick={() => setIsMenuOpen(false)} />
+          <div className="lg:hidden fixed top-0 left-0 w-[180px] h-full bg-[#121826] z-50 p-6 flex flex-col space-y-6 text-white">
+            
+            <div className="self-end">
+              <button onClick={() => setIsMenuOpen(false)} className="text-2xl">
+                <HiX className="size-6 text-white" />
+              </button>
+            </div>
+            
+            <div className="flex flex-col space-y-4">
+              
+              <div className="flex items-center space-x-2 p-2 rounded-md hover:bg-gray-700 cursor-pointer transition-all duration-200">
+                <IoIosSettings className="size-6 " />
+                <span>Settings</span>
+              </div>
+
+              <button className="px-4 py-2 border-2 w-[85px] xl:w-[96px] h-[40px] border-[#039AE4] text-[#039AE4] leading-[150%] rounded-sm bg-[#f5f5f5] font-medium text-[12px] xl:text-[14px] hover:bg-[#039AE4] focus:outline-none cursor-pointer transition-all duration-200">
+                  Regularize
+               </button>
+
+              <div className="flex items-center space-x-2 p-2 rounded-md hover:bg-gray-700 cursor-pointer transition-all duration-200">
+                <HiLogout className="size-6 text-[#E41D03]" />
+                <span>Logout</span>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
+
+      <div><PendingButton /></div>
+    </div>
+  );
+};
+
+export default DashboardHome;
