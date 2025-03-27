@@ -44,7 +44,7 @@ const DashboardHome = () => {
 
       <div className="flex items-center justify-between sticky top-0 p-5 h-[80px] w-full bg-[#f5f5f5] gap-5 shadow-lg z-50">
         <div className="">
-          <h2 className="font-inter  font-bold text-[12px] lg:text-[16px] leading-[150%] text-[#121826]">
+          <h2 className="font-inter xl:text-nowrap font-bold text-[12px] lg:text-[16px] leading-[150%] text-[#121826]">
             Pending Deals
           </h2>
         </div>
@@ -59,7 +59,7 @@ const DashboardHome = () => {
           />
         </div>
 
-        <div className="flex items-center justify-between p-5 ">
+        <div className="flex items-center gap-5 justify-center bg-white p-5 ">
           <div className="flex items-center gap-3 mr-2">
            <div className='h-[40px] w-[40px]  '> <img src={rectangle} alt="User Avatar" className="w-[40px] h-[40px]" /></div>
             <span className="font-inter hidden lg:flex font-semibold text-[14px]">

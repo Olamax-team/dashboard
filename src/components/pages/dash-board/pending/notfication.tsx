@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { X, CheckCircle, Info, Shield, Gift, Search } from "lucide-react";
+import { X, CheckCircle, Info, Shield, Gift, Search, } from "lucide-react";
 import avatar from "../../../../assets/avatar.svg"
+import ChatBox from "./chatBox";
 
 interface Notification {
   id: string;
@@ -8,6 +9,7 @@ interface Notification {
   message: string;
   time: string;
   type: "success" | "info" | "security" | "reward";
+  
 }
 
 interface Message {
@@ -17,12 +19,16 @@ interface Message {
   time: string;
 }
 
+
 interface NotificationsPanelProps {
   setEmailIsOpen: (isOpen: boolean) => void;
 }
 
 export default function NotificationsPanel({ setEmailIsOpen }: NotificationsPanelProps) {
-  const [activeTab, setActiveTab] = useState<"notifications" | "messages">("notifications");
+  const [activeTab, setActiveTab] = useState<"notifications" | "messages" | "chatBox">("notifications");
+    
+
+
 
   const notifications: Record<string, Notification[]> = {
     Today: [
@@ -180,13 +186,14 @@ export default function NotificationsPanel({ setEmailIsOpen }: NotificationsPane
 
                
               {messages.map((msg, index) => (
-                <div key={index} className="flex gap-5 py-3 border-b pb-3">
+
+                <div key={index} className="flex gap-5 py-3 border-b pb-3" onClick={() => setActiveTab("chatBox")}>
                   {/* Avatar */}
                   <div className="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center">
                     <img src={msg.avatar} alt={msg.label} className="w-full h-full object-cover rounded-full" />
                   </div>
                   {/* Message Content */}
-                  <div className="flex-1 min-w-0">
+                  <div className="flex-1 min-w-0" onClick={() => setActiveTab("chatBox")}>
                     <div className="flex justify-between">
                       <p className="lg:text-[18px]  font-bold text-[#181818] leading-[150%]">{msg.label}</p>
                       <span className="text-[12px]  font-semibold text-gray-500">{msg.time}</span>
@@ -197,6 +204,14 @@ export default function NotificationsPanel({ setEmailIsOpen }: NotificationsPane
               ))}
             </>
           )}
+          
+
+          {activeTab === "chatBox" && (
+            <ChatBox />
+
+
+          )}
+
         </div>
       </div>
     </div>
