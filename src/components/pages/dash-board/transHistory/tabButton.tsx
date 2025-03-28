@@ -1,22 +1,23 @@
 import React, { useState } from "react";
 import { HiFilter, HiOutlineSortDescending, HiOutlineSortAscending, HiDownload } from "react-icons/hi";
-import Buying from "./buying";
-import Selling from "./selling";
-import TopUp from "./topUp";
-import Bills from "./bills";
+import SellingHistory from "./sellingHistory";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import BuyingHistory from "./buyingHistory";
+import TopUpHistory from "./topUpHistory";
+import BillHistory from "./billHistory";
 
-const PendingButton = () => {
+const TabButton = () => {
   const [activeTab, setActiveTab] = useState("buying");
   const [sortOrder, setSortOrder] = useState<"ascending" | "descending">("descending");
   const [isDropdownOpen, setDropdownOpen] = useState(false);
-
-  const [visibleColumns, setVisibleColumns] = useState({
+  
+  const [visibleFilter, setVisibleFilter] = useState({
     user: true,
     coin: true,
     blockchain: true,
     amount: true,
+    nairaEquivalent:true,
     coinPriceUsd: true,
     dollarRate: true,
     networkFees: true,
@@ -27,6 +28,8 @@ const PendingButton = () => {
     method: true,
     paymentStatus: true,
     referrer: true,
+    phone:true,
+    transactionStatus:true,
     Timestamp: true,
     finish: true,
   });
@@ -47,9 +50,9 @@ const PendingButton = () => {
   };
 
   const toggleColumnVisibility = (column: string) => {
-    setVisibleColumns((prev) => ({
+    setVisibleFilter((prev) => ({
       ...prev,
-      [column as keyof typeof visibleColumns]: !prev[column as keyof typeof visibleColumns],
+      [column as keyof typeof visibleFilter]: !prev[column as keyof typeof visibleFilter],
     }));
   };
   
@@ -57,13 +60,13 @@ const PendingButton = () => {
   const renderComponent = () => {
     switch (activeTab) {
       case "buying":
-        return <Buying visibleColumns={visibleColumns} />;
+        return <BuyingHistory visibleFilter={visibleFilter} />;
       case "selling":
-        return <Selling visibleColumns={visibleColumns} />;
+        return <SellingHistory visibleFilter={visibleFilter} />;
       case "top-up":
-        return <TopUp />;
+        return <TopUpHistory />;
       case "bills":
-        return <Bills />;
+        return <BillHistory />;
       default:
         return <div>Default Content</div>;
     }
@@ -119,12 +122,12 @@ const PendingButton = () => {
         {isDropdownOpen && (
               <div className="absolute top-full right-0 mt-2 w-48 bg-white shadow-md rounded-md p-2 z-50">
                 <p className="text-sm font-semibold mb-2">Filter by:</p>
-                {Object.keys(visibleColumns).map((column) => (
+                {Object.keys(visibleFilter).map((column) => (
               <div key={column} className="flex items-center">
                 <input
                   type="checkbox"
                   id={column}
-                  checked={visibleColumns[column as keyof typeof visibleColumns]}
+                  checked={visibleFilter[column as keyof typeof visibleFilter]}
                   onChange={() => toggleColumnVisibility(column)}
                 />
                 <label htmlFor={column} className="ml-2">
@@ -152,4 +155,4 @@ const PendingButton = () => {
   );
 };
 
-export default PendingButton;
+export default TabButton;
