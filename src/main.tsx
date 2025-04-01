@@ -12,6 +12,7 @@ import Escrow from './components/pages/dash-board/escrow/escrow.tsx'
 import DashboardLayout from './layout/dash-board-layout.tsx'
 import DashboardHome from './components/pages/dash-board/home.tsx'
 import TransHistory from './components/pages/dash-board/transHistory/transHistory.tsx'
+import TransactionSettings from './components/pages/dash-board/transactionSettings/transactionSettings.tsx'
 
 
 const router = createBrowserRouter([
@@ -42,7 +43,11 @@ const router = createBrowserRouter([
       {
         path: '/dashboard/transaction-history',
         element: <TransHistory/>  
-      }
+      },
+      {
+        path: '/dashboard/transaction-settings',
+        element: <TransactionSettings/>  
+      },
     ]
   }
 ]); 
