@@ -182,7 +182,7 @@ const Escrow = () => {
     <DashboardLayout>
       <section className="w-full h-full mx-auto font-Inter">
         <PageHeader title="Escrow Deals" />
-        <div className="w-full h-full px-4 py-2 md:px-10 md:py-4 bg-[#F8F9FA] space-y-16 md:space-y-0">
+        <div className="w-full px-4 py-2 md:px-10 md:py-4 bg-[#F8F9FA] space-y-16 md:space-y-0">
           {/* Tabs */}
           <TabSwitcher tabs={tabs} />
         </div>
