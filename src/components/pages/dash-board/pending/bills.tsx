@@ -1,9 +1,7 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { DropdownMenu, DropdownMenuContent,  DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
 import { HiEllipsisVertical } from "react-icons/hi2";
 import React from "react";
-
-
 
 interface SellingItem {
   id: number;
@@ -21,7 +19,7 @@ interface SellingItem {
 }
 
 const Bills = () => {
-  const [completedMenu, setCompletedMenu] = React.useState('save');
+  const [completedMenu, setCompletedMenu] = React.useState("save");
 
   const transaction: SellingItem[] = [
     {
@@ -42,24 +40,24 @@ const Bills = () => {
 
   const formatTimestamp = (timestamp: string) => {
     const date = new Date(timestamp);
-    return date.toLocaleString(); 
+    return date.toLocaleString();
   };
 
   return (
     <React.Fragment>
-      <div className="border-2 border-gray-300 m-5 p-5">
-        <Table className="border-collapse">
-          <TableHeader className="rounded-lg h-[60px]">
-            <TableRow className="bg-[#ffffff] hover:bg-white border-b-0 font-bold leading-[150%] text-[14px] text-[#121826]">
-              <TableHead className="text-center font-bold text-[#121826]">User</TableHead>
-              <TableHead className="text-center font-bold text-[#121826]">Type</TableHead>
-              <TableHead className="text-center font-bold text-[#121826]">Amount</TableHead>
-              <TableHead className="text-center font-bold text-[#121826]">Wallet Address</TableHead>
-              <TableHead className="text-center font-bold text-[#121826]">Account Number</TableHead>
-              <TableHead className="text-center font-bold text-[#121826]">Exchange Value</TableHead>
-              <TableHead className="text-center font-bold text-[#121826]">Status</TableHead>
-              <TableHead className="text-center font-bold text-[#121826]">Timestamp</TableHead>
-              <TableHead className="text-center font-bold text-[#121826]">Action</TableHead>
+    <div className="lg:p-10 mx-auto px-3 py-2">
+    <Table className="border-collapse border-2">
+          <TableHeader className="rounded-lg h-[60px] border border-gray-300">
+            <TableRow className="bg-[#ffffff] hover:bg-white border-b font-bold leading-[150%] text-[14px] text-[#121826]">
+              <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">User</TableHead>
+              <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">Type</TableHead>
+              <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">Amount</TableHead>
+              <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">Wallet Address</TableHead>
+              <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">Account Number</TableHead>
+              <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">Exchange Value</TableHead>
+              <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">Status</TableHead>
+              <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">Timestamp</TableHead>
+              <TableHead className="text-center font-bold text-[#121826] border-gray-300">Action</TableHead>
             </TableRow>
           </TableHeader>
 
@@ -67,19 +65,18 @@ const Bills = () => {
             {transaction.map((transaction) => (
               <TableRow
                 key={transaction.id}
-                className="odd:bg-[#f3f3f3] even:bg-[#e0e0e0] hover:bg-[#d1d1d1]" 
+                className="odd:bg-[#f3f3f3] even:bg-[#e0e0e0] hover:bg-[#d1d1d1] border border-gray-300"
               >
-                <TableCell className="py-2 text-center">
-                    <div>{transaction.user.name}</div>
-                    <div className="text-xs text-[#121826]">UID {transaction.user.uid}</div>
-                  </TableCell>
-                                
-                <TableCell className="text-center py-2">{transaction.type}</TableCell>
-                <TableCell className="text-center py-2">{transaction.amount}</TableCell>
-                <TableCell className="text-center py-2">{transaction.walletAddress || "-"}</TableCell>
-                <TableCell className="text-center py-2">{transaction.accountNumber || "-"}</TableCell>
-                <TableCell className="text-center py-2">{transaction.exchangeValue.toLocaleString()}</TableCell>
-                <TableCell className="text-center py-2">
+                <TableCell className="py-2 text-center border-r border-gray-300">
+                  <div>{transaction.user.name}</div>
+                  <div className="text-xs text-[#121826]">UID {transaction.user.uid}</div>
+                </TableCell>
+                <TableCell className="text-center py-2 border-r border-gray-300">{transaction.type}</TableCell>
+                <TableCell className="text-center py-2 border-r border-gray-300">{transaction.amount}</TableCell>
+                <TableCell className="text-center py-2 border-r border-gray-300">{transaction.walletAddress || "-"}</TableCell>
+                <TableCell className="text-center py-2 border-r border-gray-300">{transaction.accountNumber || "-"}</TableCell>
+                <TableCell className="text-center py-2 border-r border-gray-300">{transaction.exchangeValue.toLocaleString()}</TableCell>
+                <TableCell className="text-center py-2 border-r border-gray-300">
                   <span
                     className={`px-2 py-1 rounded-full text-xs font-medium ${
                       transaction.status === "Successful"
@@ -92,8 +89,8 @@ const Bills = () => {
                     {transaction.status}
                   </span>
                 </TableCell>
-                <TableCell className="py-2 text-center">{formatTimestamp(transaction.timestamp)}</TableCell>
-                <TableCell className="text-center py-2">
+                <TableCell className="py-2 text-center border-r border-gray-300">{formatTimestamp(transaction.timestamp)}</TableCell>
+                <TableCell className="text-center py-2 border-gray-300">
                   <DropdownMenu modal={false}>
                     <DropdownMenuTrigger className="outline-none">
                       <button

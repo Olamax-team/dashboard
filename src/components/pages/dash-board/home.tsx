@@ -42,14 +42,14 @@ const DashboardHome = () => {
         ))}
       </div>
 
-      <div className="flex items-center justify-between sticky top-0 p-5 h-[80px] w-full bg-[#f5f5f5] gap-5 shadow-lg z-50">
+      <div className="font-Inter bg-white px-4 py-2 md:px-10 md:py-7 flex gap-6 xl:gap-24 w-full h-[80px] items-center justify-between sticky top-0 z-50">
         <div className="">
-          <h2 className="font-inter xl:text-nowrap font-bold text-[12px] lg:text-[16px] leading-[150%] text-[#121826]">
+          <h1 className="w-fit text-wrap xl:text-nowrap font-bold text-[16px] leading-[150%] font-inter">
             Pending Deals
-          </h2>
+          </h1>
         </div>
 
-        <div className="flex items-center justify-between bg-[#F1F1F1] rounded-sm w-full lg:w-[430px] p-2">
+        <div className="flex items-center justify-between bg-white rounded-sm w-full lg:w-[430px] p-2">
           <div className="flex items-center justify-center mr-2">
             <Search className="text-[#121826] size-6" />
           </div>
@@ -59,10 +59,10 @@ const DashboardHome = () => {
           />
         </div>
 
-        <div className="flex items-center gap-5 justify-center bg-white p-5 ">
+        <div className="flex items-center gap-2 justify-center bg-white ">
           <div className="flex items-center gap-3 mr-2">
            <div className='h-[40px] w-[40px]  '> <img src={rectangle} alt="User Avatar" className="w-[40px] h-[40px]" /></div>
-            <span className="font-inter hidden lg:flex font-semibold text-[14px]">
+            <span className="font-inter hidden xl:flex-nowrap lg:flex font-semibold text-[14px]">
               David Aluko
             </span>
             <span className="border-l-2 hidden  lg:block border-gray-400 h-[30px]" />            
