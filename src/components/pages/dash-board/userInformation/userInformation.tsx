@@ -1,14 +1,14 @@
 // import DashboardLayout from '@/layout/dash-board-layout'
 import PageHeader from '../escrow/pageHeader'
-import TabButton from './tabButton'
+import TabVerify from './tabVerify'
 
-const TransHistory = () => {
+const UserInformation = () => {
   return (
     
     <section className="w-full h-full  font-Inter ">
-        <PageHeader title="Transaction History" />
+        <PageHeader title="User Informations" />
         <div className="w-full px-4 py-2 md:px-10 md:py-4 bg-[#F8F9FA] space-y-16 md:space-y-0">
-          <div><TabButton /></div>
+          <div><TabVerify /></div>
         </div>
       </section>
     
@@ -16,4 +16,4 @@ const TransHistory = () => {
   
 }
 
-export default TransHistory
+export default UserInformation
