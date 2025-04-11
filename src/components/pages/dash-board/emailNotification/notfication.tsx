@@ -24,7 +24,7 @@ interface NotificationsPanelProps {
   setEmailIsOpen: (isOpen: boolean) => void;
 }
 
-export default function NotificationsPanel({ setEmailIsOpen }: NotificationsPanelProps) {
+export default function NotificationsPanel ({ setEmailIsOpen }: NotificationsPanelProps) {
   const [activeTab, setActiveTab] = useState<"notifications" | "messages" | "chatBox">("notifications");
     
 
