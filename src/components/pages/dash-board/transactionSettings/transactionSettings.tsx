@@ -19,7 +19,7 @@ const TransactionSettings = () => {
 
   return (
     <DashboardLayout>
-      <section className="w-full h-full mx-auto font-Inter">
+      <section className="w-full h-full mx-auto font-Inter text-[#121826]">
         <PageHeader title="Transaction Settings" />
         <div className="flex flex-col bg-[#F8F9FA] px-4 py-2 md:px-10 md:py-4 gap-14 h-full">
              {/* Head Tab */}
@@ -28,7 +28,7 @@ const TransactionSettings = () => {
                 <div className="flex justify-center items-center space-x-6 py-1">
                 {/* Sort Button */}
                 <div
-                    className="text-black flex items-center justify-center space-x-2"
+                    className="text-gray-400 flex items-center justify-center space-x-2"
                     aria-disabled
                 >
                     <h1 className="font-normal text-[12px] xl:text-[16px] leading-[150%]">
@@ -40,7 +40,7 @@ const TransactionSettings = () => {
                 {/* Filter Button */}
                 <div className="relative">
                     <span
-                    className="text-black flex items-center justify-center space-x-2"
+                    className="text-gray-400 flex items-center justify-center space-x-2"
                     aria-disabled
                     >
                     <button className="text-black">Filter</button>
@@ -56,7 +56,7 @@ const TransactionSettings = () => {
                 </div>
             </div>
              {/* Bonuses and Charges */}
-             <div className="flex w-full items-center justify-between gap-16 flex-wrap md:flex-nowrap pb-10 border-b-2">
+             <div className="flex w-full items-center justify-between gap-16 flex-wrap md:flex-nowrap pb-12 border-b-2">
                 <div className="md:w-1/2 w-full space-y-4">
                     <p className="font-inter font-bold xl:text-[16px] xl:leading-[150%]">Coin Bonuses (in Naira)</p>
                     <div className="bg-white w-full h-[110px] rounded-sm px-6 py-5 space-y-2">
@@ -109,7 +109,7 @@ const TransactionSettings = () => {
                 </div>
              </div>
              {/*Dollar Rates*/}
-             <div className="flex justify-between items-start flex-wrap md:flex-nowrap gap-16 pb-10 border-b-2">
+             <div className="flex justify-between items-start flex-wrap md:flex-nowrap gap-16 pb-12 border-b-2">
                 <div className="flex flex-col w-full justify-start space-y-3">
                     <h1 className="font-inter font-bold xl:text-[16px] xl:leading-[150%]">Dollar Rate (We <span className="text-primary">Sell</span> at)</h1>
                     <SellRate/>

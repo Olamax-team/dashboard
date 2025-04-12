@@ -61,7 +61,7 @@ const OrderQuantity = () => {
   };
 
   return (
-    <div className="flex flex-row w-full justify-between items-start flex-wrap space-y-3 pb-10 border-b-2">
+    <div className="flex flex-row w-full justify-between items-start flex-wrap space-y-3 pb-12 border-b-2">
       {coins.map((coin) => (
         <div key={coin} className='flex flex-col w-full justify-start space-y-3 md:w-[calc(50%-32px)]'>
           <h2 className="font-inter font-bold xl:text-[16px] xl:leading-[150%]">

@@ -34,7 +34,7 @@ const SellRate = () => {
   return (
     <div className="w-full bg-white rounded-sm h-auto mx-auto space-y-6 px-[26px] py-[30px]">
       {currencies.map((currency) => (
-        <div key={currency} className="space-y-2 pb-4">
+        <div key={currency} className="space-y-2">
           <p className="font-inter font-medium xl:text-[14px] xl:leading-[150%]">Current Dollar Rates {currency}</p>
           <div className="flex items-center justify-between space-x-2">
             <Input
