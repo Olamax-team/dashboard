@@ -128,7 +128,7 @@ const TransactionSettings = () => {
              {/* Available coins*/}
              <div>Available Coins</div>
              {/* Cryto Rates Changes*/}
-             <div>Changes in Crypto i.e 0.00001</div>
+             <div>Changes in Crypto i.e 0.000001</div>
         </div>
       </section>
     </DashboardLayout>
