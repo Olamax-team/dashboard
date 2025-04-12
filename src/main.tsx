@@ -12,6 +12,9 @@ import Escrow from './components/pages/dash-board/escrow/escrow.tsx'
 import DashboardLayout from './layout/dash-board-layout.tsx'
 import DashboardHome from './components/pages/dash-board/home.tsx'
 import TransHistory from './components/pages/dash-board/transHistory/transHistory.tsx'
+import UserInformation from './components/pages/dash-board/userInformation/userInformation.tsx'
+import UserPreview from './components/pages/dash-board/userInformation/userDetailsVerified.tsx'
+import UnVerifiedUserDetails from './components/pages/dash-board/userInformation/UserDetailsUnverified.tsx'
 import TransactionSettings from './components/pages/dash-board/transactionSettings/transactionSettings.tsx'
 
 
@@ -42,7 +45,19 @@ const router = createBrowserRouter([
       },
       {
         path: '/dashboard/transaction-history',
-        element: <TransHistory/>  
+        element: <DashboardLayout> <TransHistory/>  </DashboardLayout> 
+      },
+      {
+        path: '/dashboard/user-information',
+        element: <DashboardLayout> <UserInformation  /> </DashboardLayout>
+      },
+      {
+        path:"/userDetailsVerified",
+        element: <DashboardLayout><UserPreview/> </DashboardLayout>  
+      },
+      {
+        path:"/UserDetailsUnverified",
+        element: <DashboardLayout><UnVerifiedUserDetails/> </DashboardLayout>  
       },
       {
         path: '/dashboard/transaction-settings',

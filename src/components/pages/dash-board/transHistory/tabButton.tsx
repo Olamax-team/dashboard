@@ -74,8 +74,8 @@ const TabButton = () => {
 
   return (
     <React.Fragment>
-    <div className="flex items-center justify-between  h-auto p-5 w-full flex-wrap">
-      <div className="flex items-center justify-center xl:mt-0 gap-5">
+    <div className="flex items-center justify-between  h-auto  mb-5 w-full flex-wrap">
+      <div className="flex items-center justify-center  xl:mt-0 gap-5">
         {tabs.map((tab) => (
           <Button
             key={tab.id}

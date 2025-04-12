@@ -20,15 +20,12 @@ interface SellingItem {
 }
 
 const TopUp = () => {
-  const [completedMenu, setCompletedMenu] = React.useState('save');
+  const [completedMenu, setCompletedMenu] = React.useState("save");
 
   const transaction: SellingItem[] = [
     {
       id: 1,
-      user: {
-        name: "Mason Mount",
-        uid: "22110976",
-      },
+      user: { name: "Mason Mount", uid: "22110976" },
       type: "Data",
       network: "MTN",
       amount: "0.0005 USDT",
@@ -40,10 +37,7 @@ const TopUp = () => {
     },
     {
       id: 2,
-      user: {
-        name: "Mason Mount",
-        uid: "22110976",
-      },
+      user: { name: "Mason Mount", uid: "22110976" },
       type: "Data",
       network: "MTN",
       amount: "0.0005 USDT",
@@ -55,64 +49,58 @@ const TopUp = () => {
     },
   ];
 
-  const formatTimestamp = (timestamp: string) => {
-    const date = new Date(timestamp);
-    return date.toLocaleString(); 
-  };
+  const formatTimestamp = (timestamp: string) => new Date(timestamp).toLocaleString();
 
   return (
     <React.Fragment>
-      <div className="border-2 border-gray-300 m-5 p-5">
-        <Table className="border-collapse">
-          <TableHeader className="rounded-lg h-[60px] [&_tr]:border-b-0">
-            <TableRow className="bg-[#ffffff] hover:bg-white border-b-0 font-bold leading-[150%] text-[14px] text-[#121826]">
-              <TableHead className="text-center font-bold text-[#121826]">User</TableHead>
-              <TableHead className="text-center font-bold text-[#121826]">Type</TableHead>
-              <TableHead className="text-center font-bold text-[#121826]">Network</TableHead>
-              <TableHead className="text-center font-bold text-[#121826]">Amount</TableHead>
-              <TableHead className="text-center font-bold text-[#121826]">Wallet Address</TableHead>
-              <TableHead className="text-center font-bold text-[#121826]">Account Number</TableHead>
-              <TableHead className="text-center font-bold text-[#121826]">Exchange Value</TableHead>
-              <TableHead className="text-center font-bold text-[#121826]">Status</TableHead>
-              <TableHead className="text-center font-bold text-[#121826]">Timestamp</TableHead>
-              <TableHead className="text-center font-bold text-[#121826]">Action</TableHead>
+      <div className="lg:p-10 mx-auto px-3 py-2">
+       <Table className="border-collapse border-2">
+          <TableHeader className="rounded-lg h-[60px] border border-gray-300">
+            <TableRow className="bg-[#ffffff] hover:bg-white border-b font-bold leading-[150%] text-[14px] text-[#121826]">
+              <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">User</TableHead>
+              <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">Type</TableHead>
+              <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">Network</TableHead>
+              <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">Amount</TableHead>
+              <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">Wallet Address</TableHead>
+              <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">Account Number</TableHead>
+              <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">Exchange Value</TableHead>
+              <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">Status</TableHead>
+              <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">Timestamp</TableHead>
+              <TableHead className="text-center font-bold text-[#121826] border-gray-300">Action</TableHead>
             </TableRow>
           </TableHeader>
 
           <TableBody>
             {transaction.map((transaction) => (
-              <TableRow
-                key={transaction.id}
-                className="odd:bg-[#f2f2f2] even:bg-[#e0e0e0] hover:bg-[#d1d1d1] text-[#121826] font-semibold text-[12px] leading-[150%] ml-5"
-              >
-                <TableCell className="py-2 text-center text-[#121826]">
+              <TableRow key={transaction.id} className="odd:bg-[#f2f2f2] even:bg-[#e0e0e0] hover:bg-[#d1d1d1] border border-gray-300">
+                <TableCell className="py-2 text-center text-[#121826] border-r border-gray-300">
                   <div>
                     <div className="font-medium">{transaction.user.name}</div>
-                    <div className="text-xs  text-[#121826]">UID {transaction.user.uid}</div>
+                    <div className="text-xs text-[#121826]">UID {transaction.user.uid}</div>
                   </div>
                 </TableCell>
-                <TableCell className="py-2 text-center text-[#121826]">{transaction.type}</TableCell>
-                <TableCell className="py-2 text-center text-[#121826]">{transaction.network}</TableCell>
-                <TableCell className="py-2 text-center text-[#121826]">{transaction.amount}</TableCell>
-                <TableCell className="py-2 text-center text-[#121826]">{transaction.walletAddress || "-"}</TableCell>
-                <TableCell className="py-2 text-center text-[#121826]">{transaction.accountNumber || "-"}</TableCell>
-                <TableCell className="py-2 text-center text-[#121826]">{transaction.exchangeValue.toLocaleString()}</TableCell>
-                <TableCell className="py-2 text-center text-[#121826]">
+                <TableCell className="py-2 text-center text-[#121826] border-r border-gray-300">{transaction.type}</TableCell>
+                <TableCell className="py-2 text-center text-[#121826] border-r border-gray-300">{transaction.network}</TableCell>
+                <TableCell className="py-2 text-center text-[#121826] border-r border-gray-300">{transaction.amount}</TableCell>
+                <TableCell className="py-2 text-center text-[#121826] border-r border-gray-300">{transaction.walletAddress || "-"}</TableCell>
+                <TableCell className="py-2 text-center text-[#121826] border-r border-gray-300">{transaction.accountNumber || "-"}</TableCell>
+                <TableCell className="py-2 text-center text-[#121826] border-r border-gray-300">{transaction.exchangeValue.toLocaleString()}</TableCell>
+                <TableCell className="py-2 text-center text-[#121826] border-r border-gray-300">
                   <span
-                    className={`px-3 py-2  text-xs font-medium ${
+                    className={`px-3 py-2 text-xs font-medium ${
                       transaction.status === "Successful"
-                        ? " text-green-700"
+                        ? "text-green-700"
                         : transaction.status === "Failed"
-                        ? " text-red-700"
-                        : " text-yellow-700"
+                        ? "text-red-700"
+                        : "text-yellow-700"
                     }`}
                   >
                     {transaction.status}
                   </span>
                 </TableCell>
-                <TableCell className="py-2 text-center text-[#121826]">{formatTimestamp(transaction.timestamp)}</TableCell>
+                <TableCell className="py-2 text-center text-[#121826] border-r border-gray-300">{formatTimestamp(transaction.timestamp)}</TableCell>
                 <TableCell className="py-2 text-center text-[#121826]">
-                <DropdownMenu modal={false}>
+                  <DropdownMenu modal={false}>
                     <DropdownMenuTrigger className="outline-none">
                       <button
                         type="button"

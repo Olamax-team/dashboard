@@ -7,10 +7,10 @@ interface EscrowTableProps {
 
 const EscrowTable: React.FC<EscrowTableProps> = ({ columns, rows }) => {
   return (
-    <div className="font-Inter w-full my-10 overflow-x-auto md:bg-white md:border rounded-t-sm">
+    <div className="font-Inter w-full my-10 overflow-x-auto md:bg-white md:border rounded-t-sm  ">
       {/* Desktop View */}
-      <div className="hidden md:block">
-        <Table className="w-full border-collapse">
+      <div className="hidden md:block ">
+        <Table className="w-full border-collapse ">
           <TableHeader>
             <TableRow className="bg-[#F5F5F5] w-full h-[60px] text-center">
               {columns.map((col, index) => (
