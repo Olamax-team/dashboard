@@ -17,6 +17,7 @@
   --primary: #039AE4; 
   --primary-foreground: oklch(0.985 0 0);
   --secondary: #0073AD;
+  --textDark: #121826;
   --secondary-foreground: oklch(0.205 0 0);
   --bg: #F8F9FA;
   --muted: oklch(0.97 0 0);

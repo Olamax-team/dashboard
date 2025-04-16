@@ -23,7 +23,7 @@ const PageHeader = ({ title }: { title: string }) => {
   const [emailIsOpen, setEmailIsOpen] = useState(false)
     
   return (
-    <div className="font-Inter bg-white px-4 py-2 md:px-10 md:py-7 flex gap-6 xl:gap-24 w-full h-[80px] items-center justify-between sticky top-0 z-50">
+    <div className="font-Inter bg-white px-4 py-2 md:px-10 md:py-7 flex gap-6 xl:gap-20 w-full h-[80px] items-center justify-between sticky top-0 z-50">
       {/*Page Title */}
       <span>
         <h1 className="w-fit text-wrap xl:text-nowrap font-bold text-[16px] leading-[150%] font-inter">{title}</h1>
