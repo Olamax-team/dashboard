@@ -15,6 +15,10 @@ import TransHistory from './components/pages/dash-board/transHistory/transHistor
 import UserInformation from './components/pages/dash-board/userInformation/userInformation.tsx'
 import UserPreview from './components/pages/dash-board/userInformation/userDetailsVerified.tsx'
 import UnVerifiedUserDetails from './components/pages/dash-board/userInformation/UserDetailsUnverified.tsx'
+import ManageRerrals from './components/pages/dash-board/manageReferrals/manageRefferrals.tsx'
+import BlockUser from './components/pages/dash-board/blockUser/blockUser.tsx'
+import Unverified from './components/pages/dash-board/blockUser/unverified.tsx'
+import News from './components/pages/dash-board/news/news.tsx'
 
 
 const router = createBrowserRouter([
@@ -57,7 +61,27 @@ const router = createBrowserRouter([
       {
         path:"/UserDetailsUnverified",
         element: <DashboardLayout><UnVerifiedUserDetails/> </DashboardLayout>  
-      }
+      },
+      {
+        path:"/dashboard/manage-referrals",
+        element:<DashboardLayout><ManageRerrals/></DashboardLayout>
+      },
+
+      {
+        path:"/dashboard/block-unblock",
+        element:<DashboardLayout><BlockUser /></DashboardLayout>
+      },
+      {
+        path:"/Unverified",
+        element: <DashboardLayout><Unverified/> </DashboardLayout>  
+      },
+
+      {
+        path:"/dashboard/news",
+        element:<DashboardLayout><News /></DashboardLayout>
+      },
+      
+     
     ]
   }
 ]); 
