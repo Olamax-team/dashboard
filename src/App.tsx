@@ -4,8 +4,10 @@ import { loginSchema, loginValues } from "./lib/validations"
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Form, FormControl, FormField, FormItem, FormMessage } from "./components/ui/form";
 import { Input } from "./components/ui/input";
+import { useNavigate } from "react-router-dom";
 
 function App() {
+
   const form = useForm<loginValues>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -14,9 +16,12 @@ function App() {
     }
   });
 
+  const navigation = useNavigate();
+
   const onSubmit = (value:loginValues) => {
-    console.log(value)
-  }
+    console.log(value);
+    navigation('/dashboard')
+  };
 
   return (
     <AuthLayout>
