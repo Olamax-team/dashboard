@@ -172,7 +172,7 @@ export default function userDetailsVerified() {
 
           <div className="space-y-4">
             {/* If there is any specific data here, you can map through it */}
-            <div className="border rounded-lg overflow-hidden">
+            <div className="border  overflow-hidden">
               <div>
                 <img src={idcard} alt="User ID" />
               </div>

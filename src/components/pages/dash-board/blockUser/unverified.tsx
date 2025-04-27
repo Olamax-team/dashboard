@@ -8,7 +8,7 @@ import idcard from '../../../../assets/idCard.svg'
 
 
 
-export default function UserDetailsUnverified() {
+export default function Unverified() {
 
   const navigate = useNavigate()
 
@@ -35,7 +35,7 @@ export default function UserDetailsUnverified() {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <PageHeader title="User Information" />
+      <PageHeader title="Blocked User" />
 
       {/* User Profile Header */}
       <div className="container px-4 py-4 bg-white">
@@ -54,11 +54,10 @@ export default function UserDetailsUnverified() {
             </button>
           </div>
 
-          <div className="flex gap-3">
+          <div className="px-4">
             <Button variant="outline" className="text-[#E41D03]  text-[13px] border-[#E41D03] hover:bg-red-50 font-medium">
-              Reject
+              Delete
             </Button>
-            <Button className="font-medium  text-[13px] leading-[150%] bg-[#039AE4]  text-[#FFFFFF]" >Approve</Button>
           </div>
         </div>
       </div>
