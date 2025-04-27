@@ -40,7 +40,8 @@ const Charges = () => {
 
 
   return (
-    <div className='flex w-1/2 items-start justify-start'>
+    <div className='flex-1 w-1/2 items-start justify-start'>
+      <h1 className="text-lg font-semibold mb-4">Charges in Crypto i.e 0.00001</h1>
       <div className="w-full bg-white rounded-sm h-auto mx-auto space-y-6 px-[26px] py-[30px]">
         {currencies.map((currency) => (
           <div key={currency} className="space-y-2 pb-4">
