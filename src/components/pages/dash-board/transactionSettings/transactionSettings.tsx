@@ -10,6 +10,9 @@ import SellRate from "./sellRate";
 import OrderQuantity from "./orderQuantity";
 import MOQTransactions from "./MOQTransactions";
 import { useState } from "react";
+import Toggle from "./toggle";
+import AvailableCoin from "./availableCoin";
+import Charges from "./cryptoCharges";
 
 const TransactionSettings = () => {
     const [coinBonus, setCoinBonus] = useState("0.15");
@@ -67,7 +70,7 @@ const TransactionSettings = () => {
                                 disabled={!editCoinBonus}
                                 onChange={(e) => setCoinBonus( e.target.value)}
                                 type="text"
-                                placeholder="0.15%"
+                                placeholder={`${coinBonus}%`}
                                 className="w-2/5 font-normal xl:text-[16px] text-[12px] leading-[120%] xl:leading-[150%] border-gray-100 border-2 rounded-sm h-[40px] shadow-none px-4 py-2.5 focus-visible:ring-0"
                             />
                             <div className="flex gap-4">
@@ -92,7 +95,7 @@ const TransactionSettings = () => {
                                 disabled={!editEscrowCharges}
                                 onChange={(e) => setEscrowCharges(e.target.value)} 
                                 type="text"
-                                placeholder="0.15%"
+                                placeholder={`${escrowCharges}%`}
                                 className="w-2/5 font-normal xl:text-[16px] text-[12px] leading-[120%] xl:leading-[150%] border-gray-100 rounded-sm h-[40px] shadow-none px-4 py-2.5 focus-visible:ring-0"
                             />
                             <div className="flex gap-4">
@@ -124,11 +127,11 @@ const TransactionSettings = () => {
              {/* Minimum Order Quantity Transactions*/}
              <MOQTransactions/>
              {/* Toggle*/}
-             <div>Toggle</div>
+             <Toggle/>
              {/* Available coins*/}
-             <div>Available Coins</div>
+             <AvailableCoin/>
              {/* Cryto Rates Changes*/}
-             <div>Changes in Crypto i.e 0.000001</div>
+             <Charges/>
         </div>
       </section>
     </DashboardLayout>
