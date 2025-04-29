@@ -12,15 +12,17 @@ interface BlogPost {
   date: string;
   author: string;
   thumbnail: string;
+  link?: string
 }
 
 export default function ManageNews() {
   const [selectedPostId, setSelectedPostId] = useState<number | null>(null);
 
-  const blogPosts: BlogPost[] = [
+  const [blogPosts, setBlogPosts] = useState <BlogPost[]> ([
     {
       id: 1,
       title: "Olamax Launches New Escrow Service for Secure Transactions",
+      link: "www.facebook.com",
       description:
         "To enhance trust in peer-to-peer transactions, Olamax now offers a fully integrated escrow service, ensuring that funds are securely held until both parties complete their exchange, boosting security for users.",
       date: "April 12, 2024",
@@ -30,6 +32,8 @@ export default function ManageNews() {
     {
       id: 2,
       title: "Olamax Now Supports Over 20 Cryptocurrencies, Expanding Your Options",
+      link: "www.facebook.com",
+
       description:
         "Olamax is excited to announce the addition of several new digital assets, providing users with even more options for converting cryptocurrencies into Naira and making cross-border payments easier than ever.",
       date: "April 12, 2024",
@@ -39,17 +43,24 @@ export default function ManageNews() {
     {
       id: 3,
       title: "Olamax Partners with Top Nigerian Banks to Streamline Crypto-to-Naira Conversions",
+      link: "www.facebook.com",
+
       description:
         "Through new partnerships with leading Nigerian banks, Olamax has enhanced its crypto conversion process, enabling faster settlements and ensuring a more seamless experience for users.",
       date: "April 12, 2024",
       author: "Admin 3",
       thumbnail: rectangle3,
     },
-  ];
+  ]);
 
   // Fetch the selected post data by ID
      const selectedPost = blogPosts.find((post) => post.id === selectedPostId);
-
+      const handleSave = (updatepost: BlogPost) =>{
+        const updatedPosts = blogPosts.map((post) =>
+          post.id === updatepost.id ? updatepost : post
+        );
+        setBlogPosts(updatedPosts);
+      };
   return (
     <section className="w-full py-12 bg-white">
       <div className="container mx-auto px-4">
@@ -69,6 +80,7 @@ export default function ManageNews() {
         <AddNews
           setShowAddNews={() => setSelectedPostId(null)} 
           post={selectedPost} 
+          handleSave={handleSave}
         />
       )}
     </section>

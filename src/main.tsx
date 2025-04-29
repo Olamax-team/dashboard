@@ -19,6 +19,8 @@ import ManageRerrals from './components/pages/dash-board/manageReferrals/manageR
 import BlockUser from './components/pages/dash-board/blockUser/blockUser.tsx'
 import Unverified from './components/pages/dash-board/blockUser/unverified.tsx'
 import News from './components/pages/dash-board/news/news.tsx'
+import Announcement from './components/pages/dash-board/announcement/announcement.tsx'
+import SiteAnalysis from './components/pages/dash-board/siteAnalytics/siteAnalysis.tsx'
 
 
 const router = createBrowserRouter([
@@ -81,6 +83,14 @@ const router = createBrowserRouter([
       {
         path:"/dashboard/news",
         element:<DashboardLayout><News /></DashboardLayout>
+      },
+      {
+        path:"/dashboard/announcements",
+        element:<DashboardLayout><Announcement /></DashboardLayout>
+      },
+      {
+        path:"/dashboard/site-analysis",
+        element:<DashboardLayout><SiteAnalysis /></DashboardLayout>
       },
     ]
   }

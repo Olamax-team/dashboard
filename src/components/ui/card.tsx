@@ -26,3 +26,29 @@ export const CardContent: React.FC<CardContentProps> = ({ className, children })
     </div>
   );
 };
+
+interface CardHeaderProps {
+  className?: string;
+  children: React.ReactNode;
+}
+
+export const CardHeader: React.FC<CardHeaderProps> = ({ className, children }) => {
+  return (
+    <div className={cn("p-4", className)}>
+      {children}
+    </div>
+  );
+};
+
+interface CardTitleProps {
+  className?: string;
+  children: React.ReactNode;
+}
+
+export const CardTitle: React.FC<CardTitleProps> = ({ className, children }) => {
+  return (
+    <div className={cn("p-4", className)}>
+      {children}
+    </div>
+  );
+};
