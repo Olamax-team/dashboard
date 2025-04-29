@@ -21,7 +21,7 @@ function App() {
   const onSubmit = (value:loginValues) => {
     console.log(value);
     navigation('/dashboard')
-  };
+  }; 
 
   return (
     <AuthLayout>
