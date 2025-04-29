@@ -4,12 +4,25 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 
+type BlogPost = {
+  id: number;
+  description: string;
+  title: string;
+  date: string;
+  author: string;
+  thumbnail: string;
+  link?: string;
+}
+
+
 type AddNewsProps = {
   setShowAddNews: (isOpen: boolean) => void;
-  post: { id: number; title: string; description: string; date: string; author: string; thumbnail: string };
+  post: BlogPost;
+  handleSave: (updatepost:BlogPost) => void;
+  // post: { id: number; title: string; description: string; date: string; author: string; thumbnail: string };
 };
 
-export default function AddNews({ setShowAddNews, post }: AddNewsProps) {
+export default function AddNews({ setShowAddNews, post,handleSave }: AddNewsProps) {
   const [title, setTitle] = useState(post.title);
   const [link, setLink] = useState("");
   const [description, setDescription] = useState(post.description);
@@ -28,7 +41,15 @@ export default function AddNews({ setShowAddNews, post }: AddNewsProps) {
   };
 
   const handleSubmit = () => {
-    console.log({ title, link, description, image });
+    const updatedPost ={
+      ...post,
+       title: title,
+       description: description,
+       thumbnail: image,
+       link: link
+    }
+    // console.log({ title, link, description, image });
+    handleSave(updatedPost);
     setShowAddNews(false); 
   };
 
@@ -56,7 +77,7 @@ export default function AddNews({ setShowAddNews, post }: AddNewsProps) {
           <img
             src={image} 
             alt="Financial chart with coins"
-            className="object-cover"
+            className="object-cover w-[71px] h-[71px] "
           />
           <label
             htmlFor="image-upload"

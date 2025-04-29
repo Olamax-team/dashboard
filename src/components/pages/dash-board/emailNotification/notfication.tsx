@@ -110,13 +110,13 @@ export default function NotificationsPanel ({ setEmailIsOpen }: NotificationsPan
 
   return (
     <div className="fixed inset-0 flex items-end justify-end bg-black/50" onClick={() => setEmailIsOpen(false)}>
-      <div className="w-[350px] h-screen lg:w-[500px] bg-white rounded-lg shadow-lg overflow-hidden" onClick={(e) => e.stopPropagation()}>
+      <div className="w-[350px] h-screen lg:w-[500px] bg-white rounded-lg shadow-lg pt-10 overflow-hidden" onClick={(e) => e.stopPropagation()}>
        
         <div className="flex items-center justify-between p-4 border-b">
           {/* Tabs: Notifications & Messages */}
           <div className="flex items-center gap-10">
             <button
-              className={`py-4 px-2 text-[20px] lg:text-[24px] rounded-md font-bold ${
+              className={`py-3 px-2 text-[18px] lg:text-[20px] rounded-md font-bold ${
                 activeTab === "notifications" ? "text-white bg-[#039AE4] " : "text-[#121826]"
               }`}
               onClick={() => setActiveTab("notifications")}
@@ -124,7 +124,7 @@ export default function NotificationsPanel ({ setEmailIsOpen }: NotificationsPan
               Notifications
             </button>
             <button
-              className={`py-4 px-2 text-[20px] lg:text-[24px] font-bold rounded-md ${
+              className={`py-3 px-2 text-[18px] lg:text-[20px] font-bold rounded-md ${
                 activeTab === "messages" ? "text-white bg-[#039AE4] " : "text-[#121826]"
               }`}
               onClick={() => setActiveTab("messages")}
