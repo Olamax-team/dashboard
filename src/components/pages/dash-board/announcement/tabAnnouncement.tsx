@@ -1,15 +1,10 @@
 import React, { useState } from "react";
-import {
-  HiFilter,
-  HiOutlineSortDescending,
-  HiOutlineSortAscending,
-  HiDownload,
-} from "react-icons/hi";
+import { HiFilter, HiOutlineSortDescending, HiOutlineSortAscending, HiDownload } from "react-icons/hi";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import ManageNews from "./manageNews";
+import EdithAnnouncement from "./edithAnnouncement";
 
-const TabNews = () => {
+const TabAnnouncement = () => {
   const [sortOrder, setSortOrder] = useState<"ascending" | "descending">("descending");
 
   const toggleSortOrder = () => {
@@ -26,7 +21,7 @@ const TabNews = () => {
               " text-[#121826]"
             )}
           >
-            Manage News Media Content
+            Upload & Edit Announcement        
           </h1>
         </div>
 
@@ -34,18 +29,14 @@ const TabNews = () => {
           <div className="text-[#000000] gap-2 flex items-center">
             {sortOrder === "descending" && (
               <div className="flex items-center justify-center cursor-pointer" onClick={toggleSortOrder}>
-                <h2 className="font-normal text-[12px] xl:text-[16px] leading-[150%]">
-                  Sort By Descending
-                </h2>
+                <h2 className="font-normal text-[12px] xl:text-[16px] leading-[150%]">Sort By Descending</h2>
                 <HiOutlineSortDescending className="size-6" />
               </div>
             )}
 
             {sortOrder === "ascending" && (
               <div className="flex items-center gap-2 justify-center cursor-pointer" onClick={toggleSortOrder}>
-                <h2 className="font-normal text-[12px] xl:text-[16px] leading-[150%]">
-                  Sort By Ascending
-                </h2>
+                <h2 className="font-normal text-[12px] xl:text-[16px] leading-[150%]">Sort By Ascending</h2>
                 <HiOutlineSortAscending className="size-6" />
               </div>
             )}
@@ -64,10 +55,10 @@ const TabNews = () => {
       </div>
 
       <div>
-        <ManageNews />
+        <EdithAnnouncement />
       </div>
     </React.Fragment>
   );
 };
 
-export default TabNews;
+export default TabAnnouncement;

@@ -8,7 +8,7 @@ type OTPVerificationProps = {
 
 export default function OTPVerification({setShowOTP}: OTPVerificationProps) {
 
-  const [otp, setOtp] = useState<string[]>(["2", "1", "0", "5", "5", "9"]);
+  const [otp, setOtp] = useState<string[]>(Array(6).fill(""));
   const [timeLeft, setTimeLeft] = useState(32);
 
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
@@ -69,14 +69,17 @@ export default function OTPVerification({setShowOTP}: OTPVerificationProps) {
       </div>
 
       <div className="flex justify-between mb-8">
-        {[0, 1, 2, 3, 4, 5].map((index) => (
+        {otp.map((digit, index) => (
           <div key={index} className="w-14 h-14">
             <input
-              ref={(el) => { inputRefs.current[index] = el }}
+              ref={(el) => {inputRefs.current[index] = el }}
               type="text"
               inputMode="numeric"
+              autoComplete="one-time-code"
               maxLength={1}
-              value={otp[index] || ""}
+              pattern="\d{1}"
+              value={digit}
+              // value={otp[index] || ""}
               onChange={(e) => handleChange(e, index)}
               onKeyDown={(e) => handleKeyDown(e, index)}
               onPaste={index === 0 ? handlePaste : undefined}

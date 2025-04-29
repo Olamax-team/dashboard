@@ -48,14 +48,14 @@ const TabBlock = () => {
     <React.Fragment>
     <div className="flex items-center justify-between  h-auto  mb-5 w-full flex-wrap">
       <div className="flex items-center justify-center  xl:mt-0 gap-5">
-      <Button
+      <h1
             className={cn(
               "relative px-4 py-2 rounded-sm text-[12px] xl:text-[16px] font-medium h-[40px] transition-colors cursor-pointer",
-              "bg-[#039AE4] text-white"
+              " text-[#121836]"
             )}
           >
             Manage Blocked User
-          </Button>
+          </h1>
       </div>
 
       <div className="flex items-center justify-center ml-3 lg:ml-0 mt-5 lg:mt-0 gap-5">
