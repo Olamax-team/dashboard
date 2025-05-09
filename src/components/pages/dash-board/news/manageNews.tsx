@@ -12,55 +12,57 @@ interface BlogPost {
   date: string;
   author: string;
   thumbnail: string;
-  link?: string
+  link?: string;
 }
 
 export default function ManageNews() {
   const [selectedPostId, setSelectedPostId] = useState<number | null>(null);
 
-  const [blogPosts, setBlogPosts] = useState <BlogPost[]> ([
+  const [blogPosts, setBlogPosts] = useState<BlogPost[]>([
     {
       id: 1,
       title: "Olamax Launches New Escrow Service for Secure Transactions",
       link: "www.facebook.com",
       description:
         "To enhance trust in peer-to-peer transactions, Olamax now offers a fully integrated escrow service, ensuring that funds are securely held until both parties complete their exchange, boosting security for users.",
-      date: "April 12, 2024",
+      date: new Date().toLocaleDateString(),
       author: "Admin 3",
       thumbnail: rectangle1,
     },
     {
       id: 2,
-      title: "Olamax Now Supports Over 20 Cryptocurrencies, Expanding Your Options",
+      title:
+        "Olamax Now Supports Over 20 Cryptocurrencies, Expanding Your Options",
       link: "www.facebook.com",
 
       description:
         "Olamax is excited to announce the addition of several new digital assets, providing users with even more options for converting cryptocurrencies into Naira and making cross-border payments easier than ever.",
-      date: "April 12, 2024",
+      date: new Date().toLocaleDateString(),
       author: "Admin 3",
       thumbnail: rectangle2,
     },
     {
       id: 3,
-      title: "Olamax Partners with Top Nigerian Banks to Streamline Crypto-to-Naira Conversions",
+      title:
+        "Olamax Partners with Top Nigerian Banks to Streamline Crypto-to-Naira Conversions",
       link: "www.facebook.com",
 
       description:
         "Through new partnerships with leading Nigerian banks, Olamax has enhanced its crypto conversion process, enabling faster settlements and ensuring a more seamless experience for users.",
-      date: "April 12, 2024",
+      date: new Date().toLocaleDateString(),
       author: "Admin 3",
       thumbnail: rectangle3,
     },
   ]);
 
   // Fetch the selected post data by ID
-     const selectedPost = blogPosts.find((post) => post.id === selectedPostId);
-      const handleSave = (updatepost: BlogPost) =>{
-        const updatedPosts = blogPosts.map((post) =>
-          post.id === updatepost.id ? updatepost : post
-        );
-        setBlogPosts(updatedPosts);
-      };
+  const selectedPost = blogPosts.find((post) => post.id === selectedPostId);
+  const handleSave = (updatepost: BlogPost) => {
+    const updatedPosts = blogPosts.map((post) =>
+      post.id === updatepost.id ? updatepost : post
+    );
+    setBlogPosts(updatedPosts);
+  };
   return (
     <section className="w-full py-12 bg-white">
       <div className="container mx-auto px-4">
@@ -69,17 +71,17 @@ export default function ManageNews() {
             <BlogCard
               key={post.id}
               post={post}
-              setSelectedPostId={setSelectedPostId} 
+              setSelectedPostId={setSelectedPostId}
             />
           ))}
         </div>
       </div>
 
       {/* Show the AddNews modal only if a post ID is selected */}
-      {selectedPost && ( 
+      {selectedPost && (
         <AddNews
-          setShowAddNews={() => setSelectedPostId(null)} 
-          post={selectedPost} 
+          setShowAddNews={() => setSelectedPostId(null)}
+          post={selectedPost}
           handleSave={handleSave}
         />
       )}
@@ -111,19 +113,27 @@ function BlogCard({
             <p>
               <span
                 className="text-[#039AE4] font-medium text-[14px] leading-[150%] cursor-pointer hover:underline"
-                onClick={() => setSelectedPostId(post.id)} 
+                onClick={() => setSelectedPostId(post.id)}
               >
                 Edit
               </span>
             </p>
-            <span className="text-[#121826] font-semibold leading-[150%] text-[14px]">{post.date}</span>
+            <span className="text-[#121826] font-semibold leading-[150%] text-[14px]">
+              {post.date}
+            </span>
           </div>
-          <p className="text-[#121826] font-semibold leading-[150%] text-[14px]">Posted by {post.author}</p>
+          <p className="text-[#121826] font-semibold leading-[150%] text-[14px]">
+            Posted by {post.author}
+          </p>
         </div>
       </div>
       <CardContent className="p-4">
-        <h3 className="text-[#121826] font-bold leading-[150%] text-[16px]">{post.title}</h3>
-        <p className="text-[#121826] font-normal leading-[150%] text-[14px]">{post.description}</p>
+        <h3 className="text-[#121826] font-bold leading-[150%] text-[16px]">
+          {post.title}
+        </h3>
+        <p className="text-[#121826] font-normal leading-[150%] text-[14px]">
+          {post.description}
+        </p>
       </CardContent>
     </Card>
   );

@@ -21,6 +21,9 @@ import Unverified from './components/pages/dash-board/blockUser/unverified.tsx'
 import News from './components/pages/dash-board/news/news.tsx'
 import Announcement from './components/pages/dash-board/announcement/announcement.tsx'
 import SiteAnalysis from './components/pages/dash-board/siteAnalytics/siteAnalysis.tsx'
+import Review from './components/pages/dash-board/review/review.tsx'
+import Advert from './components/pages/dash-board/advert/advert.tsx'
+import MangeAdmin from './components/pages/dash-board/ManageAdmin/mangeAdmin.tsx'
 
 
 const router = createBrowserRouter([
@@ -91,6 +94,18 @@ const router = createBrowserRouter([
       {
         path:"/dashboard/site-analysis",
         element:<DashboardLayout><SiteAnalysis /></DashboardLayout>
+      },
+      {
+        path:"/dashboard/reviews",
+        element:<DashboardLayout><Review /></DashboardLayout>
+      },
+      {
+        path:"/dashboard/adverts",
+        element:<DashboardLayout><Advert /></DashboardLayout>
+      },
+      {
+        path:"/dashboard/manage-admins",
+        element:<DashboardLayout><MangeAdmin /></DashboardLayout>
       },
     ]
   }
