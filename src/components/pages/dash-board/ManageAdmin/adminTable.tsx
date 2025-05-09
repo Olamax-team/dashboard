@@ -1,3 +1,4 @@
+import { Switch } from "@/components/ui/switch";
 import {
   Table,
   TableBody,
@@ -6,49 +7,84 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
-type verifiedItem = {
-  user: string;
-  uid: string;
+type transactions = {
+  id: number;
+  name: string;
   email: string;
-  phoneNumber: string;
-  referralCode: string;
-  verificationmethod: string;
-  Status: "Verified" | "UnVerified";
-  reason: string;
-  action: "Unblock" | "Block";
+  phoneNo: string;
+  role: string;
+  status: "Active" | "Inactive";
+  roleDescription: string;
 };
 
-const ManageBlockedUser = ({
+const AdminTable = ({
   visibleFilter,
 }: {
   visibleFilter: Record<string, boolean>;
 }) => {
-  const navigate = useNavigate();
-
-  const transaction: verifiedItem[] = [
+  const [transaction, setUsers] = useState<transactions[]>([
     {
-      user: "Mason Mount",
-      uid: "22110976",
+      id: 1,
+      name: "Mason Mount",
       email: "Masonmount@gmail.com",
-      phoneNumber: "09134736322",
-      referralCode: "-",
-      verificationmethod: "-",
-      Status: "Verified",
-      reason: "Malicious Transaction",
-      action: "Unblock",
+      phoneNo: "09134736322",
+      role: "Super Admin",
+      status: "Active",
+      roleDescription: "Full Access",
     },
-  ];
+    {
+      id: 2,
+      name: "Mason Mount",
+      email: "Masonmount@gmail.com",
+      phoneNo: "09134736322",
+      role: "Regular Staff",
+      status: "Active",
+      roleDescription: "-",
+    },
+    {
+      id: 3,
+      name: "Mason Mount",
+      email: "Masonmount@gmail.com",
+      phoneNo: "09134736322",
+      role: "Regular Staff",
+      status: "Active",
+      roleDescription: "-",
+    },
+    {
+      id: 4,
+      name: "Mason Mount",
+      email: "Masonmount@gmail.com",
+      phoneNo: "09134736322",
+      role: "Regular Staff",
+      status: "Inactive",
+      roleDescription: "-",
+    },
+  ]);
+
+  const toggleUserStatus = (userId: number) => {
+    setUsers(
+      transaction.map((transactions) => {
+        if (transactions.id === userId) {
+          return {
+            ...transactions,
+            status: transactions.status === "Active" ? "Inactive" : "Active",
+          };
+        }
+        return transactions;
+      })
+    );
+  };
 
   return (
     <div className="border-2 border-gray-300">
       <Table className="border-collapse">
         <TableHeader className="rounded-lg h-[60px] [&_tr]:border-b">
           <TableRow className="bg-[#ffffff] hover:bg-white border-b font-bold leading-[150%] text-[14px] text-[#121826]">
-            {visibleFilter.user && (
+            {visibleFilter.name && (
               <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
-                User
+                Name
               </TableHead>
             )}
             {visibleFilter.email && (
@@ -56,29 +92,24 @@ const ManageBlockedUser = ({
                 Email
               </TableHead>
             )}
-            {visibleFilter.phoneNumber && (
+            {visibleFilter.phoneNo && (
               <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
                 Phone Number
               </TableHead>
             )}
-            {visibleFilter.referralCode && (
+            {visibleFilter.role && (
               <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
-                Referral Code
+                Role
               </TableHead>
             )}
-            {visibleFilter.verificationmethod && (
-              <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
-                Verification Method
-              </TableHead>
-            )}
-            {visibleFilter.Status && (
+            {visibleFilter.status && (
               <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
                 Status
               </TableHead>
             )}
-            {visibleFilter.reason && (
+            {visibleFilter.roleDescription && (
               <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
-                Reason
+                Role Description
               </TableHead>
             )}
             {visibleFilter.action && (
@@ -90,16 +121,15 @@ const ManageBlockedUser = ({
         </TableHeader>
 
         <TableBody>
-          {transaction.map((transaction, index) => (
+          {transaction.map((transaction) => (
             <TableRow
-              key={index}
+              key={transaction.id}
               className={`odd:bg-[#f3f3f3] cursor-pointer even:bg-[#e0e0e0] h-[50px] hover:bg-[#d1d1d1] text-[#121826] font-semibold text-[12px] leading-[150%] ml-5`}
             >
-              {visibleFilter.user && (
+              {visibleFilter.name && (
                 <TableCell className="py-2 text-center border-r border-gray-300">
-                  <div>{transaction.user}</div>
                   <div className="text-xs text-[#121826]">
-                    UID {transaction.uid}
+                    {transaction.name}
                   </div>
                 </TableCell>
               )}
@@ -109,58 +139,35 @@ const ManageBlockedUser = ({
                   {transaction.email}
                 </TableCell>
               )}
-              {visibleFilter.phoneNumber && (
+              {visibleFilter.phoneNo && (
                 <TableCell className="py-2 text-center border-r border-gray-300">
-                  {transaction.phoneNumber}
+                  {transaction.phoneNo}
                 </TableCell>
               )}
-              {visibleFilter.referralCode && (
+              {visibleFilter.role && (
                 <TableCell className="py-2 text-center border-r border-gray-300">
-                  {transaction.referralCode}
+                  {transaction.role}
                 </TableCell>
               )}
-              {visibleFilter.verificationmethod && (
+              {visibleFilter.status && (
                 <TableCell className="py-2 text-center border-r border-gray-300">
-                  {transaction.verificationmethod}
-                </TableCell>
-              )}
-
-              {visibleFilter.Status && (
-                <TableCell className="py-2 text-center border-r border-gray-300">
-                  <span
-                    className={`px-2 py-1 rounded-sm text-xs font-medium ${
-                      transaction.Status === "Verified"
-                        ? "text-[#121826]"
-                        : transaction.Status === "UnVerified"
-                        ? "text-red-700"
-                        : "text-yellow-700"
-                    }`}
-                  >
-                    {transaction.Status}
-                  </span>
+                  {transaction.status}
                 </TableCell>
               )}
 
-              {visibleFilter.reason && (
+              {visibleFilter.roleDescription && (
                 <TableCell className="py-2 text-center border-r border-gray-300">
-                  {transaction.reason}
+                  {transaction.roleDescription}
                 </TableCell>
               )}
 
               {visibleFilter.action && (
                 <TableCell className="text-center py-2">
-                  <span
-                    onClick={() => navigate(`/Unverified`)}
-                    className={`px-2 py-1 rounded-sm text-xs font-medium ${
-                      transaction.action === "Unblock"
-                        ? "text-[#0073AD]"
-                        : transaction.action === "Block"
-                        ? "text-red-700"
-                        : "text-yellow-700"
-                    }`}
-                  >
-                    {transaction.action}
-                  </span>
+                  <Switch
+                    checked={transaction.status === "Active"}
+                    onCheckedChange={() => toggleUserStatus(transaction.id)}
+                    className="data-[state=checked]:bg-[#1FAF38] data-[state=unchecked]:bg-[#c3f0ca]"
+                  />
                 </TableCell>
               )}
             </TableRow>
@@ -171,4 +178,4 @@ const ManageBlockedUser = ({
   );
 };
 
-export default ManageBlockedUser;
+export default AdminTable;

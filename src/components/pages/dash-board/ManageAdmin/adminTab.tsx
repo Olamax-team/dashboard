@@ -5,45 +5,25 @@ import {
   HiOutlineSortAscending,
   HiDownload,
 } from "react-icons/hi";
-import Buying from "./buying";
-import Selling from "./selling";
-import TopUp from "./topUp";
-import Bills from "./bills";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import AdminTable from "./AdminTable";
 
-const PendingButton = () => {
-  const [activeTab, setActiveTab] = useState("buying");
+const AdminTab = () => {
   const [sortOrder, setSortOrder] = useState<"ascending" | "descending">(
     "descending"
   );
   const [isDropdownOpen, setDropdownOpen] = useState(false);
 
-  const [visibleColumns, setVisibleColumns] = useState({
-    user: true,
-    coin: true,
-    blockchain: true,
-    amount: true,
-    coinPriceUsd: true,
-    dollarRate: true,
-    networkFees: true,
-    nairaAmount: true,
-    networkFeesRepeat: true,
-    walletAddress: true,
-    steem: true,
-    method: true,
-    paymentStatus: true,
-    referrer: true,
-    Timestamp: true,
-    finish: true,
+  const [visibleFilter, setVisibleFilter] = useState({
+    name: true,
+    email: true,
+    phoneNo: true,
+    role: true,
+    status: true,
+    roleDescription: true,
+    action: true,
   });
-
-  const tabs = [
-    { id: "buying", label: "Buying", count: 0 },
-    { id: "selling", label: "Selling", count: 4 },
-    { id: "top-up", label: "Top-Up", count: 2 },
-    { id: "bills", label: "Bills", count: 2 },
-  ];
 
   const toggleDropdown = () => {
     setDropdownOpen((prev) => !prev);
@@ -54,61 +34,35 @@ const PendingButton = () => {
   };
 
   const toggleColumnVisibility = (column: string) => {
-    setVisibleColumns((prev) => ({
+    setVisibleFilter((prev) => ({
       ...prev,
-      [column as keyof typeof visibleColumns]:
-        !prev[column as keyof typeof visibleColumns],
+      [column as keyof typeof visibleFilter]:
+        !prev[column as keyof typeof visibleFilter],
     }));
-  };
-
-  const renderComponent = () => {
-    switch (activeTab) {
-      case "buying":
-        return <Buying visibleColumns={visibleColumns} />;
-      case "selling":
-        return <Selling visibleColumns={visibleColumns} />;
-      case "top-up":
-        return <TopUp />;
-      case "bills":
-        return <Bills />;
-      default:
-        return <div>Default Content</div>;
-    }
   };
 
   return (
     <React.Fragment>
-      <div className="flex justify-between font-Inter flex-wrap space-y-4   bg-white">
-        <div className="flex items-center lg:gap-5  gap-2 justify-center bg-white px-5 py-1 w-fit lg:mt-3  lg:px-0  lg:py-0 ">
-          {tabs.map((tab) => (
-            <Button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={cn(
-                "relative px-6 py-4 rounded-sm text-[12px] xl:text-[16px] font-medium h-[40px] transition-colors cursor-pointer",
-                activeTab === tab.id
-                  ? "bg-[#039AE4] text-white"
-                  : "bg-transparent text-[#121826] cursor-pointer hover:bg-gray-100"
-              )}
-            >
-              {tab.label}
-              {tab.count > 0 && (
-                <span className="absolute -top-1 -right-1 flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-[#039AE4] rounded-full">
-                  {tab.count}
-                </span>
-              )}
-            </Button>
-          ))}
+      <div className="flex items-center justify-between  h-auto  mb-5 w-full flex-wrap">
+        <div className="flex items-center justify-center  xl:mt-0 gap-5">
+          <h1
+            className={cn(
+              "relative px-4 py-2 rounded-sm text-[12px] xl:text-[16px] font-medium h-[40px] transition-colors cursor-pointer",
+              " text-[#121836]"
+            )}
+          >
+            Manage Admin
+          </h1>
         </div>
 
-        <div className="flex items-center justify-center lg:px-0  lg:py-0 px-5 py-1 w-fit bg-white  ">
-          <div className="text-[#000000] flex items-center ">
+        <div className="flex items-center justify-center ml-3 lg:ml-0 mt-5 lg:mt-0 gap-5">
+          <div className="text-[#000000] gap-2 flex items-center">
             {sortOrder === "descending" && (
               <div
-                className="flex items-center justify-center gap-2 cursor-pointer"
+                className="flex items-center justify-center cursor-pointer"
                 onClick={toggleSortOrder}
               >
-                <h2 className="font-normal text-[13px] xl:text-[16px] leading-[150%]">
+                <h2 className="font-normal text-[12px] xl:text-[16px] leading-[150%]">
                   Sort By Descending
                 </h2>
                 <HiOutlineSortDescending className="size-6" />
@@ -120,7 +74,7 @@ const PendingButton = () => {
                 className="flex items-center gap-2 justify-center cursor-pointer"
                 onClick={toggleSortOrder}
               >
-                <h2 className="font-normal text-[13px] xl:text-[16px] leading-[150%]">
+                <h2 className="font-normal text-[12px] xl:text-[16px] leading-[150%]">
                   Sort By Ascending
                 </h2>
                 <HiOutlineSortAscending className="size-6" />
@@ -142,13 +96,13 @@ const PendingButton = () => {
             {isDropdownOpen && (
               <div className="absolute top-full right-0 mt-2 w-48 bg-white shadow-md rounded-md p-2 z-50">
                 <p className="text-sm font-semibold mb-2">Filter by:</p>
-                {Object.keys(visibleColumns).map((column) => (
+                {Object.keys(visibleFilter).map((column) => (
                   <div key={column} className="flex items-center">
                     <input
                       type="checkbox"
                       id={column}
                       checked={
-                        visibleColumns[column as keyof typeof visibleColumns]
+                        visibleFilter[column as keyof typeof visibleFilter]
                       }
                       onChange={() => toggleColumnVisibility(column)}
                     />
@@ -171,9 +125,11 @@ const PendingButton = () => {
           </Button>
         </div>
       </div>
-      <div>{renderComponent()}</div>
+      <div>
+        <AdminTable visibleFilter={visibleFilter} />
+      </div>
     </React.Fragment>
   );
 };
 
-export default PendingButton;
+export default AdminTab;

@@ -1,14 +1,15 @@
-import { Search, ChevronDown } from 'lucide-react';
-import rectangle from'../../../assets/Rectangle 4871.svg';
-import { HiMail,  HiX, HiLogout } from "react-icons/hi";
-import { IoIosSettings } from "react-icons/io";
-import PendingButton from './pending/pendingButton';
-import { useState } from 'react';
-import NotificationsPanel from './emailNotification/notfication';
+// import { Search, ChevronDown } from "lucide-react";
+// import rectangle from "../../../assets/Rectangle 4871.svg";
+// import { HiMail, HiX, HiLogout } from "react-icons/hi";
+// import { IoIosSettings } from "react-icons/io";
+import PendingButton from "./pending/pendingButton";
+// import { useState } from "react";
+// import NotificationsPanel from "./emailNotification/notfication";
+import PageHeader from "./escrow/pageHeader";
 
 const DashboardHome = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [emailIsOpen, setEmailIsOpen] = useState(false)
+  // const [isMenuOpen, setIsMenuOpen] = useState(false);
+  // const [emailIsOpen, setEmailIsOpen] = useState(false);
 
   const exchangeType = [
     { label: "BTC", amount: "$87375" },
@@ -24,7 +25,7 @@ const DashboardHome = () => {
 
   return (
     <div>
-      <div className="bg-[#039AE4] lg:flex items-center justify-center hidden w-full h-[50px] flex-wrap"> 
+      <div className="bg-[#039AE4] lg:flex items-center justify-center hidden w-full h-[50px] flex-wrap">
         {exchangeType.map((exchange, index) => (
           <div key={index} className="flex items-center space-x-2">
             <p className="flex items-center justify-between gap-1 w-full">
@@ -42,7 +43,7 @@ const DashboardHome = () => {
         ))}
       </div>
 
-      <div className="font-Inter bg-white px-4 py-2 md:px-10 md:py-7 flex gap-6 xl:gap-24 w-full h-[80px] items-center justify-between sticky top-0 z-30">
+      {/* <div className="font-Inter bg-white px-4 py-2 md:px-10 md:py-7 flex gap-6 xl:gap-24 w-full h-[80px] items-center justify-between sticky top-0 z-30">
         <div className="">
           <h1 className="w-fit text-wrap xl:text-nowrap font-bold text-[16px] leading-[150%] font-inter">
             Pending Deals
@@ -61,22 +62,31 @@ const DashboardHome = () => {
 
         <div className="flex items-center gap-2 justify-center bg-white ">
           <div className="flex items-center gap-3 mr-2">
-           <div className='h-[40px] w-[40px]  '> <img src={rectangle} alt="User Avatar" className="w-[40px] h-[40px]" /></div>
+            <div className="h-[40px] w-[40px]  ">
+              {" "}
+              <img
+                src={rectangle}
+                alt="User Avatar"
+                className="w-[40px] h-[40px]"
+              />
+            </div>
             <span className="font-inter hidden xl:flex-nowrap lg:flex font-semibold text-[14px]">
               David Aluko
             </span>
-            <span className="border-l-2 hidden  lg:block border-gray-400 h-[30px]" />            
+            <span className="border-l-2 hidden  lg:block border-gray-400 h-[30px]" />
           </div>
 
-          <div className="relative flex items-center justify-center w-[40px] h-[40px] rounded-full bg-[#f5f5f5] cursor-pointer transition-all duration-200"
-             onClick={() => setEmailIsOpen(true)}
+          <div
+            className="relative flex items-center justify-center w-[40px] h-[40px] rounded-full bg-[#f5f5f5] cursor-pointer transition-all duration-200"
+            onClick={() => setEmailIsOpen(true)}
           >
             <HiMail className="size-6" />
             <div className="absolute top-0 right-0 w-[16px] h-[16px] bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center">
               1
             </div>
-            { emailIsOpen &&  <NotificationsPanel setEmailIsOpen = {setEmailIsOpen}  /> }
-
+            {emailIsOpen && (
+              <NotificationsPanel setEmailIsOpen={setEmailIsOpen} />
+            )}
           </div>
 
           <div className="w-[40px]  hidden    h-[40px] lg:flex items-center justify-center rounded-full bg-[#f5f5f5] cursor-pointer transition-all duration-200">
@@ -88,44 +98,46 @@ const DashboardHome = () => {
           </div>
 
           <button className=" hidden lg:block px-4 py-2 border-2 w-[80px] lg:w-[96px] h-[40px] border-[#039AE4] text-[#039AE4] leading-[150%] rounded-sm bg-[#f5f5f5] font-medium text-[10px] xl:text-[14px] hover:bg-[#039AE4] focus:outline-none cursor-pointer transition-all duration-200">
-          Regularize
+            Regularize
           </button>
         </div>
 
-
-        
         <div className="lg:hidden ">
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             className="text-[#121826] text-2xl focus:outline-none"
           >
-            {isMenuOpen ? <HiX className="size-6 text-white" /> : <ChevronDown  className="size-6 text-[#039AE4]" />}
+            {isMenuOpen ? (
+              <HiX className="size-6 text-white" />
+            ) : (
+              <ChevronDown className="size-6 text-[#039AE4]" />
+            )}
           </button>
-        </div>      
-
+        </div>
       </div>
 
       {isMenuOpen && (
         <>
-          <div className="fixed inset-0 bg-white bg-opacity-50 z-40" onClick={() => setIsMenuOpen(false)} />
+          <div
+            className="fixed inset-0 bg-white bg-opacity-50 z-40"
+            onClick={() => setIsMenuOpen(false)}
+          />
           <div className="lg:hidden fixed top-0 left-0 w-[180px] h-full bg-[#121826] z-50 p-6 flex flex-col space-y-6 text-white">
-            
             <div className="self-end">
               <button onClick={() => setIsMenuOpen(false)} className="text-2xl">
                 <HiX className="size-6 text-white" />
               </button>
             </div>
-            
+
             <div className="flex flex-col space-y-4">
-              
               <div className="flex items-center space-x-2 p-2 rounded-md hover:bg-gray-700 cursor-pointer transition-all duration-200">
                 <IoIosSettings className="size-6 " />
                 <span>Settings</span>
               </div>
 
               <button className="px-4 py-2 border-2 w-[85px] xl:w-[96px] h-[40px] border-[#039AE4] text-[#039AE4] leading-[150%] rounded-sm bg-[#f5f5f5] font-medium text-[12px] xl:text-[14px] hover:bg-[#039AE4] focus:outline-none cursor-pointer transition-all duration-200">
-                  Regularize
-               </button>
+                Regularize
+              </button>
 
               <div className="flex items-center space-x-2 p-2 rounded-md hover:bg-gray-700 cursor-pointer transition-all duration-200">
                 <HiLogout className="size-6 text-[#E41D03]" />
@@ -134,9 +146,20 @@ const DashboardHome = () => {
             </div>
           </div>
         </>
-      )}
+      )} */}
+        
 
-      <div><PendingButton /></div>
+        <section className="w-full h-full  font-Inter ">
+           <PageHeader title="News" />
+        <div className="w-full px-4 py-2 md:px-10 md:py-4 bg-[#F8F9FA] space-y-16 md:space-y-0">
+          <div>
+            <PendingButton />
+          </div>
+        </div>
+    </section>
+      {/* <div>
+        <PendingButton />
+      </div> */}
     </div>
   );
 };

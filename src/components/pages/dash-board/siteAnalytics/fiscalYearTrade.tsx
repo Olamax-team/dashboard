@@ -48,7 +48,9 @@ const FiscalYearTrade = () => {
                   className="rounded-lg border p-4 shadow-sm bg-white dark:bg-gray-900"
                 >
                   <p className="text-sm text-[#000000] mb-1">{item.thisMont}</p>
-                  <p className="text-[20px] text-[#141414] font-bold">{item.amount}</p>
+                  <p className="text-[20px] text-[#141414] font-bold">
+                    {item.amount}
+                  </p>
                   <p className="text-xs text-[#000000] mt-5">{item.lastDay}</p>
                 </div>
               ))}
@@ -60,9 +62,14 @@ const FiscalYearTrade = () => {
           <MemberGrowthChart />
         </div>
       </Card>
-      <div className="mt-5"><FinancialDashboard  />  </div>
+      <div className="mt-5">
+        <FinancialDashboard />{" "}
+      </div>
 
-      <div className="mt-5"> <CryptoTransactionTable/>  </div>
+      <div className="mt-5">
+        {" "}
+        <CryptoTransactionTable />{" "}
+      </div>
     </section>
   );
 };
