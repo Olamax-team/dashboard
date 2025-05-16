@@ -40,7 +40,7 @@ const DashboardLayout = ({children}:{children:React.ReactNode}) => {
 
   const SidebarMenu = () => {
     return (
-      <div className='lg:h-[calc(100%_-_80px)] h-[calc(100%_-_60px)] flex flex-col justify-around gap-3'>
+      <div className='lg:h-[calc(100%_-_80px)] h-[calc(100%_-_60px)] flex flex-col justify-around gap-3 pb-10'>
         <NavLink
           path='/dashboard'
           icon={FaRegHourglassHalf}
