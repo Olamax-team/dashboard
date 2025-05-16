@@ -1,6 +1,5 @@
-
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { LineChart, Line, ResponsiveContainer } from "recharts"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { LineChart, Line, ResponsiveContainer } from "recharts";
 
 const data = [
   { value: 40 },
@@ -13,42 +12,64 @@ const data = [
   { value: 65 },
   { value: 40 },
   { value: 55 },
-]
+];
 
 interface MetricCardProps {
-  title: string
-  value: string
-  change: string
-  comparison: string
-  data: Array<{ value: number }>
+  title: string;
+  value: string;
+  change: string;
+  comparison: string;
+  data: Array<{ value: number }>;
 }
 
-function MetricCard({ title, value, change, comparison, data }: MetricCardProps) {
-  const isNegative = change.startsWith("-")
+function MetricCard({
+  title,
+  value,
+  change,
+  comparison,
+  data,
+}: MetricCardProps) {
+  const isNegative = change.startsWith("-");
 
   return (
     <Card>
       <CardHeader className="pb-2">
-        <CardTitle className="text-sm font-medium text-muted-foreground">{title}</CardTitle>
+        <CardTitle className="text-sm font-medium text-muted-foreground">
+          {title}
+        </CardTitle>
       </CardHeader>
       <CardContent className="space-y-1">
         <div className="flex items-start justify-between">
           <div>
             <div className="text-[20px] font-bold">{value}</div>
-            <div className={`text-xs ${isNegative ? "text-[#E41D03]" : "text-green-500"}`}>{change}</div>
-            <div className="text-[14px] text-[#000000] mt-1">Compared to {comparison} Last Month</div>
+            <div
+              className={`text-xs ${
+                isNegative ? "text-[#E41D03]" : "text-green-500"
+              }`}
+            >
+              {change}
+            </div>
+            <div className="text-[14px] text-[#000000] mt-1">
+              Compared to {comparison} Last Month
+            </div>
           </div>
           <div className="h-16 w-24">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={data}>
-                <Line type="monotone" dataKey="value" stroke="#ef4444" strokeWidth={1} dot={false} />
+                <Line
+                  type="monotone"
+                  dataKey="value"
+                  stroke="#ef4444"
+                  strokeWidth={1}
+                  dot={false}
+                />
               </LineChart>
             </ResponsiveContainer>
           </div>
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }
 
 export default function FinancialDashboard() {
@@ -78,5 +99,5 @@ export default function FinancialDashboard() {
         />
       </div>
     </div>
-  )
+  );
 }
