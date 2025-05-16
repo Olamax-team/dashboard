@@ -7,9 +7,9 @@ import {
 } from "react-icons/hi";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import ManageNews from "./manageNews";
+import ReviewRatings from "./reviewRatings";
 
-const TabNews = () => {
+const TabReview = () => {
   const [sortOrder, setSortOrder] = useState<"ascending" | "descending">(
     "descending"
   );
@@ -28,7 +28,7 @@ const TabNews = () => {
               " text-[#121826]"
             )}
           >
-            Manage News Media Content
+            Manage User Feedback
           </h1>
         </div>
 
@@ -60,24 +60,27 @@ const TabNews = () => {
           </div>
 
           {/* Filter Icon and Label only */}
-          <div className="flex items-center p-3 gap-1">
+          <div className="flex items-center p-3 gap-1 text-gray-400 cursor-not-allowed pointer-events-none">
             <h2 className="font-normal text-[12px] xl:text-[16px] leading-[150%]">
               Filter
             </h2>
             <HiFilter className="size-6" />
           </div>
 
-          <Button className="bg-[#039AE4] text-[#ffffff] w-[96px] leading-[150%] gap-1 text-[12px] lg:text-[16px] h-[40px] rounded-[5px] px-4 py-2 items-center cursor-pointer flex">
-            Export <HiDownload className="size-6 text-[#ffffff]" />
+          <Button
+            disabled
+            className="bg-[#039AE4] text-white w-[96px] leading-[150%] gap-1 text-[12px] lg:text-[16px] h-[40px] rounded-[5px] px-4 py-2 items-center flex opacity-50 cursor-not-allowed"
+          >
+            Export <HiDownload className="size-6" />
           </Button>
         </div>
       </div>
 
       <div>
-        <ManageNews />
+        <ReviewRatings />
       </div>
     </React.Fragment>
   );
 };
 
-export default TabNews;
+export default TabReview;

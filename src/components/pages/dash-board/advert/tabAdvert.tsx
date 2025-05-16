@@ -3,16 +3,45 @@ import {
   HiFilter,
   HiOutlineSortDescending,
   HiOutlineSortAscending,
-  HiDownload,
 } from "react-icons/hi";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import ManageNews from "./manageNews";
+import AddAdvert from "./addAdvert";
+import EditAdvert from "./editAdvert";
 
-const TabNews = () => {
+type BlogPost = {
+    id: number;
+    title: string;
+    date: string;
+    author: string;
+    thumbnail: string;
+    link?: string;
+  }
+  
+
+const TabAdvert = () => {
   const [sortOrder, setSortOrder] = useState<"ascending" | "descending">(
     "descending"
   );
+  const [showAddAdvert, setShowAddAdvert] = useState(false);
+  const [post, setPost] = useState<BlogPost>({
+    id: Date.now(),
+    title: '',
+    thumbnail: '',
+    author: '',
+    date:'',
+    link: '',
+  });
+  
+  const handleAddNewClick = () => {
+    setShowAddAdvert(true);
+  };
+
+  const handleSave = () => {
+    console.log("Saving post...", post);
+    // Add actual save logic here
+    setShowAddAdvert(false); // hide the AddAdvert component after saving
+  };
 
   const toggleSortOrder = () => {
     setSortOrder(sortOrder === "ascending" ? "descending" : "ascending");
@@ -28,7 +57,7 @@ const TabNews = () => {
               " text-[#121826]"
             )}
           >
-            Manage News Media Content
+            Upload & Edit Announcement
           </h1>
         </div>
 
@@ -59,7 +88,7 @@ const TabNews = () => {
             )}
           </div>
 
-          {/* Filter Icon and Label only */}
+          {/* Filter */}
           <div className="flex items-center p-3 gap-1">
             <h2 className="font-normal text-[12px] xl:text-[16px] leading-[150%]">
               Filter
@@ -67,17 +96,31 @@ const TabNews = () => {
             <HiFilter className="size-6" />
           </div>
 
-          <Button className="bg-[#039AE4] text-[#ffffff] w-[96px] leading-[150%] gap-1 text-[12px] lg:text-[16px] h-[40px] rounded-[5px] px-4 py-2 items-center cursor-pointer flex">
-            Export <HiDownload className="size-6 text-[#ffffff]" />
+          {/* Add New Button */}
+          <Button
+            onClick={handleAddNewClick}
+            className="bg-[#039AE4] text-[#ffffff] w-[96px] leading-[150%] gap-1 text-[12px] lg:text-[16px] h-[40px] rounded-[5px] px-4 py-2 items-center cursor-pointer flex"
+          >
+            AddNew
           </Button>
         </div>
       </div>
 
+      {/* Conditional AddAdvert Component */}
+      {showAddAdvert && (
+        <AddAdvert
+          setShowAddNews={setShowAddAdvert}
+          post={post}
+          handleSave={handleSave}
+          setPost={setPost}
+        />
+      )}
+
       <div>
-        <ManageNews />
+        <EditAdvert />
       </div>
     </React.Fragment>
   );
 };
 
-export default TabNews;
+export default TabAdvert;

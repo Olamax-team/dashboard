@@ -1,4 +1,11 @@
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 type BuyingItem = {
   user: string;
@@ -21,7 +28,11 @@ type BuyingItem = {
   finish: string;
 };
 
-const Buying = ({ visibleColumns }: { visibleColumns: Record<string, boolean> }) => {
+const Buying = ({
+  visibleColumns,
+}: {
+  visibleColumns: Record<string, boolean>;
+}) => {
   const transaction: BuyingItem[] = [
     {
       user: "Mason Mount",
@@ -51,26 +62,90 @@ const Buying = ({ visibleColumns }: { visibleColumns: Record<string, boolean> })
   };
 
   return (
-    <div className="lg:p-10 mx-auto px-3 py-2">
+    <div className=" mx-auto px-3 py-2">
       <Table className="border-collapse   border-2 ">
         <TableHeader className="rounded-lg h-[60px] border border-gray-300">
           <TableRow className="bg-[#ffffff] hover:bg-white border-b font-bold leading-[150%] text-[14px] text-[#121826]">
-            {visibleColumns.user && <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">User</TableHead>}
-            {visibleColumns.coin && <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">Coin</TableHead>}
-            {visibleColumns.blockchain && <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">Blockchain</TableHead>}
-            {visibleColumns.amount && <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">Amount</TableHead>}
-            {visibleColumns.coinPriceUsd && <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">Coin Price (USD)</TableHead>}
-            {visibleColumns.dollarRate && <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">Dollar Rate</TableHead>}
-            {visibleColumns.networkFees && <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">Network Fees ($)</TableHead>}
-            {visibleColumns.nairaAmount && <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">Naira Amount + N/Fees</TableHead>}
-            {visibleColumns.networkFeesRepeat && <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">Network Fees ($)</TableHead>}
-            {visibleColumns.walletAddress && <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">Wallet Address</TableHead>}
-            {visibleColumns.steem && <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">Steem Username</TableHead>}
-            {visibleColumns.method && <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">Method</TableHead>}
-            {visibleColumns.paymentStatus && <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">Payment Status</TableHead>}
-            {visibleColumns.referrer && <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">Referrer</TableHead>}
-            {visibleColumns.Timestamp && <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">Time Stamp</TableHead>}
-            {visibleColumns.finish && <TableHead className="text-center font-bold text-[#121826] border-gray-300">Finish</TableHead>}
+            {visibleColumns.user && (
+              <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
+                User
+              </TableHead>
+            )}
+            {visibleColumns.coin && (
+              <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
+                Coin
+              </TableHead>
+            )}
+            {visibleColumns.blockchain && (
+              <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
+                Blockchain
+              </TableHead>
+            )}
+            {visibleColumns.amount && (
+              <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
+                Amount
+              </TableHead>
+            )}
+            {visibleColumns.coinPriceUsd && (
+              <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
+                Coin Price (USD)
+              </TableHead>
+            )}
+            {visibleColumns.dollarRate && (
+              <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
+                Dollar Rate
+              </TableHead>
+            )}
+            {visibleColumns.networkFees && (
+              <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
+                Network Fees ($)
+              </TableHead>
+            )}
+            {visibleColumns.nairaAmount && (
+              <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
+                Naira Amount + N/Fees
+              </TableHead>
+            )}
+            {visibleColumns.networkFeesRepeat && (
+              <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
+                Network Fees ($)
+              </TableHead>
+            )}
+            {visibleColumns.walletAddress && (
+              <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
+                Wallet Address
+              </TableHead>
+            )}
+            {visibleColumns.steem && (
+              <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
+                Steem Username
+              </TableHead>
+            )}
+            {visibleColumns.method && (
+              <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
+                Method
+              </TableHead>
+            )}
+            {visibleColumns.paymentStatus && (
+              <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
+                Payment Status
+              </TableHead>
+            )}
+            {visibleColumns.referrer && (
+              <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
+                Referrer
+              </TableHead>
+            )}
+            {visibleColumns.Timestamp && (
+              <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
+                Time Stamp
+              </TableHead>
+            )}
+            {visibleColumns.finish && (
+              <TableHead className="text-center font-bold text-[#121826] border-gray-300">
+                Finish
+              </TableHead>
+            )}
           </TableRow>
         </TableHeader>
 
@@ -83,25 +158,69 @@ const Buying = ({ visibleColumns }: { visibleColumns: Record<string, boolean> })
               {visibleColumns.user && (
                 <TableCell className="py-2 text-center border-r border-gray-300">
                   <div>{transaction.user}</div>
-                  <div className="text-xs text-[#121826]">UID {transaction.uid}</div>
+                  <div className="text-xs text-[#121826]">
+                    UID {transaction.uid}
+                  </div>
                 </TableCell>
               )}
               {visibleColumns.coin && (
                 <TableCell className="py-2 text-center border-r border-gray-300">
                   <div>{transaction.coin}</div>
-                  <div className="text-xs text-[#121826]">{transaction.coinShort}</div>
+                  <div className="text-xs text-[#121826]">
+                    {transaction.coinShort}
+                  </div>
                 </TableCell>
               )}
-              {visibleColumns.blockchain && <TableCell className="py-2 text-center border-r border-gray-300">{transaction.blockchain}</TableCell>}
-              {visibleColumns.amount && <TableCell className="py-2 text-center border-r border-gray-300">{transaction.amount}</TableCell>}
-              {visibleColumns.coinPriceUsd && <TableCell className="py-2 text-center border-r border-gray-300">{transaction.coinPriceUsd}</TableCell>}
-              {visibleColumns.dollarRate && <TableCell className="py-2 text-center border-r border-gray-300">{transaction.dollarRate}</TableCell>}
-              {visibleColumns.networkFees && <TableCell className="py-2 text-center border-r border-gray-300">{transaction.networkFees}</TableCell>}
-              {visibleColumns.nairaAmount && <TableCell className="py-2 text-center border-r border-gray-300">{transaction.nairaAmount}</TableCell>}
-              {visibleColumns.networkFeesRepeat && <TableCell className="py-2 text-center border-r border-gray-300">{transaction.networkFeesRepeat}</TableCell>}
-              {visibleColumns.walletAddress && <TableCell className="py-2 text-center border-r border-gray-300">{transaction.walletAddress}</TableCell>}
-              {visibleColumns.steem && <TableCell className="py-2 text-center border-r border-gray-300">{transaction.steem}</TableCell>}
-              {visibleColumns.method && <TableCell className="py-2 text-center border-r border-gray-300">{transaction.method}</TableCell>}
+              {visibleColumns.blockchain && (
+                <TableCell className="py-2 text-center border-r border-gray-300">
+                  {transaction.blockchain}
+                </TableCell>
+              )}
+              {visibleColumns.amount && (
+                <TableCell className="py-2 text-center border-r border-gray-300">
+                  {transaction.amount}
+                </TableCell>
+              )}
+              {visibleColumns.coinPriceUsd && (
+                <TableCell className="py-2 text-center border-r border-gray-300">
+                  {transaction.coinPriceUsd}
+                </TableCell>
+              )}
+              {visibleColumns.dollarRate && (
+                <TableCell className="py-2 text-center border-r border-gray-300">
+                  {transaction.dollarRate}
+                </TableCell>
+              )}
+              {visibleColumns.networkFees && (
+                <TableCell className="py-2 text-center border-r border-gray-300">
+                  {transaction.networkFees}
+                </TableCell>
+              )}
+              {visibleColumns.nairaAmount && (
+                <TableCell className="py-2 text-center border-r border-gray-300">
+                  {transaction.nairaAmount}
+                </TableCell>
+              )}
+              {visibleColumns.networkFeesRepeat && (
+                <TableCell className="py-2 text-center border-r border-gray-300">
+                  {transaction.networkFeesRepeat}
+                </TableCell>
+              )}
+              {visibleColumns.walletAddress && (
+                <TableCell className="py-2 text-center border-r border-gray-300">
+                  {transaction.walletAddress}
+                </TableCell>
+              )}
+              {visibleColumns.steem && (
+                <TableCell className="py-2 text-center border-r border-gray-300">
+                  {transaction.steem}
+                </TableCell>
+              )}
+              {visibleColumns.method && (
+                <TableCell className="py-2 text-center border-r border-gray-300">
+                  {transaction.method}
+                </TableCell>
+              )}
               {visibleColumns.paymentStatus && (
                 <TableCell className="py-2 text-center border-r border-gray-300">
                   <span
@@ -117,9 +236,21 @@ const Buying = ({ visibleColumns }: { visibleColumns: Record<string, boolean> })
                   </span>
                 </TableCell>
               )}
-              {visibleColumns.referrer && <TableCell className="py-2 text-center border-r border-gray-300">{transaction.referrer}</TableCell>}
-              {visibleColumns.Timestamp && <TableCell className="py-2 text-center border-r border-gray-300">{formatTimestamp(transaction.Timestamp)}</TableCell>}
-              {visibleColumns.finish && <TableCell className="py-2 text-center border-gray-300">{transaction.finish}</TableCell>}
+              {visibleColumns.referrer && (
+                <TableCell className="py-2 text-center border-r border-gray-300">
+                  {transaction.referrer}
+                </TableCell>
+              )}
+              {visibleColumns.Timestamp && (
+                <TableCell className="py-2 text-center border-r border-gray-300">
+                  {formatTimestamp(transaction.Timestamp)}
+                </TableCell>
+              )}
+              {visibleColumns.finish && (
+                <TableCell className="py-2 text-center border-gray-300">
+                  {transaction.finish}
+                </TableCell>
+              )}
             </TableRow>
           ))}
         </TableBody>

@@ -1,4 +1,11 @@
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 type BuyingItem = {
   user: string;
@@ -23,7 +30,11 @@ type BuyingItem = {
   finish: string;
 };
 
-const BuyingHistory = ({ visibleFilter }: { visibleFilter: Record<string, boolean> }) => {
+const BuyingHistory = ({
+  visibleFilter,
+}: {
+  visibleFilter: Record<string, boolean>;
+}) => {
   const transaction: BuyingItem[] = [
     {
       user: "Mason Mount",
@@ -59,23 +70,91 @@ const BuyingHistory = ({ visibleFilter }: { visibleFilter: Record<string, boolea
       <Table className="border-collapse">
         <TableHeader className="rounded-lg h-[60px] [&_tr]:border-b">
           <TableRow className="bg-[#ffffff] hover:bg-white border-b font-bold leading-[150%] text-[14px] text-[#121826]">
-            {visibleFilter.user && <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">User</TableHead>}
-            {visibleFilter.coin && <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">Coin</TableHead>}
-            {visibleFilter.blockchain && <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">Blockchain</TableHead>}
-            {visibleFilter.amount && <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">Amount</TableHead>}
-            {visibleFilter.coinPriceUsd && <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">Coin Price (USD)</TableHead>}
-            {visibleFilter.dollarRate && <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">Dollar Rate</TableHead>}
-            {visibleFilter.networkFees && <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">Network Fees ($)</TableHead>}
-            {visibleFilter.nairaAmount && <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">Naira Amount + N/Fees</TableHead>}
-            {visibleFilter.networkFeesRepeat && <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">Network Fees ($)</TableHead>}
-            {visibleFilter.walletAddress && <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">Wallet Address</TableHead>}
-            {visibleFilter.steem && <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">Steem Username</TableHead>}
-            {visibleFilter.method && <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">Method</TableHead>}
-            {visibleFilter.paymentStatus && <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">Payment Status</TableHead>}
-            {visibleFilter.paymentStatus && <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">Transaction Status</TableHead>}
-            {visibleFilter.referrer && <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">Referrer</TableHead>}
-            {visibleFilter.referrer && <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">Phone</TableHead>}
-            {visibleFilter.Timestamp && <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">Time Stamp</TableHead>}
+            {visibleFilter.user && (
+              <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
+                User
+              </TableHead>
+            )}
+            {visibleFilter.coin && (
+              <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
+                Coin
+              </TableHead>
+            )}
+            {visibleFilter.blockchain && (
+              <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
+                Blockchain
+              </TableHead>
+            )}
+            {visibleFilter.amount && (
+              <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
+                Amount
+              </TableHead>
+            )}
+            {visibleFilter.coinPriceUsd && (
+              <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
+                Coin Price (USD)
+              </TableHead>
+            )}
+            {visibleFilter.dollarRate && (
+              <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
+                Dollar Rate
+              </TableHead>
+            )}
+            {visibleFilter.networkFees && (
+              <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
+                Network Fees ($)
+              </TableHead>
+            )}
+            {visibleFilter.nairaAmount && (
+              <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
+                Naira Amount + N/Fees
+              </TableHead>
+            )}
+            {visibleFilter.networkFeesRepeat && (
+              <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
+                Network Fees ($)
+              </TableHead>
+            )}
+            {visibleFilter.walletAddress && (
+              <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
+                Wallet Address
+              </TableHead>
+            )}
+            {visibleFilter.steem && (
+              <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
+                Steem Username
+              </TableHead>
+            )}
+            {visibleFilter.method && (
+              <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
+                Method
+              </TableHead>
+            )}
+            {visibleFilter.paymentStatus && (
+              <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
+                Payment Status
+              </TableHead>
+            )}
+            {visibleFilter.paymentStatus && (
+              <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
+                Transaction Status
+              </TableHead>
+            )}
+            {visibleFilter.referrer && (
+              <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
+                Referrer
+              </TableHead>
+            )}
+            {visibleFilter.referrer && (
+              <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
+                Phone
+              </TableHead>
+            )}
+            {visibleFilter.Timestamp && (
+              <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
+                Time Stamp
+              </TableHead>
+            )}
           </TableRow>
         </TableHeader>
 
@@ -88,25 +167,69 @@ const BuyingHistory = ({ visibleFilter }: { visibleFilter: Record<string, boolea
               {visibleFilter.user && (
                 <TableCell className="py-2 text-center border-r border-gray-300">
                   <div>{transaction.user}</div>
-                  <div className="text-xs text-[#121826]">UID {transaction.uid}</div>
+                  <div className="text-xs text-[#121826]">
+                    UID {transaction.uid}
+                  </div>
                 </TableCell>
               )}
               {visibleFilter.coin && (
                 <TableCell className="py-2 text-center border-r border-gray-300">
                   <div>{transaction.coin}</div>
-                  <div className="text-xs text-[#121826]">{transaction.coinShort}</div>
+                  <div className="text-xs text-[#121826]">
+                    {transaction.coinShort}
+                  </div>
                 </TableCell>
               )}
-              {visibleFilter.blockchain && <TableCell className="py-2 text-center border-r border-gray-300">{transaction.blockchain}</TableCell>}
-              {visibleFilter.amount && <TableCell className="py-2 text-center border-r border-gray-300">{transaction.amount}</TableCell>}
-              {visibleFilter.coinPriceUsd && <TableCell className="py-2 text-center border-r border-gray-300">{transaction.coinPriceUsd}</TableCell>}
-              {visibleFilter.dollarRate && <TableCell className="py-2 text-center border-r border-gray-300">{transaction.dollarRate}</TableCell>}
-              {visibleFilter.networkFees && <TableCell className="py-2 text-center border-r border-gray-300">{transaction.networkFees}</TableCell>}
-              {visibleFilter.nairaAmount && <TableCell className="py-2 text-center border-r border-gray-300">{transaction.nairaAmount}</TableCell>}
-              {visibleFilter.networkFeesRepeat && <TableCell className="py-2 text-center border-r border-gray-300">{transaction.networkFeesRepeat}</TableCell>}
-              {visibleFilter.walletAddress && <TableCell className="py-2 text-center border-r border-gray-300">{transaction.walletAddress}</TableCell>}
-              {visibleFilter.steem && <TableCell className="py-2 text-center border-r border-gray-300">{transaction.steem}</TableCell>}
-              {visibleFilter.method && <TableCell className="py-2 text-center border-r border-gray-300">{transaction.method}</TableCell>}
+              {visibleFilter.blockchain && (
+                <TableCell className="py-2 text-center border-r border-gray-300">
+                  {transaction.blockchain}
+                </TableCell>
+              )}
+              {visibleFilter.amount && (
+                <TableCell className="py-2 text-center border-r border-gray-300">
+                  {transaction.amount}
+                </TableCell>
+              )}
+              {visibleFilter.coinPriceUsd && (
+                <TableCell className="py-2 text-center border-r border-gray-300">
+                  {transaction.coinPriceUsd}
+                </TableCell>
+              )}
+              {visibleFilter.dollarRate && (
+                <TableCell className="py-2 text-center border-r border-gray-300">
+                  {transaction.dollarRate}
+                </TableCell>
+              )}
+              {visibleFilter.networkFees && (
+                <TableCell className="py-2 text-center border-r border-gray-300">
+                  {transaction.networkFees}
+                </TableCell>
+              )}
+              {visibleFilter.nairaAmount && (
+                <TableCell className="py-2 text-center border-r border-gray-300">
+                  {transaction.nairaAmount}
+                </TableCell>
+              )}
+              {visibleFilter.networkFeesRepeat && (
+                <TableCell className="py-2 text-center border-r border-gray-300">
+                  {transaction.networkFeesRepeat}
+                </TableCell>
+              )}
+              {visibleFilter.walletAddress && (
+                <TableCell className="py-2 text-center border-r border-gray-300">
+                  {transaction.walletAddress}
+                </TableCell>
+              )}
+              {visibleFilter.steem && (
+                <TableCell className="py-2 text-center border-r border-gray-300">
+                  {transaction.steem}
+                </TableCell>
+              )}
+              {visibleFilter.method && (
+                <TableCell className="py-2 text-center border-r border-gray-300">
+                  {transaction.method}
+                </TableCell>
+              )}
               {visibleFilter.paymentStatus && (
                 <TableCell className="py-2 text-center border-r border-gray-300">
                   <span
@@ -122,10 +245,26 @@ const BuyingHistory = ({ visibleFilter }: { visibleFilter: Record<string, boolea
                   </span>
                 </TableCell>
               )}
-              {visibleFilter.referrer && <TableCell className="py-2 text-center border-r border-gray-300">{transaction.transactionStatus}</TableCell>}
-              {visibleFilter.referrer && <TableCell className="py-2 text-center border-r border-gray-300">{transaction.referrer}</TableCell>}
-              {visibleFilter.referrer && <TableCell className="py-2 text-center border-r border-gray-300">{transaction.phone}</TableCell>}
-              {visibleFilter.Timestamp && <TableCell className="py-2 text-center border-r border-gray-300">{formatTimestamp(transaction.Timestamp)}</TableCell>}
+              {visibleFilter.referrer && (
+                <TableCell className="py-2 text-center border-r border-gray-300">
+                  {transaction.transactionStatus}
+                </TableCell>
+              )}
+              {visibleFilter.referrer && (
+                <TableCell className="py-2 text-center border-r border-gray-300">
+                  {transaction.referrer}
+                </TableCell>
+              )}
+              {visibleFilter.referrer && (
+                <TableCell className="py-2 text-center border-r border-gray-300">
+                  {transaction.phone}
+                </TableCell>
+              )}
+              {visibleFilter.Timestamp && (
+                <TableCell className="py-2 text-center border-r border-gray-300">
+                  {formatTimestamp(transaction.Timestamp)}
+                </TableCell>
+              )}
             </TableRow>
           ))}
         </TableBody>

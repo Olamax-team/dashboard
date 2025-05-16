@@ -15,19 +15,19 @@ const EdithAnnouncement = () => {
     {
       id: 1,
       body: "GET MORE VALUE FOR YOUR USDT AND BTC WHEN YOU BUY OR SELL USDT/BTC AND EARN BONK TOKEN. PROMO STARTS FROM 6TH OF MARCH TILL 6TH OF APRIL. FOR ENQUIRIES.",
-      date: "April 12, 2024",
+      date: new Date().toLocaleDateString(),
       author: "Admin 1",
     },
     {
       id: 2,
       body: "GET MORE VALUE FOR YOUR USDT AND BTC WHEN YOU BUY OR SELL USDT/BTC AND EARN BONK TOKEN. PROMO STARTS FROM 6TH OF MARCH TILL 6TH OF APRIL. FOR ENQUIRIES",
-      date: "April 12, 2024",
+      date: new Date().toLocaleDateString(),
       author: "Admin 1",
     },
     {
       id: 3,
       body: "GET MORE VALUE FOR YOUR USDT AND BTC WHEN YOU BUY OR SELL USDT/BTC AND EARN BONK TOKEN. PROMO STARTS FROM 6TH OF MARCH TILL 6TH OF APRIL. FOR ENQUIRIES",
-      date: "April 12, 2024",
+      date: new Date().toLocaleDateString(),
       author: "Admin 1",
     },
   ]);
