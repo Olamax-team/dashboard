@@ -8,10 +8,9 @@ import Layout from './layout/layout.tsx'
 import Authenticate from './components/pages/auth/authenticate.tsx'
 import Passphrase from './components/pages/auth/passphrase.tsx'
 import Escrow from './components/pages/dash-board/escrow/escrow.tsx'
-import DashboardLayout from './layout/dash-board-layout.tsx'
 import DashboardHome from './components/pages/dash-board/home.tsx'
 import TransHistory from './components/pages/dash-board/transHistory/transHistory.tsx'
-import UserInformation from './components/pages/dash-board/userInformation/userInformation.tsx'
+import UserInformation from './components/pages/dash-board/userInformation/user-information.tsx'
 import UserPreview from './components/pages/dash-board/userInformation/userDetailsVerified.tsx'
 import UnVerifiedUserDetails from './components/pages/dash-board/userInformation/UserDetailsUnverified.tsx'
 import TransactionSettings from './components/pages/dash-board/transactionSettings/transactionSettings.tsx'
@@ -24,6 +23,10 @@ import SiteAnalysis from './components/pages/dash-board/siteAnalytics/siteAnalys
 import Review from './components/pages/dash-board/review/review.tsx'
 import Advert from './components/pages/dash-board/advert/advert.tsx'
 import MangeAdmin from './components/pages/dash-board/ManageAdmin/mangeAdmin.tsx'
+import ProtectAuthRoutes from './layout/protect-auth-routes.tsx'
+import ProtectRoute from './layout/protect-routes.tsx'
+import UnverifiedUserInformation from './components/pages/dash-board/userInformation/unverified-user-information.tsx'
+import PendingUserInformation from './components/pages/dash-board/userInformation/pending-user-information.tsx'
 
 
 const router = createBrowserRouter([
@@ -33,79 +36,150 @@ const router = createBrowserRouter([
     children: [
       {
         path: '/',
-        element: <App/>
+        element: 
+          <ProtectAuthRoutes>
+            <App/>
+          </ProtectAuthRoutes>
       },
       {
         path: '/authenticate',
-        element: <Authenticate/>
+        element: 
+          <ProtectAuthRoutes>
+            <Authenticate/>
+          </ProtectAuthRoutes>
       },
       {
         path: '/passphrase',
-        element: <Passphrase/>
+        element: 
+          <ProtectAuthRoutes>
+            <Passphrase/>
+          </ProtectAuthRoutes>
       },
       {
         path: '/dashboard',
-        element: <DashboardLayout><DashboardHome/> </DashboardLayout>
+        element: 
+          <ProtectRoute>
+            <DashboardHome/>
+          </ProtectRoute>
       },
       {
         path: '/dashboard/escrow-deals',
-        element: <Escrow/>
+        element:
+         <ProtectRoute>
+           <Escrow/>
+         </ProtectRoute>
       },
       {
         path: '/dashboard/transaction-history',
-        element: <DashboardLayout> <TransHistory/>  </DashboardLayout> 
+        element: 
+          <ProtectRoute>
+            <TransHistory/>
+          </ProtectRoute>
       },
       {
         path: '/dashboard/user-information',
-        element: <DashboardLayout> <UserInformation  /> </DashboardLayout>
+        element: 
+          <ProtectRoute>
+            <UserInformation/>
+          </ProtectRoute>
       },
       {
-        path:"/userDetailsVerified",
-        element: <DashboardLayout><UserPreview/> </DashboardLayout>  
+        path: '/dashboard/user-information/unverified',
+        element: 
+          <ProtectRoute>
+            <UnverifiedUserInformation/>
+          </ProtectRoute>
       },
       {
-        path:"/UserDetailsUnverified",
-        element: <DashboardLayout><UnVerifiedUserDetails/> </DashboardLayout>  
+        path: '/dashboard/user-information/pending',
+        element: 
+          <ProtectRoute>
+            <PendingUserInformation/>
+          </ProtectRoute>
+      },
+      {
+        path:"/dashboard/user-information/user-details-verified",
+        element: 
+          <ProtectRoute>
+            <UserPreview/>  
+          </ProtectRoute>
+      },
+      {
+        path:"/dashboard/user-information/user-details-unverified",
+        element: 
+          <ProtectRoute>
+            <UnVerifiedUserDetails/>
+          </ProtectRoute>
       },
       {
         path: '/dashboard/transaction-settings',
-        element: <TransactionSettings/>  
+        element: 
+          <ProtectRoute>
+            <TransactionSettings/>  
+          </ProtectRoute>
       },
       {
         path:"/dashboard/manage-referrals",
-        element:<DashboardLayout><ManageRerrals/></DashboardLayout>
+        element:
+          <ProtectRoute>
+            <ManageRerrals/>
+          </ProtectRoute>
       },
       {
         path:"/dashboard/block-unblock",
-        element:<DashboardLayout><BlockUser /></DashboardLayout>
+        element:
+          <ProtectRoute>
+            <BlockUser />
+          </ProtectRoute>
       },
       {
         path:"/Unverified",
-        element: <DashboardLayout><Unverified/> </DashboardLayout>  
+        element: 
+          <ProtectRoute>
+            <Unverified/>
+          </ProtectRoute>
       },
       {
         path:"/dashboard/news",
-        element:<DashboardLayout><News /></DashboardLayout>
+        element:
+          <ProtectRoute>
+            <News />
+          </ProtectRoute>
       },
       {
         path:"/dashboard/announcements",
-        element:<DashboardLayout><Announcement /></DashboardLayout>
+        element:
+          <ProtectRoute>
+            <Announcement />
+          </ProtectRoute>
       },
       {
         path:"/dashboard/site-analysis",
-        element:<DashboardLayout><SiteAnalysis /></DashboardLayout>
+        element:
+          <ProtectRoute>
+            <SiteAnalysis />
+          </ProtectRoute>
       },
       {
         path:"/dashboard/reviews",
-        element:<DashboardLayout><Review /></DashboardLayout>
+        element:
+          <ProtectRoute>
+            <Review />
+          </ProtectRoute>
       },
       {
         path:"/dashboard/adverts",
-        element:<DashboardLayout><Advert /></DashboardLayout>
+        element:
+          <ProtectRoute>
+            <Advert />
+          </ProtectRoute>
       },
       {
         path:"/dashboard/manage-admins",
-        element:<DashboardLayout><MangeAdmin /></DashboardLayout>
+        element:
+          <ProtectRoute>
+            <MangeAdmin />
+          </ProtectRoute>
       },
     ]
   }

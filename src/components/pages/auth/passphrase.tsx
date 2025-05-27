@@ -4,6 +4,10 @@ import AuthLayout from "@/layout/auth-layout";
 import { passphraseSchema, passphraseValues } from "@/lib/validations";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
+import { useNavigate } from "react-router-dom";
+import { useApiConfig } from "@/lib/use-api-config";
+import { apiRequestHandler } from "@/api/api-request-handler";
+import axios from "axios";
 
 const Passphrase = () => {
   const form = useForm<passphraseValues>({
@@ -13,8 +17,27 @@ const Passphrase = () => {
     }
   });
 
-  const onSubmit = (value:passphraseValues) => {
-    console.log(value)
+  const navigate = useNavigate();
+  const loginDetails = localStorage.getItem('loginDetails');
+
+  const loginConfig = useApiConfig({
+    method: 'post',
+    url: 'admin/login',
+    formdata: {
+      access_id: loginDetails ? JSON.parse(loginDetails).access_id : '',
+      password: loginDetails ? JSON.parse(loginDetails).password : '',
+      seedphrase: form.getValues('passphrase')
+    }
+  })
+
+  const login = () => axios.request(loginConfig);
+
+  const onSubmit = async () => {
+    const loginUser = await apiRequestHandler(login);
+    if (loginUser?.status === 200) {
+      localStorage.removeItem('loginDetails');
+      navigate('/dashboard');
+    }
   }
 
   return (

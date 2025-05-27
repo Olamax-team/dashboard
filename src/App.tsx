@@ -16,11 +16,11 @@ function App() {
     }
   });
 
-  const navigation = useNavigate();
+  const navigate = useNavigate();
 
-  const onSubmit = (value:loginValues) => {
-    console.log(value);
-    navigation('/dashboard')
+  const onSubmit = (values:loginValues) => {
+    localStorage.setItem('loginDetails', JSON.stringify(values));
+    navigate('/passphrase');
   }; 
 
   return (

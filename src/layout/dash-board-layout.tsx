@@ -11,8 +11,7 @@ const DashboardLayout = ({children}:{children:React.ReactNode}) => {
   const [isOpen, setIsOpen] = React.useState(false);
   const location = useLocation();
 
-  const NavLink = ({path, icon:Icon, label}:{path:string,icon:IconType, label:string}) => {
-    const isActive = location.pathname === path;
+  const NavLink = ({path, icon:Icon, label, isActive}:{path:string,icon:IconType, label:string, isActive: boolean}) => {
     return (
       <Link to={path} className={cn('text-white lg:p-4 p-3 rounded-r-xl flex items-center gap-2 hover:bg-white hover:text-black', isActive && 'bg-white text-black')}>
         <Icon className='size-5'/>
@@ -45,66 +44,79 @@ const DashboardLayout = ({children}:{children:React.ReactNode}) => {
           path='/dashboard'
           icon={FaRegHourglassHalf}
           label='Pending Deals'
+          isActive = {location.pathname === '/dashboard'}
         />
         <NavLink
           path='/dashboard/escrow-deals'
           icon={FiRefreshCcw}
           label='Escrow Deals'
+          isActive = {location.pathname === '/dashboard/escrow-deals'}
         />
         <NavLink
           path='/dashboard/transaction-history'
           icon={HiOutlineClipboardList}
           label='Transaction History'
+          isActive = {location.pathname === '/dashboard/transaction-history'}
         />
         <NavLink
           path='/dashboard/transaction-settings'
           icon={HiAdjustments}
           label='Transaction Settings'
+          isActive = {location.pathname === '/dashboard/transaction-settings'}
         />
         <NavLink
           path='/dashboard/user-information'
           icon={HiUserCircle}
           label='User Information'
+          isActive = {location.pathname === '/dashboard/user-information' || location.pathname.startsWith('/dashboard/user-information')}
         />
         <NavLink
           path='/dashboard/manage-referrals'
           icon={HiUserAdd}
           label='Manage Referrals'
+          isActive = {location.pathname === '/dashboard/manage-referrals'}
         />
         <NavLink
           path='/dashboard/block-unblock'
           icon={HiMinusCircle}
           label='Block & Unblock'
+          isActive = {location.pathname === '/dashboard/block-unblock'}
         />
         <NavLink
           path='/dashboard/news'
           icon={HiNewspaper}
           label='News'
+          isActive = {location.pathname === '/dashboard/news'}
         />
         <NavLink
           path='/dashboard/announcements'
           icon={HiSpeakerphone}
           label='Announcements'
+          isActive = {location.pathname === '/dashboard/announcements'}
         />
         <NavLink
           path='/dashboard/site-analysis'
           icon={HiChartPie}
           label='Site Analysis'
+          isActive = {location.pathname === '/dashboard/site-analysis'}
         />
         <NavLink
           path='/dashboard/reviews'
           icon={HiStar}
           label='Reviews'
+          isActive = {location.pathname === '/dashboard/reviews'}
         />
         <NavLink
           path='/dashboard/adverts'
           icon={HiDesktopComputer}
           label='Adverts'
+          isActive = {location.pathname === '/dashboard/adverts'}
         />
         <NavLink
           path='/dashboard/manage-admins'
           icon={HiUserGroup}
           label='Manage Admins'
+          isActive = {location.pathname === '/dashboard/manage-admins'}
         />
       </div>
     )

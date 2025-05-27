@@ -6,14 +6,16 @@ import { ChevronDown, Search } from "lucide-react";
 import { HiMail, HiLogout, HiX } from "react-icons/hi";
 import { IoIosSettings } from "react-icons/io";
 import NotificationsPanel from "../emailNotification/notfication";
+import { useAdminDetails } from "@/store/admin-details-store";
 
 type UserDetails = {
   name: string;
   profilePicture: string;
 }
 const PageHeader = ({ title }: { title: string }) => {
+  const { logOut } = useAdminDetails();
     
-  const user: UserDetails= 
+  const user: UserDetails = 
     {
       name: "David Aluko",
       profilePicture: rectangle,
@@ -61,8 +63,8 @@ const PageHeader = ({ title }: { title: string }) => {
               <IoIosSettings className="size-6 text-[#121826]" />
           </div>
 
-          <div className="w-[40px] h-[40px] hidden lg:flex items-center justify-center rounded-full px-2 bg-[#f5f5f5] cursor-pointer transition-all duration-200">
-              <HiLogout className="size-6 text-[#E41D03]" />
+          <div className="w-[40px] h-[40px] hidden lg:flex items-center justify-center rounded-full px-2 bg-[#f5f5f5] cursor-pointer transition-all duration-200" onClick={() => logOut()}>
+            <HiLogout className="size-6 text-[#E41D03]" />
           </div>
           {/* Regularize Button */}
           <div className="w-fit hidden md:block">

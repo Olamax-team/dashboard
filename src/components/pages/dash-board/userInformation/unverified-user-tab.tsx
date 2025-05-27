@@ -1,27 +1,26 @@
 import React, { useState } from "react";
-import {
-  HiFilter,
-  HiOutlineSortDescending,
-  HiOutlineSortAscending,
-  HiDownload,
-} from "react-icons/hi";
+import { HiFilter, HiOutlineSortDescending, HiOutlineSortAscending, HiDownload } from "react-icons/hi";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import AdminTable from "./adminTable";
+import Unverified from "./unverified-users";
+import { useLocation, useNavigate } from "react-router-dom";
 
-const AdminTab = () => {
-  const [sortOrder, setSortOrder] = useState<"ascending" | "descending">(
-    "descending"
-  );
+
+const UnVerifiedUserTab = () => {
+  const [sortOrder, setSortOrder] = useState<"ascending" | "descending">("descending");
   const [isDropdownOpen, setDropdownOpen] = useState(false);
 
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
+
   const [visibleFilter, setVisibleFilter] = useState({
-    name: true,
+    user: true,
     email: true,
-    phoneNo: true,
-    role: true,
-    status: true,
-    roleDescription: true,
+    phoneNumber: true,
+    referralCode: true,
+    verificationmethod: true,
+    Status: true,
+    referrerBonus: true,
     action: true,
   });
 
@@ -44,15 +43,40 @@ const AdminTab = () => {
   return (
     <React.Fragment>
       <div className="flex items-center justify-between  h-auto  mb-5 w-full flex-wrap">
-        <div className="flex items-center justify-center  xl:mt-0 gap-5">
-          <h1
+        <div className="flex items-center justify-center xl:mt-0 gap-1">
+          <Button
+            onClick={() => navigate("/dashboard/user-information")}
             className={cn(
               "relative px-4 py-2 rounded-sm text-[12px] xl:text-[16px] font-medium h-[40px] transition-colors cursor-pointer",
-              " text-[#121836]"
+              pathname === "/dashboard/user-information"
+                ? "bg-[#039AE4] text-white"
+                : "bg-transparent text-[#121826] cursor-pointer hover:bg-gray-200"
             )}
           >
-            Manage Admin
-          </h1>
+            Verified
+          </Button>
+          <Button
+            onClick={() => navigate("/dashboard/user-information/unverified")}
+            className={cn(
+              "relative px-4 py-2 rounded-sm text-[12px] xl:text-[16px] font-medium h-[40px] transition-colors cursor-pointer",
+              pathname === "/dashboard/user-information/unverified"
+                ? "bg-[#039AE4] text-white"
+                : "bg-transparent text-[#121826] cursor-pointer hover:bg-gray-200"
+            )}
+          >
+            Unverified
+          </Button>
+          <Button
+            onClick={() => navigate("/dashboard/user-information/pending")}
+            className={cn(
+              "relative px-4 py-2 rounded-sm text-[12px] xl:text-[16px] font-medium h-[40px] transition-colors cursor-pointer",
+              pathname === "/dashboard/user-information/pending"
+                ? "bg-[#039AE4] text-white"
+                : "bg-transparent text-[#121826] cursor-pointer hover:bg-gray-200"
+            )}
+          >
+            Pending
+          </Button>
         </div>
 
         <div className="flex items-center justify-center ml-3 lg:ml-0 mt-5 lg:mt-0 gap-5">
@@ -125,11 +149,9 @@ const AdminTab = () => {
           </Button>
         </div>
       </div>
-      <div>
-        <AdminTable visibleFilter={visibleFilter} />
-      </div>
+        <Unverified visibleFilter={visibleFilter} />
     </React.Fragment>
   );
 };
 
-export default AdminTab;
+export default UnVerifiedUserTab;
