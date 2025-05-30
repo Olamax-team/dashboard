@@ -1,3 +1,4 @@
+import { apiRequestHandler } from "@/api/api-request-handler";
 import {
   Table,
   TableBody,
@@ -6,6 +7,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useApiConfigWithToken } from "@/lib/use-api-config";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
 import React from "react";
 
 type SellingItem = {
@@ -63,6 +67,21 @@ const SellingHistory = ({
     const date = new Date(timestamp);
     return date.toLocaleString();
   };
+
+  const sellTransactionConfig = useApiConfigWithToken({
+    method: 'get',
+    url: 'admin/sell-transactions'
+  });
+
+  const sellTransaction = () => axios.request(sellTransactionConfig);
+
+  const {data, status } = useQuery({
+    queryKey: ['sell-transactions'],
+    queryFn: () => apiRequestHandler(sellTransaction)
+  })
+
+  console.log(data?.data.data.data);
+  console.log(status);
 
   return (
     <React.Fragment>

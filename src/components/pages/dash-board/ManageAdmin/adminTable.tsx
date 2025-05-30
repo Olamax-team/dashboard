@@ -2,7 +2,7 @@ import { apiRequestHandler } from "@/api/api-request-handler";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Switch } from "@/components/ui/switch";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow,} from "@/components/ui/table";
-import { userProps } from "@/lib/types";
+import { userDetailsProps } from "@/lib/types";
 import { useApiConfigWithToken } from "@/lib/use-api-config";
 import { extractFirstName } from "@/lib/utils";
 import { useAdminDetails } from "@/store/admin-details-store";
@@ -11,6 +11,7 @@ import axios from "axios";
 import { Loader2 } from "lucide-react";
 import { useState } from "react";
 import { HiMiniEllipsisVertical } from "react-icons/hi2";
+import { toast } from "sonner";
 
 
 const AdminTable = ({ visibleFilter }: {visibleFilter: Record<string, boolean>}) => {
@@ -21,46 +22,42 @@ const AdminTable = ({ visibleFilter }: {visibleFilter: Record<string, boolean>})
 
   const userConfig = useApiConfigWithToken({
     method: 'get',
-    url: 'users'
-  });
-
-  const roleSetUpConfig = useApiConfigWithToken({
-    method: 'get',
-    url: 'admin/setup-roles'
-  });
-
-  const listRolesConfig = useApiConfigWithToken({
-    method: 'get',
-    url: 'admin/list-roles'
+    url: 'admin/users'
   });
 
   const fetchUsers = () => axios.request(userConfig);
-  const setUpRoles = () => axios.request(roleSetUpConfig);
-  const listRoles = () => axios.request(listRolesConfig)
 
   const { data:usersResponse, status } = useQuery({
     queryKey: ['all-users'],
     queryFn: () =>apiRequestHandler(fetchUsers)
   });
 
-  const { data:roleResponse } = useQuery({
-    queryKey: ['setup-roles'],
-    queryFn: () =>apiRequestHandler(setUpRoles)
-  });
+  const allUsers:userDetailsProps[] = usersResponse?.data.data.filter((user: userDetailsProps) => user.uid !== null) || [];
 
-  const { data:rolesList } = useQuery({
-    queryKey: ['setup-permission'],
-    queryFn: () =>apiRequestHandler(listRoles)
-  });
-
-  const allUsers:userProps[] = usersResponse?.data.data.filter((user: userProps) => user.uid !== null) || [];
-  const allRoles = rolesList?.data[0];
-
-  console.log(roleResponse);
-  console.log(allUsers);
-  console.log(allRoles);
-  
   const { token } = useAdminDetails();
+
+  const allRoles = [
+    {
+      id: 1,
+      name: 'superAdmin'
+    },
+    {
+      id: 2,
+      name: 'admin'
+    },
+    {
+      id: 3,
+      name: 'user'
+    },
+    {
+      id: 4,
+      name: 'creator'
+    },
+    {
+      id: 5,
+      name: 'author'
+    }
+  ]
 
   const assignRole = async (userId: number, role: string) => {
 
@@ -79,7 +76,9 @@ const AdminTable = ({ visibleFilter }: {visibleFilter: Record<string, boolean>})
     });
 
     const assignRoleResult = await apiRequestHandler(assign);
-    console.log(assignRoleResult);
+    if (assignRoleResult && assignRoleResult.status === 200) {
+      toast.success(assignRoleResult.data.message);
+    }
   };
 
   const toggleUserStatus = (role:boolean) => {

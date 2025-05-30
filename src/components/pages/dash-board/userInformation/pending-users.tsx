@@ -7,7 +7,7 @@ import { useApiConfigWithToken } from "@/lib/use-api-config";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import { apiRequestHandler } from "@/api/api-request-handler";
-import { userProps } from "@/lib/types";
+import { userDetailsProps } from "@/lib/types";
 import { Loader2 } from "lucide-react";
 import { extractFirstName } from "@/lib/utils";
 
@@ -17,7 +17,7 @@ const PendingUsers = ({visibleFilter }: {visibleFilter: Record<string, boolean>}
 
   const userConfig = useApiConfigWithToken({
     method: 'get',
-    url: 'users'
+    url: 'admin/users'
   });
 
   const fetchUsers = () => axios.request(userConfig);
@@ -29,11 +29,11 @@ const PendingUsers = ({visibleFilter }: {visibleFilter: Record<string, boolean>}
 
   interface UsersResponse {
     data: {
-      data: Partial<userProps>[];
+      data: Partial<userDetailsProps>[];
     };
   }
 
-  const verifiedUsers: Partial<userProps>[] | undefined = (usersResponse as UsersResponse | undefined)?.data.data.filter((user:Partial<userProps>) => user.uid !== null).filter((user: Partial<userProps>) => user.status === 'Pending');
+  const verifiedUsers: Partial<userDetailsProps>[] | undefined = (usersResponse as UsersResponse | undefined)?.data.data.filter((user:Partial<userDetailsProps>) => user.uid !== null).filter((user: Partial<userDetailsProps>) => user.status === 'Pending');
 
   if (allUserStatus === "pending") {
     return (

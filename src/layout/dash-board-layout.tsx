@@ -26,7 +26,7 @@ const DashboardLayout = ({children}:{children:React.ReactNode}) => {
         <div className={cn("right-0 top-0 absolute z-[80000] w-[60%] md:w-[50%] bg-black h-full",)}>
           <div className="w-full h-full pb-8 pl-4 pr-5">
             <div className="w-full h-[60px] flex items-center pr-4 justify-between text-white">
-              <button onClick={() =>setIsOpen(false)}>
+              <button onClick={() =>setIsOpen(false)} className='cursor-pointer'>
                 <X className='size-7'/>
               </button>
             </div>
@@ -133,7 +133,7 @@ const DashboardLayout = ({children}:{children:React.ReactNode}) => {
         <SidebarMenu/>
       </div>
       <div className="lg:w-[85%] w-full flex-1 pt-[60px] lg:pt-0">
-        <div className="w-full h-[60px] shadow-md lg:hidden flex items-center gap-3 px-6 fixed left-0 top-0 bg-white" onClick={() => setIsOpen(true)}>
+        <div className="w-full h-[60px] shadow-md lg:hidden flex items-center gap-3 px-6 fixed left-0 top-0 bg-white cursor-pointer" onClick={() => setIsOpen(true)}>
           <MenuIcon/>
           <div className="lg:w-[154px] lg:h-[40px] w-[80px]">
             <img src="/images/OLAMAX_Logo_2.png" alt="auth_banner" className='w-full h-full object-contain object-center'/>

@@ -7,18 +7,19 @@ import { HiMail, HiLogout, HiX } from "react-icons/hi";
 import { IoIosSettings } from "react-icons/io";
 import NotificationsPanel from "../emailNotification/notfication";
 import { useAdminDetails } from "@/store/admin-details-store";
+import { extractFirstName } from "@/lib/utils";
 
 type UserDetails = {
   name: string;
   profilePicture: string;
 }
 const PageHeader = ({ title }: { title: string }) => {
-  const { logOut } = useAdminDetails();
+  const { logOut, fullUserDetails } = useAdminDetails();
     
   const user: UserDetails = 
     {
-      name: "David Aluko",
-      profilePicture: rectangle,
+      name: `${extractFirstName(fullUserDetails?.first_name)} ${extractFirstName(fullUserDetails?.last_name)}`,
+      profilePicture: fullUserDetails ? fullUserDetails.profile_image : rectangle,
     };
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -43,7 +44,7 @@ const PageHeader = ({ title }: { title: string }) => {
         </div>
         <div className="flex gap-2 xl:gap-8">
           <div className="flex items-center gap-3">
-            <div className='h-[40px] w-[40px]  '> <img src={user.profilePicture} alt="User Avatar" className="w-[40px] h-[40px]" /></div>
+            <div className='h-[40px] w-[40px]  '> <img src={user.profilePicture} alt="User Avatar" className="size-[40px] rounded-full" /></div>
               <span className="font-inter hidden lg:flex font-semibold text-[14px] text-nowrap">
                 {user.name}
               </span>
@@ -86,7 +87,7 @@ const PageHeader = ({ title }: { title: string }) => {
             <>
               <div className="fixed inset-0 bg-black w-1/2 z-40 p-4" onClick={() => setIsMenuOpen(false)} />
                 <div className="lg:hidden fixed top-0 left-0 w-[180px] h-full bg-bg z-50 flex flex-col space-y-6 text-white">
-                  <button onClick={() => setIsMenuOpen(false)} className="text-2xl">
+                  <button onClick={() => setIsMenuOpen(false)} className="text-2xl ml-2 mt-2 cursor-pointer">
                     <HiX className="size-6 text-white" />
                   </button>
                   <div className="flex flex-col px-4 items-start justify-start space-y-3">
@@ -99,7 +100,7 @@ const PageHeader = ({ title }: { title: string }) => {
                         Regularize
                     </Button>
 
-                    <div className="flex items-center space-x-2 p-2 rounded-md hover:bg-gray-700 cursor-pointer transition-all duration-200">
+                    <div className="flex items-center space-x-2 p-2 rounded-md hover:bg-gray-700 cursor-pointer transition-all duration-200" onClick={() => logOut()}>
                       <HiLogout className="size-6 text-[#E41D03]" />
                       <span>Logout</span>
                     </div>

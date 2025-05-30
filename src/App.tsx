@@ -18,7 +18,7 @@ function App() {
 
   const navigate = useNavigate();
 
-  const onSubmit = (values:loginValues) => {
+  const onSubmit = async (values:loginValues) => {
     localStorage.setItem('loginDetails', JSON.stringify(values));
     navigate('/passphrase');
   }; 

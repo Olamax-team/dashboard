@@ -1,4 +1,4 @@
-export interface userProps {
+export interface userDetailsProps {
   id: number;
   uid: string;
   email: string;
