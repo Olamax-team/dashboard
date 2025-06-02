@@ -27,6 +27,9 @@ import ProtectAuthRoutes from './layout/protect-auth-routes.tsx'
 import ProtectRoute from './layout/protect-routes.tsx'
 import UnverifiedUserInformation from './components/pages/dash-board/userInformation/unverified-user-information.tsx'
 import PendingUserInformation from './components/pages/dash-board/userInformation/pending-user-information.tsx'
+import DashboardBills from './components/pages/dash-board/pending/dashboard-bills.tsx'
+import DashboardTopUp from './components/pages/dash-board/pending/dashboard-top-up.tsx'
+import DashboardSelling from './components/pages/dash-board/pending/dasboard-selling.tsx'
 
 
 const router = createBrowserRouter([
@@ -60,6 +63,27 @@ const router = createBrowserRouter([
         element: 
           <ProtectRoute>
             <DashboardHome/>
+          </ProtectRoute>
+      },
+      {
+        path: '/dashboard/bills',
+        element: 
+          <ProtectRoute>
+            <DashboardBills/>
+          </ProtectRoute>
+      },
+      {
+        path: '/dashboard/top-up',
+        element: 
+          <ProtectRoute>
+            <DashboardTopUp/>
+          </ProtectRoute>
+      },
+      {
+        path: '/dashboard/selling',
+        element: 
+          <ProtectRoute>
+            <DashboardSelling/>
           </ProtectRoute>
       },
       {

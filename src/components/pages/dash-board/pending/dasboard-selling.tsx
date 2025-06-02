@@ -1,8 +1,8 @@
-import PageHeader from "./escrow/pageHeader";
 import DashboardLayout from "@/layout/dash-board-layout";
-import BuyingTab from "./pending/buying-tab";
+import PageHeader from "../escrow/pageHeader";
+import SellingTab from "./selling-tab";
 
-const DashboardHome = () => {
+const DashboardSelling = () => {
   
   const exchangeType = [
     { label: "BTC", amount: "$87375" },
@@ -40,7 +40,7 @@ const DashboardHome = () => {
           <PageHeader title="News" />
           <div className="w-full px-4 py-2 md:px-10 md:py-4 bg-[#F8F9FA] space-y-16 md:space-y-0">
             <div>
-              <BuyingTab />
+              <SellingTab />
             </div>
           </div>
         </section>
@@ -49,4 +49,4 @@ const DashboardHome = () => {
   );
 };
 
-export default DashboardHome;
+export default DashboardSelling;

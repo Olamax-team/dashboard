@@ -77,6 +77,7 @@ const AdminTable = ({ visibleFilter }: {visibleFilter: Record<string, boolean>})
 
     const assignRoleResult = await apiRequestHandler(assign);
     if (assignRoleResult && assignRoleResult.status === 200) {
+      console.log(assignRoleResult)
       toast.success(assignRoleResult.data.message);
     }
   };
@@ -155,7 +156,7 @@ const AdminTable = ({ visibleFilter }: {visibleFilter: Record<string, boolean>})
             </TableRow>
           </TableHeader>
           <TableBody>
-            {allUsers && allUsers.length > 0 && allUsers.map((user) => (
+            {allUsers && allUsers.length > 0 && allUsers.filter((item) => item.role === 'admin' || item.role === 'superAdmin').map((user) => (
               <TableRow
                 key={user.id}
                 className={`odd:bg-[#f3f3f3] cursor-pointer even:bg-[#e0e0e0] h-[50px] hover:bg-[#d1d1d1] text-[#121826] font-semibold text-[12px] leading-[150%] ml-5`}

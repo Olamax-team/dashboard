@@ -44,7 +44,7 @@ const DashboardLayout = ({children}:{children:React.ReactNode}) => {
           path='/dashboard'
           icon={FaRegHourglassHalf}
           label='Pending Deals'
-          isActive = {location.pathname === '/dashboard'}
+          isActive = {location.pathname === '/dashboard' || location.pathname === '/dashboard/selling' || location.pathname === '/dashboard/top-up' || location.pathname === '/dashboard/bills'}
         />
         <NavLink
           path='/dashboard/escrow-deals'

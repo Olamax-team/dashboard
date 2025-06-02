@@ -1,19 +1,11 @@
 import React, { useState } from "react";
-import {
-  HiFilter,
-  HiOutlineSortDescending,
-  HiOutlineSortAscending,
-  HiDownload,
-} from "react-icons/hi";
-import Buying from "./buying";
-import Selling from "./selling";
-import TopUp from "./topUp";
-import Bills from "./bills";
+import { HiFilter, HiOutlineSortDescending, HiOutlineSortAscending, HiDownload } from "react-icons/hi";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { useLocation, useNavigate } from "react-router-dom";
+import Selling from "./selling";
 
-const PendingButton = () => {
-  const [activeTab, setActiveTab] = useState("buying");
+const SellingTab = () => {
   const [sortOrder, setSortOrder] = useState<"ascending" | "descending">(
     "descending"
   );
@@ -38,13 +30,6 @@ const PendingButton = () => {
     finish: true,
   });
 
-  const tabs = [
-    { id: "buying", label: "Buying", count: 0 },
-    { id: "selling", label: "Selling", count: 4 },
-    { id: "top-up", label: "Top-Up", count: 2 },
-    { id: "bills", label: "Bills", count: 2 },
-  ];
-
   const toggleDropdown = () => {
     setDropdownOpen((prev) => !prev);
   };
@@ -61,46 +46,39 @@ const PendingButton = () => {
     }));
   };
 
-  const renderComponent = () => {
-    switch (activeTab) {
-      case "buying":
-        return <Buying visibleColumns={visibleColumns} />;
-      case "selling":
-        return <Selling visibleColumns={visibleColumns} />;
-      case "top-up":
-        return <TopUp />;
-      case "bills":
-        return <Bills />;
-      default:
-        return <div>Default Content</div>;
-    }
-  };
+  const { pathname } = useLocation();
+  const navigate = useNavigate();
+
+  const NavButton = ({path, label, count}:{path:string, label:string, count:number}) => {
+
+    return (
+      <Button onClick={() => navigate(path)}
+          className={cn(
+            "relative px-6 py-4 rounded-sm text-[12px] xl:text-[16px] font-medium h-[40px] transition-colors cursor-pointer",
+            pathname === path
+              ? "bg-[#039AE4] text-white"
+              : "bg-transparent text-[#121826] cursor-pointer hover:bg-gray-100"
+          )}
+        >
+          {label}
+          {count > 0 && (
+            <span className="absolute -top-1 -right-1 flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-[#039AE4] rounded-full">
+              {count}
+            </span>
+          )}
+      </Button>
+    )
+  }
 
   return (
     <React.Fragment>
       <div className="flex justify-between font-Inter flex-wrap space-y-4   bg-white">
         <div className="flex items-center lg:gap-5  gap-2 justify-center bg-white px-5 py-1 w-fit lg:mt-3  lg:px-0  lg:py-0 ">
-          {tabs.map((tab) => (
-            <Button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={cn(
-                "relative px-6 py-4 rounded-sm text-[12px] xl:text-[16px] font-medium h-[40px] transition-colors cursor-pointer",
-                activeTab === tab.id
-                  ? "bg-[#039AE4] text-white"
-                  : "bg-transparent text-[#121826] cursor-pointer hover:bg-gray-100"
-              )}
-            >
-              {tab.label}
-              {tab.count > 0 && (
-                <span className="absolute -top-1 -right-1 flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-[#039AE4] rounded-full">
-                  {tab.count}
-                </span>
-              )}
-            </Button>
-          ))}
+          <NavButton path="/dashboard" label="Buying" count={3}/>
+          <NavButton path="/dashboard/selling" label="Selling" count={4}/>
+          <NavButton path="/dashboard/top-up" label="Top Up" count={5}/>
+          <NavButton path="/dashboard/bills" label="Bills" count={9}/>
         </div>
-
         <div className="flex items-center justify-center lg:px-0  lg:py-0 px-5 py-1 w-fit bg-white  ">
           <div className="text-[#000000] flex items-center ">
             {sortOrder === "descending" && (
@@ -171,9 +149,22 @@ const PendingButton = () => {
           </Button>
         </div>
       </div>
-      <div>{renderComponent()}</div>
+      <Selling visibleColumns={visibleColumns} />
     </React.Fragment>
   );
 };
 
-export default PendingButton;
+export default SellingTab;
+
+// const SellingTab = () => {
+//   return (
+//     <div>
+//       {pathname === '/dashboard' && <Buying visibleColumns={visibleColumns} />}
+//       {pathname === '/dashboard/selling' && <Selling visibleColumns={visibleColumns} />}
+//       {pathname === '/dashboard/top-up' && <TopUp />}
+//       {pathname === '/dashboard/bills' && <Bills/>}
+//     </div>
+//   )
+// }
+
+// export default SellingTab
