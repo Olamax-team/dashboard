@@ -8,6 +8,7 @@ import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import { apiRequestHandler } from "@/api/api-request-handler";
 import { coinProps, minTransaction } from "@/lib/types";
+import { useAdminDetails } from "@/store/admin-details-store";
 
 // Define transaction types
 type Action = "Airtime" | "Data" | "Bills";
@@ -34,6 +35,7 @@ const CoinMOQCard = ({ coin, coinId }: { coin: string; coinId: number }) => {
   const { data } = useQuery({
     queryKey: ["min-transaction"],
     queryFn: () => apiRequestHandler(fetchAllCoins),
+    enabled: !!coinId
   });
 
   const minTransaction = data?.data as minTransaction;
@@ -44,8 +46,8 @@ const CoinMOQCard = ({ coin, coinId }: { coin: string; coinId: number }) => {
 
   // Track MOQ values for each action type
   const [values, setValues] = useState<Record<Action, string>>({
-    Airtime: minTransaction ? minTransaction?.limit.card_limit : '1000',
-    Data: minTransaction? minTransaction?.limit.data_limit : '1000',
+    Airtime: minTransaction ? minTransaction?.limit?.card_limit : '1000',
+    Data: minTransaction? minTransaction?.limit?.data_limit : '1000',
     Bills: "10000",
   });
 
@@ -58,8 +60,8 @@ const CoinMOQCard = ({ coin, coinId }: { coin: string; coinId: number }) => {
 
   // Track checkbox state (whether the service is enabled or not)
   const [checkedStates, setCheckedStates] = useState<Record<Action, boolean>>({
-    Airtime: minTransaction ? (minTransaction?.limit.card_limit_active === 1 ? true : false) : false,
-    Data: minTransaction ? (minTransaction?.limit.data_limit_active === 1 ? true : false) : false,
+    Airtime: minTransaction ? (minTransaction?.limit?.card_limit_active === 1 ? true : false) : false,
+    Data: minTransaction ? (minTransaction?.limit?.data_limit_active === 1 ? true : false) : false,
     Bills: false,
   });
  
@@ -91,6 +93,8 @@ const CoinMOQCard = ({ coin, coinId }: { coin: string; coinId: number }) => {
     }));
   };
 
+  const { token } = useAdminDetails();
+
   // Save all changes for this single coin
   const handleSaveAll = async () => {
     if (!coinId) {
@@ -110,20 +114,22 @@ const CoinMOQCard = ({ coin, coinId }: { coin: string; coinId: number }) => {
       escrow: false,
     };
 
-    console.log(`→ [${coin}] Saving payload:`, payload);
+    //config for axios
+    const config = {
+      method: 'post',
+      maxBodyLength: Infinity,
+      url: `https://api.olamax.io/api/add-min-transaction`,
+      headers: {
+        'Content-Type':'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      data: payload,
+    };
 
-    // You can uncomment this when ready to use API
-    // try {
-    //   const saveConfig = useApiConfigWithToken({
-    //     method: "post",
-    //     url: "/save-moq-config", // Replace with your actual endpoint
-    //     data: payload,
-    //   });
-    //   await axios.request(saveConfig);
-    //   console.log(`✅ [${coin}] saved successfully`);
-    // } catch (err) {
-    //   console.error(`❌ [${coin}] failed to save`, err);
-    // }
+    //api call
+    const saveData = () => axios.request(config);
+    const result = await apiRequestHandler(saveData);
+    console.log(result);
 
     // Disable all edit modes after saving
     setEditMode({ Airtime: false, Data: false, Bills: false });
@@ -211,22 +217,8 @@ const CoinMOQCard = ({ coin, coinId }: { coin: string; coinId: number }) => {
  * - Fetches all available coins
  * - Renders <CoinMOQCard> for each coin (excluding NGN)
  */
-const MOQTransactions = () => {
+const MOQTransactions = ({status, allCoin}:{status: 'pending' | 'error' | 'success', allCoin:coinProps[]}) => {
   // API configuration for fetching all buyable coins
-  const allCoinConfig = useApiConfigWithToken({
-    method: "get",
-    url: "all-coins/buy",
-  });
-
-  const fetchAllCoins = () => axios.request(allCoinConfig);
-
-  // React Query to fetch coin data
-  const { data, status } = useQuery({
-    queryKey: ["all-coins"],
-    queryFn: () => apiRequestHandler(fetchAllCoins),
-  });
-
-  const allCoin = data?.data.coin as coinProps[];
 
   // ─── Loading State ───
   if (status === "pending") {
@@ -259,7 +251,7 @@ const MOQTransactions = () => {
   if (status === "success" && allCoin.length > 0) {
     return (
       <div className="flex flex-row w-full justify-between items-start flex-wrap pb-12 space-y-4 border-b-2">
-        {allCoin
+        { allCoin
           .filter((item) => item.coin !== "NGN")
           .map((coin) => (
             <CoinMOQCard key={coin.id} coin={coin.coin} coinId={coin.id} />

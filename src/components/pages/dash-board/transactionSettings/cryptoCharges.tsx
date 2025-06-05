@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Edit, Loader2 } from 'lucide-react';
@@ -6,9 +6,11 @@ import { HiFolderArrowDown } from 'react-icons/hi2';
 import { Switch } from '@/components/ui/switch';
 import { useApiConfigWithToken } from '@/lib/use-api-config';
 import axios from 'axios';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiRequestHandler } from '@/api/api-request-handler';
 import { coinProps, minTransaction } from '@/lib/types';
+import { useAdminDetails } from '@/store/admin-details-store';
+import { toast } from 'sonner';
 
 /**
  * ChargeCard — Manages state for a single currency:
@@ -21,16 +23,30 @@ import { coinProps, minTransaction } from '@/lib/types';
  *  • Current charges text
  *  • Active switch + “Save All Changes” button
  */
-const ChargeCard = ({ currency, coinId, transaction_charge }: { currency: string, coinId: number, transaction_charge:number }) => {
-  const [charge, setCharge] = useState<string>('0.0001');
+const ChargeCard = ({ currency, coinId }: { currency: string, coinId: number }) => {
+
+  // API configuration for fetching minimum transactions
+  const minTransactionConfig = useApiConfigWithToken({
+    method: "get",
+    url: `min-transaction/${coinId}`,
+  });
+
+  const fetchAllCoins = () => axios.request(minTransactionConfig);
+
+  // React Query to fetch minimum transaction data
+  const { data } = useQuery({
+    queryKey: ["min-transaction"],
+    queryFn: () => apiRequestHandler(fetchAllCoins),
+    enabled: !!coinId
+  });
+
+  const minTransaction = data?.data as minTransaction;
+
+  console.log(minTransaction);
+
+  const [charge, setCharge] = useState<string>(minTransaction ? String(minTransaction.transaction_charges) : '0.0001');
   const [editMode, setEditMode] = useState<boolean>(false);
   const [active, setActive] = useState<boolean>(true);
-  
-  // Update charge if transaction_charge changes (e.g., after data loads)
-  useEffect(() => {
-    setCharge(transaction_charge.toString());
-  }, [transaction_charge]);
-
 
   const handleEditClick = () => {
     setEditMode(true);
@@ -48,7 +64,10 @@ const ChargeCard = ({ currency, coinId, transaction_charge }: { currency: string
     setActive(prev => !prev);
   };
 
-  const handleSaveAll = () => {
+  const { token } = useAdminDetails();
+  const queryClient = useQueryClient();
+
+  const handleSaveAll = async () => {
     // Build payload: { currency, charge, active }
     console.log(`[${currency}] Saving all:`, {
       currency,
@@ -56,7 +75,57 @@ const ChargeCard = ({ currency, coinId, transaction_charge }: { currency: string
       charge: parseFloat(charge),
       active,
     });
-    // TODO: call your API here
+
+// Construct payload to send to the backend
+    const chargePayload = {
+      coin_id: coinId,
+      charges: parseFloat(charge),
+    };
+
+    const activatePayload = {
+      coin_id: coinId,
+      mode: active
+    };
+
+    //config for axios
+    const chargeConfig = {
+      method: 'post',
+      maxBodyLength: Infinity,
+      url: `https://api.olamax.io/api/set-charges`,
+      headers: {
+        'Content-Type':'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      data: chargePayload,
+    };
+
+    const activateConfig = {
+      method: 'post',
+      maxBodyLength: Infinity,
+      url: `https://api.olamax.io/api/update-charges`,
+      headers: {
+        'Content-Type':'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      data: activatePayload,
+    };
+
+    //api calls
+    const saveCharge = () => axios.request(chargeConfig);
+    const saveActivate = () => axios.request(activateConfig);
+    const chargeResult = await apiRequestHandler(saveCharge);
+    const activateResult = await apiRequestHandler(saveActivate);
+
+    if (chargeResult && chargeResult.status === 200) {
+      toast.success(chargeResult.data.message);
+      queryClient.invalidateQueries({ queryKey: ['min-transaction'] })
+    };
+
+    if (activateResult && activateResult.status === 200) {
+      toast.success(activateResult.data.message);
+      queryClient.invalidateQueries({ queryKey: ['min-transaction'] })
+    };
+
     setEditMode(false);
   };
 
@@ -140,24 +209,9 @@ const Charges = () => {
   });
 
   const allCoin = data?.data.coin as coinProps[];
-  const MOQConfig = useApiConfigWithToken({
-  method: "get",
-  url: "min-transaction/1",
-  });
-
-  const fetchMOQConfig = () => axios.request(MOQConfig);
-
-  // React Query to fetch coin data
-  const { data: MOQData, status: MOQStatus } = useQuery({
-    queryKey: ["min-transaction"],
-    queryFn: () => apiRequestHandler(fetchMOQConfig),
-  });
-
-const MOQ = MOQData?.data as minTransaction[];
-  console.log('MOQ:', MOQ);
 
   // ─── Loading State ───
-  if (status || MOQStatus === "pending") {
+  if (status === "pending") {
     return (
       <div className="flex items-center justify-center py-20 space-y-4 border-b-2">
         <Loader2 className="animate-spin" />
@@ -193,11 +247,9 @@ const MOQ = MOQData?.data as minTransaction[];
 
         <div className="w-full bg-white rounded-sm h-auto mx-auto space-y-6 px-[26px] py-[30px]">
           {allCoin.filter((item) =>item.coin !== 'NGN').map((currency) => {
-            // Find the MOQ for this coinId
-            const moq = MOQ.find((m) =>  m.coin.id === currency.id);
-            const transaction_charges = moq?.transaction_charges ?? 0.0001;
+            
             return (
-              <ChargeCard key={currency.id} currency={currency.coin} coinId={currency.id} transaction_charge={transaction_charges} />
+              <ChargeCard key={currency.id} currency={currency.coin} coinId={currency.id} />
           )})}
         </div>
       </div>

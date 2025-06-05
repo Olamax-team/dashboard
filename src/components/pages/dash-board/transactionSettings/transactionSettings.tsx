@@ -13,12 +13,33 @@ import { useState } from "react";
 import Toggle from "./toggle";
 import AvailableCoin from "./availableCoin";
 import Charges from "./cryptoCharges";
+import { useApiConfigWithToken } from "@/lib/use-api-config";
+import axios from "axios";
+import { useQuery } from "@tanstack/react-query";
+import { apiRequestHandler } from "@/api/api-request-handler";
+import { coinProps } from "@/lib/types";
 
 const TransactionSettings = () => {
   const [coinBonus, setCoinBonus] = useState("0.15");
   const [editCoinBonus, setEditCoinBonus] = useState(false);
   const [escrowCharges, setEscrowCharges] = useState("0.15");
   const [editEscrowCharges, setEditEscrowCharges] = useState(false);
+
+
+  const allCoinConfig = useApiConfigWithToken({
+    method: "get",
+    url: "all-coins/buy",
+  });
+
+  const fetchAllCoins = () => axios.request(allCoinConfig);
+
+  // React Query to fetch coin data
+  const { data, status } = useQuery({
+    queryKey: ["all-coins"],
+    queryFn: () => apiRequestHandler(fetchAllCoins),
+  });
+
+  const allCoin = data?.data.coin as coinProps[];
 
   return (
     <DashboardLayout>
@@ -135,9 +156,9 @@ const TransactionSettings = () => {
             </div>
           </div>
           {/* Minimum Order Quantity */}
-          <OrderQuantity/>
+          <OrderQuantity status={status} allCoin={allCoin} />
           {/* Minimum Order Quantity Transactions*/}
-          <MOQTransactions/>
+          <MOQTransactions status={status} allCoin={allCoin}/>
           {/* Toggle*/}
           <Toggle/>
           {/* Available coins*/}

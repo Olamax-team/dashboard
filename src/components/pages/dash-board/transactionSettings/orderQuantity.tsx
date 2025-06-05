@@ -172,15 +172,15 @@ const CoinOrderCard = ({ coin, coinId }: { coin: string; coinId: number }) => {
   const { data } = useQuery({
     queryKey: ["min-transaction"],
     queryFn: () => apiRequestHandler(fetchMinimumTransaction),
+    enabled: !!coinId
   });
 
   const minTransaction = data?.data as minTransaction;
-  console.log(parseFloat(minTransaction?.limit.buying_limit));
 
   // ─── Local state for values ───────────────────────────────────
   const [values, setValues] = useState<Record<Action, string>>({
-    Buy: minTransaction ? minTransaction?.limit.buying_limit : '10000',
-    Sell: minTransaction ? minTransaction?.limit.selling_limit : '10000',
+    Buy: minTransaction ? minTransaction?.limit?.buying_limit : '10000',
+    Sell: minTransaction ? minTransaction?.limit?.selling_limit : '10000',
   });
 
   // ─── Local state for edit modes ────────────────────────────────
@@ -295,23 +295,7 @@ const CoinOrderCard = ({ coin, coinId }: { coin: string; coinId: number }) => {
  * OrderQuantity — Parent component that simply maps through all coins.
  * Renders one <CoinOrderCard> per coin.
  */
-const OrderQuantity = () => {
-
-  // API configuration for fetching all buyable coins
-  const allCoinConfig = useApiConfigWithToken({
-    method: "get",
-    url: "all-coins/buy",
-  });
-
-  const fetchAllCoins = () => axios.request(allCoinConfig);
-
-  // React Query to fetch coin data
-  const { data, status } = useQuery({
-    queryKey: ["all-coins"],
-    queryFn: () => apiRequestHandler(fetchAllCoins),
-  });
-
-  const allCoin = data?.data.coin as coinProps[];
+const OrderQuantity = ({status, allCoin}:{status: 'pending' | 'error' | 'success', allCoin:coinProps[]}) => {
 
   // ─── Loading State ───
   if (status === "pending") {
