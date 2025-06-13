@@ -3,7 +3,7 @@ import { HiFilter, HiOutlineSortDescending, HiOutlineSortAscending, HiDownload }
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import Verified from "./verified-users";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 
 
 const VerifiedUserTab = () => {
@@ -12,6 +12,31 @@ const VerifiedUserTab = () => {
 
   const navigate = useNavigate();
   const { pathname } = useLocation();
+  const [searchParams] = useSearchParams();
+
+  const [query, setQuery] = React.useState("");
+
+  const handleSearch = () => {
+    const trimmed = query.trim();
+    const encodedQuery = encodeURIComponent(query.trim());
+    if (trimmed) {
+      navigate(`/dashboard/user-information?status=verified&search=${encodedQuery}`);
+    } else {
+      navigate(".", { replace: true });
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault(); 
+      handleSearch();
+    };
+  };
+
+  React.useEffect(() => {
+    const q = searchParams.get('search')
+    if (q) setQuery(q as string);
+  }, []);
 
   const [visibleFilter, setVisibleFilter] = useState({
     user: true,
@@ -148,6 +173,23 @@ const VerifiedUserTab = () => {
             Export <HiDownload className="size-6 text-[#ffffff]" />
           </Button>
         </div>
+      </div>
+      <div className="my-5">
+        <input 
+          value={query}
+          onChange={(e) => {
+            const value = e.target.value;
+            setQuery(value);
+            // If input is cleared, remove query params
+            if (value.trim() === "") {
+              navigate(".", { replace: true });
+            }
+          }}
+            onKeyDown={handleKeyDown}
+          type="text" 
+          placeholder="Search for verified user" 
+          className="h-11 w-[50%] rounded-lg outline-0 focus:outline-none border px-4"
+        />
       </div>
       <Verified visibleFilter={visibleFilter} />
     </React.Fragment>

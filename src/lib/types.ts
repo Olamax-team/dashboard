@@ -76,3 +76,155 @@ export interface minTransaction {
   buy_naira_value: string;
   icon: string;
 };
+
+export interface pendingTransactionDataResponse {
+  data: {
+    bills: Bill[];
+    buyings: Buying[];
+    sell_transactions: SellTransaction[];
+    topUp: TopUp[];
+  };
+  pagination: {
+    bills: Pagination;
+    buyings: Pagination;
+    sell_transactions: Pagination;
+  };
+}
+
+interface Pagination {
+  current_page: number;
+  per_page: number;
+  total: number;
+  last_page: number;
+}
+
+interface User {
+  user_id: number;
+  uid: string;
+  first_name: string;
+  middle_name: string | null;
+  last_name: string;
+  phone: string | null;
+}
+
+interface Bill {
+  bills_transaction_id: number;
+  user: User;
+  coin: string | null;
+  blockchain: string | null;
+  coin_value: string | null;
+  naira_value: string;
+  method: string;
+  status: string;
+  finished: string;
+  exchange_value: string | null;
+  type: string;
+  billtype: string;
+  payment_made: string | null;
+  amount_paid: string | null;
+  product_number: string;
+  customer_name: string | null;
+  customernumber: string | null;
+  notification_phone_number: string | null;
+  invoice: string | null;
+  ref: string;
+  wallet_address: string | null;
+  bank: string;
+  receiving_number: string;
+  network: string;
+  created_at: string;
+  updated_at: string;
+}
+
+interface Buying {
+  buy_transaction_id: number;
+  user: User;
+  coin: {
+    coin_id: number;
+    coin_name: string;
+    coin: string;
+  };
+  blockchain: {
+    blobkchain_id: number;
+    blockchain_name: string;
+  };
+  coin_price: string;
+  amount: number;
+  dollar_rate: string;
+  total_naira_plus_fees: string;
+  method: string;
+  payment_status: string;
+  finished: string;
+  wallet_address: string;
+  payment_made: string | null;
+  amount_paid: string | null;
+  transaction_contact: string;
+  network_fees_dollar: string;
+  referer: string | null;
+  network_fees_naira: string;
+  created_at: string;
+  updated_at: string;
+}
+
+interface SellTransaction {
+  sell_transaction_id: number;
+  user: User;
+  selling: {
+    id: number;
+    virtual_account_id: number;
+    ref: string;
+    currency: string;
+    network: string;
+    created_at: string;
+    updated_at: string;
+  };
+  amount_sent: string;
+  naira_value: string;
+  status: string;
+  coin: string;
+  sell_details: SellDetail;
+  referer: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+interface SellDetail {
+  id: number;
+  sell_transaction_id: number;
+  account_name: string;
+  account_number: string;
+  bank_name: string;
+  phone_number: string;
+  created_at: string;
+  updated_at: string;
+}
+
+interface TopUp {
+  bills_transaction_id: number;
+  user: User;
+  coin: string | null;
+  blockchain: string | null;
+  coin_value: string | null;
+  naira_value: string;
+  method: string;
+  status: string;
+  finished: string;
+  exchange_value: string | null;
+  type: string;
+  billtype: string;
+  payment_made: string | null;
+  amount_paid: string | null;
+  product_number: string;
+  customer_name: string | null;
+  customernumber: string | null;
+  notification_phone_number: string | null;
+  invoice: string | null;
+  ref: string;
+  wallet_address: string | null;
+  bank: string;
+  receiving_number: string;
+  network: string;
+  referer: string | null;
+  created_at: string;
+  updated_at: string;
+}

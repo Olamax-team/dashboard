@@ -57,11 +57,11 @@ const BuyingTab = () => {
             "relative px-6 py-4 rounded-sm text-[12px] xl:text-[16px] font-medium h-[40px] transition-colors cursor-pointer",
             pathname === path
               ? "bg-[#039AE4] text-white"
-              : "bg-transparent text-[#121826] cursor-pointer hover:bg-gray-100"
+              : "bg-white text-[#121826] cursor-pointer hover:bg-gray-100 border "
           )}
         >
           {label}
-          {count > 0 && (
+          { count > 0 && (
             <span className="absolute -top-1 -right-1 flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-[#039AE4] rounded-full">
               {count}
             </span>
@@ -72,14 +72,14 @@ const BuyingTab = () => {
 
   return (
     <React.Fragment>
-      <div className="flex justify-between font-Inter flex-wrap space-y-4   bg-white">
-        <div className="flex items-center lg:gap-5  gap-2 justify-center bg-white px-5 py-1 w-fit lg:mt-3  lg:px-0  lg:py-0 ">
+      <div className="flex justify-between font-Inter flex-wrap space-y-4">
+        <div className="flex items-center lg:gap-5 gap-2 justify-center px-5 py-1 w-fit lg:mt-3  lg:px-0  lg:py-0 ">
           <NavButton path="/dashboard" label="Buying" count={3}/>
           <NavButton path="/dashboard/selling" label="Selling" count={4}/>
           <NavButton path="/dashboard/top-up" label="Top Up" count={5}/>
           <NavButton path="/dashboard/bills" label="Bills" count={9}/>
         </div>
-        <div className="flex items-center justify-center lg:px-0  lg:py-0 px-5 py-1 w-fit bg-white  ">
+        <div className="flex items-center justify-center lg:px-0  lg:py-0 px-5 py-1 w-fit ">
           <div className="text-[#000000] flex items-center ">
             {sortOrder === "descending" && (
               <div

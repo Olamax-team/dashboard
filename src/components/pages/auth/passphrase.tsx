@@ -61,7 +61,7 @@ const Passphrase = () => {
       setUser(loginUser.data.data.user);
 
       const allUsersConfig = {
-        method: 'get',
+        method: 'post',
         maxBodyLength: Infinity,
         url: `https://api.olamax.io/api/admin/users`,
         headers: {

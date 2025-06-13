@@ -2,28 +2,37 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { DropdownMenu, DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import React from "react";
 import { HiMiniEllipsisVertical } from "react-icons/hi2";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useApiConfigWithToken } from "@/lib/use-api-config";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import { apiRequestHandler } from "@/api/api-request-handler";
 import { userDetailsProps } from "@/lib/types";
 import { Loader2 } from "lucide-react";
-import { extractFirstName } from "@/lib/utils";
+import { cn, extractFirstName } from "@/lib/utils";
+import { toast } from "sonner";
+import { useAdminDetails } from "@/store/admin-details-store";
+import { useFetch } from "@/lib/use-fetch";
 
 const VerifiedUsers = ({visibleFilter}: {visibleFilter: Record<string, boolean>}) => {
+  const { token } = useAdminDetails();
   const [completedMenu, setCompletedMenu] = React.useState("view");
   const navigate = useNavigate();
 
+  const [searchParams] = useSearchParams();
+
+  const paramsString = searchParams.toString();
+  const fullUrl = paramsString ? `admin/users?${paramsString}` : 'admin/users?status=verified';
+
   const userConfig = useApiConfigWithToken({
-    method: 'get',
-    url: 'admin/users'
+    method: 'post',
+    url: fullUrl
   });
 
   const fetchUsers = () => axios.request(userConfig);
 
   const { data:usersResponse, status:allUserStatus } = useQuery({
-    queryKey: ['verified-users'],
+    queryKey: ['verified-users', paramsString],
     queryFn: () =>apiRequestHandler(fetchUsers)
   });
 
@@ -31,7 +40,55 @@ const VerifiedUsers = ({visibleFilter}: {visibleFilter: Record<string, boolean>}
     data: {
       data: Partial<userDetailsProps>[];
     };
-  }
+  };
+
+  const allRoles = [
+    {
+      id: 1,
+      name: 'superAdmin'
+    },
+    {
+      id: 2,
+      name: 'admin'
+    },
+    {
+      id: 3,
+      name: 'user'
+    },
+    {
+      id: 4,
+      name: 'creator'
+    },
+    {
+      id: 5,
+      name: 'author'
+    }
+  ]
+
+  const assignRole = async (userId: number, role: string) => {
+
+    const assign: () => Promise<any> = () => axios.request({
+      method: 'post',
+      maxBodyLength: Infinity,
+      url: `https://api.olamax.io/api/admin/assign-role`,
+      headers: {
+        'Content-Type':'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      data: {
+        user_id: userId,
+        role: role,
+      },
+    });
+
+    const assignRoleResult = await apiRequestHandler(assign);
+    if (assignRoleResult && assignRoleResult.status === 200) {
+      console.log(assignRoleResult)
+      toast.success(assignRoleResult.data.message);
+    }
+  };
+
+  const { deleteUser, blockUser } = useFetch();
 
   const verifiedUsers: Partial<userDetailsProps>[] | undefined = (usersResponse as UsersResponse | undefined)?.data.data.filter((user: Partial<userDetailsProps>) => user.status === 'verified');
 
@@ -55,7 +112,7 @@ const VerifiedUsers = ({visibleFilter}: {visibleFilter: Record<string, boolean>}
   if (allUserStatus === 'success' && verifiedUsers && verifiedUsers.length === 0) {
     return (
       <div className="flex items-center justify-center h-full text-gray-500 py-28">
-        No verified users found.
+        {paramsString ? `No verified user for the query "${searchParams.get('search')}" was found` : 'No verified users found.'}
       </div>
     );
   };
@@ -116,7 +173,7 @@ const VerifiedUsers = ({visibleFilter}: {visibleFilter: Record<string, boolean>}
                 className="cursor-pointer odd:bg-gray-100 even:bg-gray-200 border-b h-[50px] hover:bg-gray-300 transition-all"
               >
                 {visibleFilter.user && (
-                  <TableCell className="py-2 text-center border-r border-gray-300 group" onClick={() => navigate(`/dashboard/user-information/user-details-verified`)} >
+                  <TableCell className="py-2 text-center border-r border-gray-300 group" onClick={() => navigate(`/dashboard/user-information/user-details/${item.id}`)} >
                     <div className="group-hover:underline capitalize">{extractFirstName(item.first_name)} {extractFirstName(item.last_name)}</div>
                     <div className="text-xs text-[#121826] group-hover:underline">
                       UID {item.uid}
@@ -179,7 +236,7 @@ const VerifiedUsers = ({visibleFilter}: {visibleFilter: Record<string, boolean>}
                         </button>
                       </DropdownMenuTrigger>
 
-                      <DropdownMenuContent className="rounded-xl bg-white shadow-lg p-4 w-[180px] ring-1 ring-gray-200 transition-all duration-200 transform scale-95 hover:scale-100">
+                      <DropdownMenuContent className="rounded-xl bg-white shadow-lg p-2 w-[180px] ring-1 ring-gray-200 transition-all duration-200 transform scale-95 hover:scale-100">
                         <DropdownMenuRadioGroup
                           value={completedMenu}
                           onValueChange={setCompletedMenu}
@@ -188,19 +245,21 @@ const VerifiedUsers = ({visibleFilter}: {visibleFilter: Record<string, boolean>}
                             value="view"
                             onClick={(e) => {
                               e.stopPropagation(); // Prevent row click
-                              navigate(`/UserPreview/${item.uid}`);
+                              navigate(`/dashboard/user-information/user-details/${item.id}`);
                             }}
                             className="rounded-lg py-2 px-4 text-sm pl-6 text-[#000000] hover:bg-blue-50 focus:ring-2 focus:ring-black transition-all duration-150"
                           >
                             View
                           </DropdownMenuRadioItem>
                           <DropdownMenuRadioItem
+                            onClick={() => { if (item.id !== undefined) blockUser(item.id); }}
                             value="block User"
                             className="rounded-lg py-2 px-4 text-sm pl-6 text-[#000000] hover:bg-blue-50 focus:ring-2 focus:ring-black transition-all duration-150"
                           >
                             Block User
                           </DropdownMenuRadioItem>
                           <DropdownMenuRadioItem
+                            onClick={() => { if (item.id !== undefined) deleteUser(item.id); }}
                             value="delete User"
                             className="rounded-lg py-2 px-4 text-sm pl-6 text-[#000000] hover:bg-blue-50 focus:ring-2 focus:ring-black transition-all duration-150"
                           >
@@ -212,6 +271,23 @@ const VerifiedUsers = ({visibleFilter}: {visibleFilter: Record<string, boolean>}
                           >
                             Export Details
                           </DropdownMenuRadioItem>
+                          { allRoles && (allRoles as { id: number; name: string }[])
+                          .filter((role: { id: number; name: string }) => role.name !== "user")
+                          .map((role: { id: number; name: string }) => (
+                          <DropdownMenuRadioItem
+                            key={role.id}
+                            value={role.name}
+                            onClick={(e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+                              e.stopPropagation();
+                              if (item.id !== undefined) {
+                                assignRole(item.id, role.name);
+                              }
+                            }}
+                            className={cn("capitalize rounded-lg py-2 px-4 text-sm pl-6 text-[#000000] hover:bg-blue-50 focus:ring-2 focus:ring-black transition-all duration-150", (item && item.role) === role.name ? 'hidden' : 'block' )}
+                          >
+                            Assign {role.name}
+                          </DropdownMenuRadioItem>
+                          ))}
                         </DropdownMenuRadioGroup>
                       </DropdownMenuContent>
                     </DropdownMenu>

@@ -316,7 +316,7 @@ const OrderQuantity = ({status, allCoin}:{status: 'pending' | 'error' | 'success
   }
 
   // ─── Empty State ───
-  if (status === "success" && allCoin.length < 1) {
+  if (status === "success" && allCoin && allCoin.length < 1) {
     return (
       <div className="flex items-center justify-center py-20 space-y-4 border-b-2">
         <p className="text-red-500">Order Quantities not available at the moment.</p>
@@ -325,7 +325,7 @@ const OrderQuantity = ({status, allCoin}:{status: 'pending' | 'error' | 'success
   }
   
   // ─── Success State ───
-  if (status === "success" && allCoin.length > 0) {
+  if (status === "success" && allCoin && allCoin.length > 0) {
     return (
       <div className="flex flex-row w-full justify-between items-start flex-wrap space-y-3 pb-12 border-b-2">
         {allCoin.filter((item) => item.coin !== 'NGN').map((coin) => (

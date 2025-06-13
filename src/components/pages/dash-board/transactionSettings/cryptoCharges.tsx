@@ -113,17 +113,16 @@ const ChargeCard = ({ currency, coinId }: { currency: string, coinId: number }) 
     //api calls
     const saveCharge = () => axios.request(chargeConfig);
     const saveActivate = () => axios.request(activateConfig);
-    const chargeResult = await apiRequestHandler(saveCharge);
     const activateResult = await apiRequestHandler(saveActivate);
 
-    if (chargeResult && chargeResult.status === 200) {
-      toast.success(chargeResult.data.message);
-      queryClient.invalidateQueries({ queryKey: ['min-transaction'] })
-    };
-
     if (activateResult && activateResult.status === 200) {
-      toast.success(activateResult.data.message);
-      queryClient.invalidateQueries({ queryKey: ['min-transaction'] })
+        toast.success(activateResult.data.message);
+        const chargeResult = await apiRequestHandler(saveCharge);
+
+        if (chargeResult && chargeResult.status === 200) {
+        toast.success(chargeResult.data.message);
+      };
+      queryClient.invalidateQueries({ queryKey: ['min-transaction']})
     };
 
     setEditMode(false);
@@ -229,7 +228,7 @@ const Charges = () => {
   }
 
   // ─── Empty State ───
-  if (status === "success" && allCoin.length < 1) {
+  if (status === "success" && allCoin && allCoin.length < 1) {
     return (
       <div className="flex items-center justify-center py-20 space-y-4 border-b-2">
         <p className="text-red-500">Minimum Order Quantities not available at the moment.</p>
@@ -238,7 +237,7 @@ const Charges = () => {
   }
 
   // ─── Success State ───
-  if (status === "success" && allCoin.length > 0) {
+  if (status === "success" && allCoin && allCoin.length > 0) {
     return (
       <div className="flex-1 w-1/2 items-start justify-start">
         <h1 className="text-lg font-semibold mb-4">

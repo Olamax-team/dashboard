@@ -11,8 +11,6 @@ import Escrow from './components/pages/dash-board/escrow/escrow.tsx'
 import DashboardHome from './components/pages/dash-board/home.tsx'
 import TransHistory from './components/pages/dash-board/transHistory/transHistory.tsx'
 import UserInformation from './components/pages/dash-board/userInformation/user-information.tsx'
-import UserPreview from './components/pages/dash-board/userInformation/userDetailsVerified.tsx'
-import UnVerifiedUserDetails from './components/pages/dash-board/userInformation/UserDetailsUnverified.tsx'
 import TransactionSettings from './components/pages/dash-board/transactionSettings/transactionSettings.tsx'
 import ManageRerrals from './components/pages/dash-board/manageReferrals/manageRefferrals.tsx'
 import BlockUser from './components/pages/dash-board/blockUser/blockUser.tsx'
@@ -30,6 +28,7 @@ import PendingUserInformation from './components/pages/dash-board/userInformatio
 import DashboardBills from './components/pages/dash-board/pending/dashboard-bills.tsx'
 import DashboardTopUp from './components/pages/dash-board/pending/dashboard-top-up.tsx'
 import DashboardSelling from './components/pages/dash-board/pending/dasboard-selling.tsx'
+import UserDetails from './components/pages/dash-board/userInformation/user-details.tsx'
 
 
 const router = createBrowserRouter([
@@ -122,17 +121,10 @@ const router = createBrowserRouter([
           </ProtectRoute>
       },
       {
-        path:"/dashboard/user-information/user-details-verified",
+        path:"/dashboard/user-information/user-details/:id",
         element: 
           <ProtectRoute>
-            <UserPreview/>  
-          </ProtectRoute>
-      },
-      {
-        path:"/dashboard/user-information/user-details-unverified",
-        element: 
-          <ProtectRoute>
-            <UnVerifiedUserDetails/>
+            <UserDetails/>  
           </ProtectRoute>
       },
       {

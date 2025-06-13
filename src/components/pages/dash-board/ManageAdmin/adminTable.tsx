@@ -4,7 +4,7 @@ import { Switch } from "@/components/ui/switch";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow,} from "@/components/ui/table";
 import { userDetailsProps } from "@/lib/types";
 import { useApiConfigWithToken } from "@/lib/use-api-config";
-import { extractFirstName } from "@/lib/utils";
+import { cn, extractFirstName } from "@/lib/utils";
 import { useAdminDetails } from "@/store/admin-details-store";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
@@ -231,7 +231,7 @@ const AdminTable = ({ visibleFilter }: {visibleFilter: Record<string, boolean>})
                             e.stopPropagation();
                             assignRole(user.id, role.name);
                             }}
-                            className="capitalize rounded-lg py-2 px-4 text-sm pl-6 text-[#000000] hover:bg-blue-50 focus:ring-2 focus:ring-black transition-all duration-150"
+                            className={cn("capitalize rounded-lg py-2 px-4 text-sm pl-6 text-[#000000] hover:bg-blue-50 focus:ring-2 focus:ring-black transition-all duration-150", (user && user.role) === role.name ? 'hidden' : 'block' )}
                           >
                             Assign {role.name}
                           </DropdownMenuRadioItem>

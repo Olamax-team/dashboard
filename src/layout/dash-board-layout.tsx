@@ -6,10 +6,13 @@ import { IconType } from 'react-icons';
 import { FaRegHourglassHalf } from "react-icons/fa6";
 import { FiRefreshCcw } from "react-icons/fi";
 import { HiOutlineClipboardList, HiAdjustments, HiUserCircle, HiUserAdd, HiMinusCircle, HiNewspaper, HiSpeakerphone, HiChartPie, HiStar, HiDesktopComputer, HiUserGroup } from "react-icons/hi";
+import { useAdminDetails } from '@/store/admin-details-store';
 
 const DashboardLayout = ({children}:{children:React.ReactNode}) => {
   const [isOpen, setIsOpen] = React.useState(false);
   const location = useLocation();
+
+  const { fullUserDetails } = useAdminDetails();
 
   const NavLink = ({path, icon:Icon, label, isActive}:{path:string,icon:IconType, label:string, isActive: boolean}) => {
     return (
@@ -40,48 +43,62 @@ const DashboardLayout = ({children}:{children:React.ReactNode}) => {
   const SidebarMenu = () => {
     return (
       <div className='lg:h-[calc(100%_-_80px)] h-[calc(100%_-_60px)] flex flex-col justify-around gap-3 pb-10'>
-        <NavLink
-          path='/dashboard'
-          icon={FaRegHourglassHalf}
-          label='Pending Deals'
-          isActive = {location.pathname === '/dashboard' || location.pathname === '/dashboard/selling' || location.pathname === '/dashboard/top-up' || location.pathname === '/dashboard/bills'}
-        />
-        <NavLink
-          path='/dashboard/escrow-deals'
-          icon={FiRefreshCcw}
-          label='Escrow Deals'
-          isActive = {location.pathname === '/dashboard/escrow-deals'}
-        />
-        <NavLink
-          path='/dashboard/transaction-history'
-          icon={HiOutlineClipboardList}
-          label='Transaction History'
-          isActive = {location.pathname === '/dashboard/transaction-history'}
-        />
-        <NavLink
-          path='/dashboard/transaction-settings'
-          icon={HiAdjustments}
-          label='Transaction Settings'
-          isActive = {location.pathname === '/dashboard/transaction-settings'}
-        />
-        <NavLink
-          path='/dashboard/user-information'
-          icon={HiUserCircle}
-          label='User Information'
-          isActive = {location.pathname === '/dashboard/user-information' || location.pathname.startsWith('/dashboard/user-information')}
-        />
-        <NavLink
-          path='/dashboard/manage-referrals'
-          icon={HiUserAdd}
-          label='Manage Referrals'
-          isActive = {location.pathname === '/dashboard/manage-referrals'}
-        />
-        <NavLink
-          path='/dashboard/block-unblock'
-          icon={HiMinusCircle}
-          label='Block & Unblock'
-          isActive = {location.pathname === '/dashboard/block-unblock'}
-        />
+        { fullUserDetails && fullUserDetails.role === 'superAdmin' &&
+          <NavLink
+            path='/dashboard'
+            icon={FaRegHourglassHalf}
+            label='Pending Deals'
+            isActive = {location.pathname === '/dashboard' || location.pathname === '/dashboard/selling' || location.pathname === '/dashboard/top-up' || location.pathname === '/dashboard/bills'}
+          />
+        }
+        { fullUserDetails && fullUserDetails.role === 'superAdmin' &&
+          <NavLink
+            path='/dashboard/escrow-deals'
+            icon={FiRefreshCcw}
+            label='Escrow Deals'
+            isActive = {location.pathname === '/dashboard/escrow-deals'}
+          />
+        }
+        { fullUserDetails && fullUserDetails.role === 'superAdmin' &&
+          <NavLink
+            path='/dashboard/transaction-history'
+            icon={HiOutlineClipboardList}
+            label='Transaction History'
+            isActive = {location.pathname === '/dashboard/transaction-history'}
+          />
+        }
+        { fullUserDetails && fullUserDetails.role === 'superAdmin' &&
+          <NavLink
+            path='/dashboard/transaction-settings'
+            icon={HiAdjustments}
+            label='Transaction Settings'
+            isActive = {location.pathname === '/dashboard/transaction-settings'}
+          />
+        }
+        { fullUserDetails && fullUserDetails.role === 'superAdmin' &&
+          <NavLink
+            path='/dashboard/user-information'
+            icon={HiUserCircle}
+            label='User Information'
+            isActive = {location.pathname === '/dashboard/user-information' || location.pathname.startsWith('/dashboard/user-information')}
+          />
+        }
+        { fullUserDetails && fullUserDetails.role === 'superAdmin' &&
+          <NavLink
+            path='/dashboard/manage-referrals'
+            icon={HiUserAdd}
+            label='Manage Referrals'
+            isActive = {location.pathname === '/dashboard/manage-referrals'}
+          />
+        }
+        { fullUserDetails && fullUserDetails.role === 'superAdmin' &&
+          <NavLink
+            path='/dashboard/block-unblock'
+            icon={HiMinusCircle}
+            label='Block & Unblock'
+            isActive = {location.pathname === '/dashboard/block-unblock'}
+          />
+        }
         <NavLink
           path='/dashboard/news'
           icon={HiNewspaper}
@@ -112,19 +129,21 @@ const DashboardLayout = ({children}:{children:React.ReactNode}) => {
           label='Adverts'
           isActive = {location.pathname === '/dashboard/adverts'}
         />
-        <NavLink
-          path='/dashboard/manage-admins'
-          icon={HiUserGroup}
-          label='Manage Admins'
-          isActive = {location.pathname === '/dashboard/manage-admins'}
-        />
+        { fullUserDetails && fullUserDetails.role === 'superAdmin' &&
+          <NavLink
+            path='/dashboard/manage-admins'
+            icon={HiUserGroup}
+            label='Manage Admins'
+            isActive = {location.pathname === '/dashboard/manage-admins'}
+          />
+        }
       </div>
     )
   };
   
   return (
     <div className='flex min-h-screen'>
-      <div className="lg:w-[15%] hidden lg:flex sticky top-0 bg-black overflow-hidden flex-col pr-6 h-full">
+      <div className="lg:w-[15%] hidden lg:flex sticky top-0 bg-black overflow-hidden flex-col pr-6 h-full min-h-screen">
         <div className="h-[80px] w-full flex items-center justify-center">
           <div className="w-[138px] h-[24px]">
             <img src='/images/OLAMAX_logo_3.png' alt='logo_black' className='object-contain object-center'/>
@@ -132,7 +151,7 @@ const DashboardLayout = ({children}:{children:React.ReactNode}) => {
         </div>
         <SidebarMenu/>
       </div>
-      <div className="lg:w-[85%] w-full flex-1 pt-[60px] lg:pt-0">
+      <div className="lg:w-[85%] w-full flex-1 pt-[60px] lg:pt-0 bg-gray-50">
         <div className="w-full h-[60px] shadow-md lg:hidden flex items-center gap-3 px-6 fixed left-0 top-0 bg-white cursor-pointer" onClick={() => setIsOpen(true)}>
           <MenuIcon/>
           <div className="lg:w-[154px] lg:h-[40px] w-[80px]">

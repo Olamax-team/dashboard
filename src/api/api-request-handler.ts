@@ -19,6 +19,7 @@ export const apiRequestHandler = async <T>( requestFn: () => Promise<T>, setLoad
     const axiosError = error as AxiosError<ApiErrorResponse>;
     const errorMessage = axiosError?.response?.data?.message || axiosError?.response?.data?.error?.message;
     if (axiosError?.response?.data.errors) {
+      console.log(error);
       const errorObject = axiosError?.response?.data.errors;
 
       if (Object.prototype.hasOwnProperty.call(errorObject, 'email') && (Array.isArray(errorObject.email) ? errorObject.email.length > 0 : errorObject.email !== '')) {

@@ -10,13 +10,14 @@ import { apiRequestHandler } from "@/api/api-request-handler";
 import { userDetailsProps } from "@/lib/types";
 import { Loader2 } from "lucide-react";
 import { extractFirstName } from "@/lib/utils";
+import { useFetch } from "@/lib/use-fetch";
 
 const UnverifiedUsers = ({ visibleFilter}: { visibleFilter: Record<string, boolean>}) => {
   const [completedMenu, setCompletedMenu] = React.useState("view");
   const navigate = useNavigate();
 
   const userConfig = useApiConfigWithToken({
-    method: 'get',
+    method: 'post',
     url: 'admin/users'
   });
 
@@ -32,6 +33,8 @@ const UnverifiedUsers = ({ visibleFilter}: { visibleFilter: Record<string, boole
       data: Partial<userDetailsProps>[];
     };
   }
+
+  const { blockUser, deleteUser } = useFetch();
 
   const verifiedUsers: Partial<userDetailsProps>[] | undefined = (usersResponse as UsersResponse | undefined)?.data.data.filter((user:Partial<userDetailsProps>) => user.uid !== null).filter((user: Partial<userDetailsProps>) => user.status === 'Unverified');
 
@@ -110,13 +113,13 @@ const UnverifiedUsers = ({ visibleFilter}: { visibleFilter: Record<string, boole
           </TableHeader>
 
           <TableBody>
-            {verifiedUsers.map((item, index) => (
+            {verifiedUsers.filter((item) => item.is_blocked === 0).map((item, index) => (
               <TableRow
                 key={index}// Navigate on row click
                 className="cursor-pointer odd:bg-gray-100 even:bg-gray-200 border-b h-[50px] hover:bg-gray-300 transition-all"
               >
                 {visibleFilter.user && (
-                  <TableCell className="py-2 text-center border-r border-gray-300 group" onClick={() => navigate(`/dashboard/user-information/user-details-verified`)} >
+                  <TableCell className="py-2 text-center border-r border-gray-300 group" onClick={() => navigate(`/dashboard/user-information/user-details/${item.id}`)} >
                     <div className="group-hover:underline capitalize">{extractFirstName(item.first_name)} {extractFirstName(item.last_name)}</div>
                     <div className="text-xs text-[#121826] group-hover:underline">
                       UID {item.uid}
@@ -179,7 +182,7 @@ const UnverifiedUsers = ({ visibleFilter}: { visibleFilter: Record<string, boole
                         </button>
                       </DropdownMenuTrigger>
 
-                      <DropdownMenuContent className="rounded-xl bg-white shadow-lg p-4 w-[180px] ring-1 ring-gray-200 transition-all duration-200 transform scale-95 hover:scale-100">
+                      <DropdownMenuContent className="rounded-xl bg-white shadow-lg p-2 w-[180px] ring-1 ring-gray-200 transition-all duration-200 transform scale-95 hover:scale-100">
                         <DropdownMenuRadioGroup
                           value={completedMenu}
                           onValueChange={setCompletedMenu}
@@ -188,19 +191,21 @@ const UnverifiedUsers = ({ visibleFilter}: { visibleFilter: Record<string, boole
                             value="view"
                             onClick={(e) => {
                               e.stopPropagation();
-                              navigate(`/UserPreview/${item.uid}`);
+                              navigate(`/dashboard/user-information/user-details/${item.id}`);
                             }}
                             className="rounded-lg py-2 px-4 text-sm pl-6 text-[#000000] hover:bg-blue-50 focus:ring-2 focus:ring-black transition-all duration-150"
                           >
                             View
                           </DropdownMenuRadioItem>
                           <DropdownMenuRadioItem
+                            onClick={() => { if (item.id !== undefined) blockUser(item.id); }}
                             value="block User"
                             className="rounded-lg py-2 px-4 text-sm pl-6 text-[#000000] hover:bg-blue-50 focus:ring-2 focus:ring-black transition-all duration-150"
                           >
                             Block User
                           </DropdownMenuRadioItem>
                           <DropdownMenuRadioItem
+                            onClick={() => { if (item.id !== undefined) deleteUser(item.id); }}
                             value="delete User"
                             className="rounded-lg py-2 px-4 text-sm pl-6 text-[#000000] hover:bg-blue-50 focus:ring-2 focus:ring-black transition-all duration-150"
                           >
