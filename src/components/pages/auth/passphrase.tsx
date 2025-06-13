@@ -111,7 +111,7 @@ const Passphrase = () => {
             )}
           />
           <div className="mt-8">
-            <button type="submit" className="w-full lg:h-[70px] h-[60px] rounded-md bg-black text-white">
+            <button type="submit" className="w-full lg:h-[70px] h-[60px] rounded-md bg-black text-white cursor-pointer">
               Login
             </button>
             <div className="mt-8 text-center font-semibold">Contact support</div>

@@ -80,7 +80,7 @@ const SellingHistory = ({
     queryFn: () => apiRequestHandler(sellTransaction)
   })
 
-  console.log(data?.data.data.data);
+  console.log('sell transactions',data?.data.data.data);
   console.log(status);
 
   return (

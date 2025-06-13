@@ -1,3 +1,4 @@
+import { apiRequestHandler } from "@/api/api-request-handler";
 import {
   Table,
   TableBody,
@@ -6,6 +7,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useApiConfigWithToken } from "@/lib/use-api-config";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
 
 type BuyingItem = {
   user: string;
@@ -18,11 +22,11 @@ type BuyingItem = {
   dollarRate: number;
   networkFees: string;
   nairaAmount: string;
-  networkFeesRepeat: string;
+  // networkFeesRepeat: string;
   walletAddress: string;
   steem: string;
   method: string;
-  paymentStatus: "pending" | "Successful";
+  paymentStatus: string;
   transactionStatus: string | null;
   referrer: string;
   phone: string;
@@ -35,30 +39,71 @@ const BuyingHistory = ({
 }: {
   visibleFilter: Record<string, boolean>;
 }) => {
-  const transaction: BuyingItem[] = [
-    {
-      user: "Mason Mount",
-      uid: "22110976",
-      coin: "BITCOIN",
-      coinShort: "BTC",
-      blockchain: "TRON(TRC 20)",
-      amount: 20000.0,
-      coinPriceUsd: 20000.0,
-      dollarRate: 19800.0,
-      networkFees: "0.5",
-      nairaAmount: "-",
-      networkFeesRepeat: "0.5",
-      walletAddress: "1a1zple23eydhg467cb39d8f8f7DivfNa",
-      steem: "Mikey0071",
-      method: "",
-      paymentStatus: "pending",
-      transactionStatus: "-",
-      referrer: "Marcus Ademola",
-      phone: "-",
-      Timestamp: "2025-03-12T10:09:00Z",
-      finish: "",
-    },
-  ];
+    // API configuration for fetching minimum transactions
+  const transactionHistory = useApiConfigWithToken({
+    method: "get",
+    url: `admin/all-transactions`,
+  });
+
+  const fetchTransactionHistory = () => axios.request(transactionHistory);
+
+  // React Query to fetch minimum transaction data
+  const { data, status } = useQuery({
+    queryKey: ["transactions-history"],
+    queryFn: () => apiRequestHandler(fetchTransactionHistory),
+  });
+  console.log('buyTransactions',data?.data?.data.buyings);
+  console.log('status',status);
+
+  // const transaction: BuyingItem[] = [
+  //   {
+  //     user: "Mason Mount",
+  //     uid: "22110976",
+  //     coin: "BITCOIN",
+  //     coinShort: "BTC",
+  //     blockchain: "TRON(TRC 20)",
+  //     amount: 20000.0,
+  //     coinPriceUsd: 20000.0,
+  //     dollarRate: 19800.0,
+  //     networkFees: "0.5",
+  //     nairaAmount: "-",
+  //     networkFeesRepeat: "0.5",
+  //     walletAddress: "1a1zple23eydhg467cb39d8f8f7DivfNa",
+  //     steem: "Mikey0071",
+  //     method: "",
+  //     paymentStatus: "pending",
+  //     transactionStatus: "-",
+  //     referrer: "Marcus Ademola",
+  //     phone: "-",
+  //     Timestamp: "2025-03-12T10:09:00Z",
+  //     finish: "",
+  //   },
+  // ];
+
+// Mapping API response to BuyingItem[]
+  const transaction: BuyingItem[] = Array.isArray(data?.data?.data.buyings)
+    ? data?.data?.data.buyings.map((item: any) => ({
+        user: "-", 
+        uid: item.user_id?.toString() || "-",
+        coin: (item.coin?.coin_name || "").toUpperCase(),
+        coinShort: (item.coin?.shorthand || "").toUpperCase(),
+        blockchain: (item.blockchain || "-"), 
+        amount: Number(item.coin_value)|| 0,
+        coinPriceUsd: item.naira_value || "-", 
+        dollarRate: (item.mydollar || "-"), 
+        networkFees: (item.transaction_charges || "-"), 
+        nairaAmount: item.total_naira || "-",
+        walletAddress: (item.deposit_address || "-"), 
+        steem: "-", 
+        method: (item.method || "-"), 
+        paymentStatus: item.payment_status,
+        transactionStatus: item.finished || "-",
+        referrer: (item.ref ||"-"), 
+        phone: (item.phone ||"-"), 
+        Timestamp: item.created_at || "-",
+        finish: item.updated_at || "-",
+      }))
+    : [];
 
   const formatTimestamp = (timestamp: string) => {
     const date = new Date(timestamp);
@@ -92,7 +137,7 @@ const BuyingHistory = ({
             )}
             {visibleFilter.coinPriceUsd && (
               <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
-                Coin Price (USD)
+                Naira Equivalent (NGN)
               </TableHead>
             )}
             {visibleFilter.dollarRate && (
@@ -110,11 +155,11 @@ const BuyingHistory = ({
                 Naira Amount + N/Fees
               </TableHead>
             )}
-            {visibleFilter.networkFeesRepeat && (
+            {/* {visibleFilter.networkFeesRepeat && (
               <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
                 Network Fees ($)
               </TableHead>
-            )}
+            )} */}
             {visibleFilter.walletAddress && (
               <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
                 Wallet Address
@@ -210,11 +255,11 @@ const BuyingHistory = ({
                   {transaction.nairaAmount}
                 </TableCell>
               )}
-              {visibleFilter.networkFeesRepeat && (
+              {/* {visibleFilter.networkFeesRepeat && (
                 <TableCell className="py-2 text-center border-r border-gray-300">
                   {transaction.networkFeesRepeat}
                 </TableCell>
-              )}
+              )} */}
               {visibleFilter.walletAddress && (
                 <TableCell className="py-2 text-center border-r border-gray-300">
                   {transaction.walletAddress}
