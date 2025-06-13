@@ -42,6 +42,7 @@ export const useFetch = () => {
     });
 
     const blockResult = await apiRequestHandler(block);
+    
     if (blockResult && blockResult.status === 200) {
       toast.success('User successfully block');
       queryClient.invalidateQueries({queryKey: ['verified-users']});
