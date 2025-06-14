@@ -1,17 +1,12 @@
 import React, { useState } from "react";
 import { HiFilter, HiOutlineSortDescending, HiOutlineSortAscending, HiDownload } from "react-icons/hi";
-import SellingHistory from "./sellingHistory";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import BuyingHistory from "./buyingHistory";
-import TopUpHistory from "./topUpHistory";
-import BillHistory from "./billHistory";
+import { useLocation, useNavigate } from "react-router-dom";
+import SellingHistory from "./sellingHistory";
 
-const TabButton = () => {
-  const [activeTab, setActiveTab] = useState("buying");
-  const [sortOrder, setSortOrder] = useState<"ascending" | "descending">(
-    "descending"
-  );
+const SellingTab = () => {
+  const [sortOrder, setSortOrder] = useState<"ascending" | "descending">("descending");
   const [isDropdownOpen, setDropdownOpen] = useState(false);
 
   const [visibleFilter, setVisibleFilter] = useState({
@@ -36,13 +31,6 @@ const TabButton = () => {
     finish: true,
   });
 
-  const tabs = [
-    { id: "buying", label: "Buying", count: 0 },
-    { id: "selling", label: "Selling", count: 4 },
-    { id: "top-up", label: "Top-Up", count: 2 },
-    { id: "bills", label: "Bills", count: 2 },
-  ];
-
   const toggleDropdown = () => {
     setDropdownOpen((prev) => !prev);
   };
@@ -59,46 +47,49 @@ const TabButton = () => {
     }));
   };
 
-  const renderComponent = () => {
-    switch (activeTab) {
-      case "buying":
-        return <BuyingHistory visibleFilter={visibleFilter} />;
-      case "selling":
-        return <SellingHistory visibleFilter={visibleFilter} />;
-      case "top-up":
-        return <TopUpHistory />;
-      case "bills":
-        return <BillHistory />;
-      default:
-        return <div>Default Content</div>;
-    }
-  };
+  // const renderComponent = () => {
+  //   switch (activeTab) {
+  //     case "buying":
+  //       return <BuyingHistory visibleFilter={visibleFilter} />;
+  //     case "selling":
+  //       return <SellingHistory visibleFilter={visibleFilter} />;
+  //     case "top-up":
+  //       return <TopUpHistory />;
+  //     case "bills":
+  //       return <BillHistory />;
+  //     default:
+  //       return <div>Default Content</div>;
+  //   }
+  // };
+
+
+    const { pathname } = useLocation();
+    const navigate = useNavigate();
+  
+    const NavButton = ({path, label}:{path:string, label:string}) => {
+  
+      return (
+        <Button onClick={() => navigate(path)}
+            className={cn(
+              "relative px-6 py-4 rounded-sm text-[12px] xl:text-[16px] font-medium h-[40px] transition-colors cursor-pointer", pathname === path
+                ? "bg-[#039AE4] text-white"
+                : "bg-transparent text-[#121826] cursor-pointer hover:bg-gray-100 border"
+            )}
+          >
+            {label}
+        </Button>
+      )
+    };
 
   return (
     <React.Fragment>
-      <div className="flex items-center justify-between  h-auto  mb-5 w-full flex-wrap">
-        <div className="flex items-center justify-center  xl:mt-0 gap-5">
-          {tabs.map((tab) => (
-            <Button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={cn(
-                "relative px-4 py-2 rounded-sm text-[12px] xl:text-[16px] font-medium h-[40px] transition-colors cursor-pointer",
-                activeTab === tab.id
-                  ? "bg-[#039AE4] text-white"
-                  : "bg-transparent text-[#121826] cursor-pointer hover:bg-gray-100"
-              )}
-            >
-              {tab.label}
-              {tab.count > 0 && (
-                <span className="absolute -top-1 -right-1 flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-[#039AE4] rounded-full">
-                  {tab.count}
-                </span>
-              )}
-            </Button>
-          ))}
+      <div className="flex items-center justify-between h-auto mb-5 w-full flex-wrap">
+        <div className="flex items-center lg:gap-5  gap-2 justify-center px-5 py-1 w-fit lg:mt-3  lg:px-0  lg:py-0 ">
+          <NavButton path="/dashboard/transaction-history" label="Buying" />
+          <NavButton path="/dashboard/transaction-history/selling" label="Selling" />
+          <NavButton path="/dashboard/transaction-history/top-up" label="Top Up"/>
+          <NavButton path="/dashboard/transaction-history/bills" label="Bills" />
         </div>
-
         <div className="flex items-center justify-center ml-3 lg:ml-0 mt-5 lg:mt-0 gap-5">
           <div className="text-[#000000] gap-2 flex items-center">
             {sortOrder === "descending" && (
@@ -113,7 +104,7 @@ const TabButton = () => {
               </div>
             )}
 
-            {sortOrder === "ascending" && (
+            { sortOrder === "ascending" && (
               <div
                 className="flex items-center gap-2 justify-center cursor-pointer"
                 onClick={toggleSortOrder}
@@ -169,9 +160,11 @@ const TabButton = () => {
           </Button>
         </div>
       </div>
-      <div>{renderComponent()}</div>
+      <div>
+        <SellingHistory visibleFilter={visibleFilter} />
+      </div>
     </React.Fragment>
   );
 };
 
-export default TabButton;
+export default SellingTab;

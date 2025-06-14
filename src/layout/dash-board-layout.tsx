@@ -64,7 +64,7 @@ const DashboardLayout = ({children}:{children:React.ReactNode}) => {
             path='/dashboard/transaction-history'
             icon={HiOutlineClipboardList}
             label='Transaction History'
-            isActive = {location.pathname === '/dashboard/transaction-history'}
+            isActive = {location.pathname === '/dashboard/transaction-history' || location.pathname.startsWith('/dashboard/transaction-history')}
           />
         }
         { fullUserDetails && fullUserDetails.role === 'superAdmin' &&

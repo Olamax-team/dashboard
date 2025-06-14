@@ -1,321 +1,258 @@
 import { apiRequestHandler } from "@/api/api-request-handler";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { AllTransactionsData } from "@/lib/types";
 import { useApiConfigWithToken } from "@/lib/use-api-config";
+import { extractFirstName } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import { Loader2 } from "lucide-react";
 
-type BuyingItem = {
-  user: string;
-  uid: string;
-  coin: string;
-  coinShort: string;
-  blockchain: string;
-  amount: number;
-  coinPriceUsd: number;
-  dollarRate: number;
-  networkFees: string;
-  nairaAmount: string;
-  // networkFeesRepeat: string;
-  walletAddress: string;
-  steem: string;
-  method: string;
-  paymentStatus: string;
-  transactionStatus: string | null;
-  referrer: string;
-  phone: string;
-  Timestamp: string;
-  finish: string;
-};
+const BuyingHistory = ({visibleFilter}: {visibleFilter: Record<string, boolean>}) => {
 
-const BuyingHistory = ({
-  visibleFilter,
-}: {
-  visibleFilter: Record<string, boolean>;
-}) => {
-    // API configuration for fetching minimum transactions
+  // API configuration for fetching minimum transactions
   const transactionHistory = useApiConfigWithToken({
     method: "get",
-    url: `admin/all-transactions`,
+    url: 'admin/all-transactions',
   });
 
   const fetchTransactionHistory = () => axios.request(transactionHistory);
 
   // React Query to fetch minimum transaction data
   const { data, status } = useQuery({
-    queryKey: ["transactions-history"],
+    queryKey: ["buying-transaction"],
     queryFn: () => apiRequestHandler(fetchTransactionHistory),
   });
-  console.log('buyTransactions',data?.data?.data.buyings);
-  console.log('status',status);
 
-  // const transaction: BuyingItem[] = [
-  //   {
-  //     user: "Mason Mount",
-  //     uid: "22110976",
-  //     coin: "BITCOIN",
-  //     coinShort: "BTC",
-  //     blockchain: "TRON(TRC 20)",
-  //     amount: 20000.0,
-  //     coinPriceUsd: 20000.0,
-  //     dollarRate: 19800.0,
-  //     networkFees: "0.5",
-  //     nairaAmount: "-",
-  //     networkFeesRepeat: "0.5",
-  //     walletAddress: "1a1zple23eydhg467cb39d8f8f7DivfNa",
-  //     steem: "Mikey0071",
-  //     method: "",
-  //     paymentStatus: "pending",
-  //     transactionStatus: "-",
-  //     referrer: "Marcus Ademola",
-  //     phone: "-",
-  //     Timestamp: "2025-03-12T10:09:00Z",
-  //     finish: "",
-  //   },
-  // ];
-
-// Mapping API response to BuyingItem[]
-  const transaction: BuyingItem[] = Array.isArray(data?.data?.data.buyings)
-    ? data?.data?.data.buyings.map((item: any) => ({
-        user: "-", 
-        uid: item.user_id?.toString() || "-",
-        coin: (item.coin?.coin_name || "").toUpperCase(),
-        coinShort: (item.coin?.shorthand || "").toUpperCase(),
-        blockchain: (item.blockchain || "-"), 
-        amount: Number(item.coin_value)|| 0,
-        coinPriceUsd: item.naira_value || "-", 
-        dollarRate: (item.mydollar || "-"), 
-        networkFees: (item.transaction_charges || "-"), 
-        nairaAmount: item.total_naira || "-",
-        walletAddress: (item.deposit_address || "-"), 
-        steem: "-", 
-        method: (item.method || "-"), 
-        paymentStatus: item.payment_status,
-        transactionStatus: item.finished || "-",
-        referrer: (item.ref ||"-"), 
-        phone: (item.phone ||"-"), 
-        Timestamp: item.created_at || "-",
-        finish: item.updated_at || "-",
-      }))
-    : [];
+  const allTransaction = data?.data.data as AllTransactionsData;
+  const transaction = allTransaction?.buyings;
 
   const formatTimestamp = (timestamp: string) => {
     const date = new Date(timestamp);
     return date.toLocaleString();
   };
 
-  return (
-    <div className="border-2 border-gray-300">
-      <Table className="border-collapse">
-        <TableHeader className="rounded-lg h-[60px] [&_tr]:border-b">
-          <TableRow className="bg-[#ffffff] hover:bg-white border-b font-bold leading-[150%] text-[14px] text-[#121826]">
-            {visibleFilter.user && (
-              <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
-                User
-              </TableHead>
-            )}
-            {visibleFilter.coin && (
-              <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
-                Coin
-              </TableHead>
-            )}
-            {visibleFilter.blockchain && (
-              <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
-                Blockchain
-              </TableHead>
-            )}
-            {visibleFilter.amount && (
-              <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
-                Amount
-              </TableHead>
-            )}
-            {visibleFilter.coinPriceUsd && (
-              <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
-                Naira Equivalent (NGN)
-              </TableHead>
-            )}
-            {visibleFilter.dollarRate && (
-              <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
-                Dollar Rate
-              </TableHead>
-            )}
-            {visibleFilter.networkFees && (
-              <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
-                Network Fees ($)
-              </TableHead>
-            )}
-            {visibleFilter.nairaAmount && (
-              <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
-                Naira Amount + N/Fees
-              </TableHead>
-            )}
-            {/* {visibleFilter.networkFeesRepeat && (
-              <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
-                Network Fees ($)
-              </TableHead>
-            )} */}
-            {visibleFilter.walletAddress && (
-              <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
-                Wallet Address
-              </TableHead>
-            )}
-            {visibleFilter.steem && (
-              <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
-                Steem Username
-              </TableHead>
-            )}
-            {visibleFilter.method && (
-              <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
-                Method
-              </TableHead>
-            )}
-            {visibleFilter.paymentStatus && (
-              <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
-                Payment Status
-              </TableHead>
-            )}
-            {visibleFilter.paymentStatus && (
-              <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
-                Transaction Status
-              </TableHead>
-            )}
-            {visibleFilter.referrer && (
-              <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
-                Referrer
-              </TableHead>
-            )}
-            {visibleFilter.referrer && (
-              <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
-                Phone
-              </TableHead>
-            )}
-            {visibleFilter.Timestamp && (
-              <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
-                Time Stamp
-              </TableHead>
-            )}
-          </TableRow>
-        </TableHeader>
+  if (status === 'error') {
+    return (
+      <div className="w-full h-[40vh] flex justify-center py-20">
+        An error occured while loading transactions history
+      </div>
+    )
+  };
 
-        <TableBody>
-          {transaction.map((transaction, index) => (
-            <TableRow
-              key={index}
-              className={`odd:bg-[#f3f3f3] even:bg-[#e0e0e0] h-[50px] hover:bg-[#d1d1d1] text-[#121826] font-semibold text-[12px] leading-[150%] ml-5`}
-            >
+  if (status === 'success' && transaction && transaction.length < 1) {
+    return (
+      <div className="w-full h-[40vh] flex justify-center py-20">
+        There is no transaction history yet
+      </div>
+    )
+  };
+
+  if (status === 'pending') {
+    return (
+      <div className="w-full h-[40vh] flex items-center justify-center">
+        <Loader2 className="animate-spin"/>
+      </div>
+    )
+  };
+
+  if (status === 'success' && transaction && transaction.length > 1) {
+    return (
+      <div className="border-2 border-gray-300">
+        <Table className="border-collapse">
+          <TableHeader className="rounded-lg h-[60px] [&_tr]:border-b">
+            <TableRow className="bg-[#ffffff] hover:bg-white border-b font-bold leading-[150%] text-[14px] text-[#121826]">
               {visibleFilter.user && (
-                <TableCell className="py-2 text-center border-r border-gray-300">
-                  <div>{transaction.user}</div>
-                  <div className="text-xs text-[#121826]">
-                    UID {transaction.uid}
-                  </div>
-                </TableCell>
+                <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
+                  User
+                </TableHead>
               )}
               {visibleFilter.coin && (
-                <TableCell className="py-2 text-center border-r border-gray-300">
-                  <div>{transaction.coin}</div>
-                  <div className="text-xs text-[#121826]">
-                    {transaction.coinShort}
-                  </div>
-                </TableCell>
+                <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
+                  Coin
+                </TableHead>
               )}
               {visibleFilter.blockchain && (
-                <TableCell className="py-2 text-center border-r border-gray-300">
-                  {transaction.blockchain}
-                </TableCell>
+                <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
+                  Blockchain
+                </TableHead>
               )}
               {visibleFilter.amount && (
-                <TableCell className="py-2 text-center border-r border-gray-300">
-                  {transaction.amount}
-                </TableCell>
+                <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
+                  Amount
+                </TableHead>
               )}
               {visibleFilter.coinPriceUsd && (
-                <TableCell className="py-2 text-center border-r border-gray-300">
-                  {transaction.coinPriceUsd}
-                </TableCell>
+                <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
+                  Naira Equivalent (NGN)
+                </TableHead>
               )}
               {visibleFilter.dollarRate && (
-                <TableCell className="py-2 text-center border-r border-gray-300">
-                  {transaction.dollarRate}
-                </TableCell>
+                <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
+                  Dollar Rate
+                </TableHead>
               )}
               {visibleFilter.networkFees && (
-                <TableCell className="py-2 text-center border-r border-gray-300">
-                  {transaction.networkFees}
-                </TableCell>
+                <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
+                  Network Fees ($)
+                </TableHead>
               )}
               {visibleFilter.nairaAmount && (
-                <TableCell className="py-2 text-center border-r border-gray-300">
-                  {transaction.nairaAmount}
-                </TableCell>
+                <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
+                  Naira Amount + N/Fees
+                </TableHead>
               )}
-              {/* {visibleFilter.networkFeesRepeat && (
-                <TableCell className="py-2 text-center border-r border-gray-300">
-                  {transaction.networkFeesRepeat}
-                </TableCell>
-              )} */}
+              {visibleFilter.networkFeesRepeat && (
+                <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
+                  Network Fees ($)
+                </TableHead>
+              )}
               {visibleFilter.walletAddress && (
-                <TableCell className="py-2 text-center border-r border-gray-300">
-                  {transaction.walletAddress}
-                </TableCell>
-              )}
-              {visibleFilter.steem && (
-                <TableCell className="py-2 text-center border-r border-gray-300">
-                  {transaction.steem}
-                </TableCell>
+                <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
+                  Wallet Address
+                </TableHead>
               )}
               {visibleFilter.method && (
-                <TableCell className="py-2 text-center border-r border-gray-300">
-                  {transaction.method}
-                </TableCell>
+                <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
+                  Method
+                </TableHead>
               )}
               {visibleFilter.paymentStatus && (
-                <TableCell className="py-2 text-center border-r border-gray-300">
-                  <span
-                    className={`px-2 py-1 rounded-sm text-xs font-medium ${
-                      transaction.paymentStatus === "pending"
-                        ? "text-red-700"
-                        : transaction.paymentStatus === "Successful"
-                        ? "text-green-700"
-                        : "text-yellow-700"
-                    }`}
-                  >
-                    {transaction.paymentStatus}
-                  </span>
-                </TableCell>
+                <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
+                  Payment Status
+                </TableHead>
+              )}
+              {visibleFilter.paymentStatus && (
+                <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
+                  Transaction Status
+                </TableHead>
               )}
               {visibleFilter.referrer && (
-                <TableCell className="py-2 text-center border-r border-gray-300">
-                  {transaction.transactionStatus}
-                </TableCell>
+                <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
+                  Referrer
+                </TableHead>
               )}
               {visibleFilter.referrer && (
-                <TableCell className="py-2 text-center border-r border-gray-300">
-                  {transaction.referrer}
-                </TableCell>
-              )}
-              {visibleFilter.referrer && (
-                <TableCell className="py-2 text-center border-r border-gray-300">
-                  {transaction.phone}
-                </TableCell>
+                <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
+                  Phone
+                </TableHead>
               )}
               {visibleFilter.Timestamp && (
-                <TableCell className="py-2 text-center border-r border-gray-300">
-                  {formatTimestamp(transaction.Timestamp)}
-                </TableCell>
+                <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
+                  Time Stamp
+                </TableHead>
               )}
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </div>
-  );
+          </TableHeader>
+  
+          <TableBody>
+            {transaction.map((transaction, index) => (
+              <TableRow
+                key={index}
+                className={`odd:bg-[#f3f3f3] even:bg-[#e0e0e0] h-[50px] hover:bg-[#d1d1d1] text-[#121826] font-semibold text-[12px] leading-[150%] ml-5`}
+              >
+                {visibleFilter.user && (
+                  <TableCell className="py-2 text-center border-r border-gray-300">
+                    <div className="capitalize">{extractFirstName(transaction.user.first_name)} {extractFirstName(transaction.user.last_name)}</div>
+                    <div className="text-xs text-[#121826]">
+                      UID {transaction.user.uid}
+                    </div>
+                  </TableCell>
+                )}
+                {visibleFilter.coin && (
+                  <TableCell className="py-2 text-center border-r border-gray-300">
+                    <div>{transaction.coin.coin}</div>
+                    <div className="text-xs text-[#121826]">
+                      {transaction.coin.coin_name}
+                    </div>
+                  </TableCell>
+                )}
+                {visibleFilter.blockchain && (
+                  <TableCell className="py-2 text-center border-r border-gray-300 capitalize">
+                    {transaction.blockchain.blockchain_name}
+                  </TableCell>
+                )}
+                {visibleFilter.amount && (
+                  <TableCell className="py-2 text-center border-r border-gray-300">
+                    {transaction.amount}
+                  </TableCell>
+                )}
+                {visibleFilter.coinPriceUsd && (
+                  <TableCell className="py-2 text-center border-r border-gray-300">
+                    {transaction.coin_price}
+                  </TableCell>
+                )}
+                {visibleFilter.dollarRate && (
+                  <TableCell className="py-2 text-center border-r border-gray-300">
+                    {transaction.dollar_rate}
+                  </TableCell>
+                )}
+                {visibleFilter.networkFees && (
+                  <TableCell className="py-2 text-center border-r border-gray-300">
+                    {transaction.network_fees_dollar}
+                  </TableCell>
+                )}
+                {visibleFilter.nairaAmount && (
+                  <TableCell className="py-2 text-center border-r border-gray-300">
+                    {transaction.amount_paid}
+                  </TableCell>
+                )}
+                {visibleFilter.networkFeesRepeat && (
+                  <TableCell className="py-2 text-center border-r border-gray-300">
+                    {transaction.network_fees_dollar}
+                  </TableCell>
+                )}
+                {visibleFilter.walletAddress && (
+                  <TableCell className="py-2 text-center border-r border-gray-300">
+                    {transaction.wallet_address}
+                  </TableCell>
+                )}
+                {visibleFilter.method && (
+                  <TableCell className="py-2 text-center border-r border-gray-300">
+                    {transaction.method}
+                  </TableCell>
+                )}
+                {visibleFilter.paymentStatus && (
+                  <TableCell className="py-2 text-center border-r border-gray-300">
+                    <span
+                      className={`px-2 py-1 rounded-sm text-xs font-medium ${
+                        transaction.payment_status === "pending"
+                          ? "text-red-700"
+                          : transaction.payment_status === "Successful"
+                          ? "text-green-700"
+                          : "text-yellow-700"
+                      }`}
+                    >
+                      {transaction.payment_status}
+                    </span>
+                  </TableCell>
+                )}
+                {visibleFilter.referrer && (
+                  <TableCell className="py-2 text-center border-r border-gray-300">
+                    {transaction.referer}
+                  </TableCell>
+                )}
+                {visibleFilter.referrer && (
+                  <TableCell className="py-2 text-center border-r border-gray-300">
+                    {transaction.referer}
+                  </TableCell>
+                )}
+                {visibleFilter.referrer && (
+                  <TableCell className="py-2 text-center border-r border-gray-300">
+                    {transaction.user.phone}
+                  </TableCell>
+                )}
+                {visibleFilter.Timestamp && (
+                  <TableCell className="py-2 text-center border-r border-gray-300">
+                    {formatTimestamp(transaction.created_at)}
+                  </TableCell>
+                )}
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+    );
+  };
 };
 
 export default BuyingHistory;

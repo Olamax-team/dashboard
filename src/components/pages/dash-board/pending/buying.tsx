@@ -2,6 +2,7 @@ import { apiRequestHandler } from "@/api/api-request-handler";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { pendingTransactionDataResponse } from "@/lib/types";
 import { useApiConfigWithToken } from "@/lib/use-api-config";
+import { extractFirstName } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { Loader2 } from "lucide-react";
@@ -139,7 +140,7 @@ const Buying = ({ visibleColumns }: { visibleColumns: Record<string, boolean>}) 
               >
                 {visibleColumns.user && (
                   <TableCell className="py-2 text-center border-r border-gray-300">
-                    <div>{transaction.user.first_name} {transaction.user.last_name}</div>
+                    <div>{extractFirstName(transaction.user.first_name)} {extractFirstName(transaction.user.last_name)}</div>
                     <div className="text-xs text-[#121826]">
                       UID {transaction.user.uid}
                     </div>

@@ -6,9 +6,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import Bills from "./bills";
 
 const BillsTab = () => {
-  const [sortOrder, setSortOrder] = useState<"ascending" | "descending">(
-    "descending"
-  );
+  const [sortOrder, setSortOrder] = useState<"ascending" | "descending">("descending");
   const [isDropdownOpen, setDropdownOpen] = useState(false);
 
   const [visibleColumns, setVisibleColumns] = useState({
@@ -68,7 +66,7 @@ const BillsTab = () => {
           )}
       </Button>
     )
-  }
+  };
 
   return (
     <React.Fragment>
@@ -155,19 +153,3 @@ const BillsTab = () => {
 };
 
 export default BillsTab;
-
-
-// import React from 'react'
-
-// const BuyingTab = () => {
-//   return (
-//     <div>
-//       {pathname === '/dashboard' && <Buying visibleColumns={visibleColumns} />}
-//       {pathname === '/dashboard/selling' && <Selling visibleColumns={visibleColumns} />}
-//       {pathname === '/dashboard/top-up' && <TopUp />}
-//       {pathname === '/dashboard/bills' && <Bills/>}
-//     </div>
-//   )
-// }
-
-// export default BuyingTab

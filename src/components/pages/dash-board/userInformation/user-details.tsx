@@ -11,6 +11,7 @@ import { useQuery } from "@tanstack/react-query";
 import { apiRequestHandler } from "@/api/api-request-handler";
 import { userDetailsProps } from "@/lib/types";
 import { extractFirstName } from "@/lib/utils";
+import { toast } from "sonner";
 
 export default function UserDetails() {
   const navigate = useNavigate();
@@ -19,7 +20,7 @@ export default function UserDetails() {
   // Function to copy the user ID to clipboard
   const copyToClipboard = () => {
     navigator.clipboard.writeText("20921123"); // Replace with dynamic userID if necessary
-    alert("User ID copied!");
+    toast.info('User UID copied to clipboard');
   };
 
   const userConfig = useApiConfigWithToken({
@@ -130,7 +131,7 @@ export default function UserDetails() {
                   <div className="flex items-center gap-2 text-[16px] cursor-pointer leading-[150%] text-[#121826]">
                     <span>{userDetail?.uid}</span>
                     <button
-                      className="text-[#121826] "
+                      className="text-[#121826] cursor-pointer"
                       onClick={copyToClipboard} // Enable copy function
                     >
                       <Copy className="h-4 w-4" />

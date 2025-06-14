@@ -37,6 +37,7 @@ const TransactionSettings = () => {
   const { data, status } = useQuery({
     queryKey: ["all-coins"],
     queryFn: () => apiRequestHandler(fetchAllCoins),
+    refetchInterval: 1000
   });
 
   const allCoin = data?.data.coin as coinProps[];

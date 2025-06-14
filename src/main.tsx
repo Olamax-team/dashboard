@@ -9,7 +9,6 @@ import Authenticate from './components/pages/auth/authenticate.tsx'
 import Passphrase from './components/pages/auth/passphrase.tsx'
 import Escrow from './components/pages/dash-board/escrow/escrow.tsx'
 import DashboardHome from './components/pages/dash-board/home.tsx'
-import TransHistory from './components/pages/dash-board/transHistory/transHistory.tsx'
 import UserInformation from './components/pages/dash-board/userInformation/user-information.tsx'
 import TransactionSettings from './components/pages/dash-board/transactionSettings/transactionSettings.tsx'
 import ManageRerrals from './components/pages/dash-board/manageReferrals/manageRefferrals.tsx'
@@ -29,6 +28,8 @@ import DashboardBills from './components/pages/dash-board/pending/dashboard-bill
 import DashboardTopUp from './components/pages/dash-board/pending/dashboard-top-up.tsx'
 import DashboardSelling from './components/pages/dash-board/pending/dasboard-selling.tsx'
 import UserDetails from './components/pages/dash-board/userInformation/user-details.tsx'
+import BuyingTransactionHistory from './components/pages/dash-board/transHistory/buying-transaction-history.tsx'
+import SellingTransactionHistory from './components/pages/dash-board/transHistory/selling-transaction-history.tsx'
 
 
 const router = createBrowserRouter([
@@ -96,7 +97,14 @@ const router = createBrowserRouter([
         path: '/dashboard/transaction-history',
         element: 
           <ProtectRoute>
-            <TransHistory/>
+            <BuyingTransactionHistory/>
+          </ProtectRoute>
+      },
+      {
+        path: '/dashboard/transaction-history/selling',
+        element: 
+          <ProtectRoute>
+            <SellingTransactionHistory/>
           </ProtectRoute>
       },
       {
