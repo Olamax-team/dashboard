@@ -1,6 +1,5 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import React from "react";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { HiMiniEllipsisVertical } from "react-icons/hi2";
 import { useNavigate } from "react-router-dom";
 import { useApiConfigWithToken } from "@/lib/use-api-config";
@@ -11,9 +10,9 @@ import { userDetailsProps } from "@/lib/types";
 import { Loader2 } from "lucide-react";
 import { extractFirstName } from "@/lib/utils";
 import { useFetch } from "@/lib/use-fetch";
+import { DropdownMenuGroup } from "@radix-ui/react-dropdown-menu";
 
 const PendingUsers = ({visibleFilter }: {visibleFilter: Record<string, boolean>}) => {
-  const [completedMenu, setCompletedMenu] = React.useState("view");
   const navigate = useNavigate();
 
   const userConfig = useApiConfigWithToken({
@@ -181,14 +180,9 @@ const PendingUsers = ({visibleFilter }: {visibleFilter: Record<string, boolean>}
                           <HiMiniEllipsisVertical className="text-[#121826] size-7" />
                         </button>
                       </DropdownMenuTrigger>
-
                       <DropdownMenuContent className="rounded-xl bg-white shadow-lg p-2 w-[180px] ring-1 ring-gray-200 transition-all duration-200 transform scale-95 hover:scale-100">
-                        <DropdownMenuRadioGroup
-                          value={completedMenu}
-                          onValueChange={setCompletedMenu}
-                        >
-                          <DropdownMenuRadioItem
-                            value="view"
+                        <DropdownMenuGroup>
+                          <DropdownMenuItem
                             onClick={(e) => {
                               e.stopPropagation();
                               navigate(`/dashboard/user-information/user-details/${item.id}`);
@@ -196,28 +190,25 @@ const PendingUsers = ({visibleFilter }: {visibleFilter: Record<string, boolean>}
                             className="rounded-lg py-2 px-4 text-sm pl-6 text-[#000000] hover:bg-blue-50 focus:ring-2 focus:ring-black transition-all duration-150"
                           >
                             View
-                          </DropdownMenuRadioItem>
-                          <DropdownMenuRadioItem
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
                             onClick={() => { if (item.id !== undefined) blockUser(item.id); }}
-                            value="block User"
                             className="rounded-lg py-2 px-4 text-sm pl-6 text-[#000000] hover:bg-blue-50 focus:ring-2 focus:ring-black transition-all duration-150"
                           >
                             Block User
-                          </DropdownMenuRadioItem>
-                          <DropdownMenuRadioItem
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
                             onClick={() => { if (item.id !== undefined) deleteUser(item.id); }}
-                            value="delete User"
                             className="rounded-lg py-2 px-4 text-sm pl-6 text-[#000000] hover:bg-blue-50 focus:ring-2 focus:ring-black transition-all duration-150"
                           >
                             Delete User
-                          </DropdownMenuRadioItem>
-                          <DropdownMenuRadioItem
-                            value="export details"
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
                             className="rounded-lg py-2 px-4 text-sm pl-6 text-[#000000] hover:bg-blue-50 focus:ring-2 focus:ring-black transition-all duration-150"
                           >
                             Export Details
-                          </DropdownMenuRadioItem>
-                        </DropdownMenuRadioGroup>
+                          </DropdownMenuItem>
+                        </DropdownMenuGroup>
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </TableCell>
