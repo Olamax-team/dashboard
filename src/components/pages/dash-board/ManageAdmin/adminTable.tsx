@@ -100,7 +100,7 @@ const AdminTable = ({ visibleFilter }: {visibleFilter: Record<string, boolean>})
         <p className="text-red-500">Error fetching data</p>
       </div>
     );
-  }
+  };
 
   if (status === 'success' && allUsers && allUsers.length === 0) {
     return (
@@ -108,7 +108,8 @@ const AdminTable = ({ visibleFilter }: {visibleFilter: Record<string, boolean>})
         <p className="text-gray-500">No users available</p>
       </div>
     );
-  }
+  };
+
   if (status === 'success' && allUsers && allUsers.length > 0) {
     return (
       <div className="border-2 border-gray-300">

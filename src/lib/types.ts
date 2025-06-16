@@ -364,3 +364,25 @@ export interface AllTransactionsData {
   buyings: BuyingTransaction[];
   sell_transactions: SellTransaction[];
 }
+
+interface BlockUser {
+  user_id: number;
+  uid: string;
+  first_name: string | null;
+  middle_name: string | null;
+  last_name: string | null;
+  phone: string | null;
+  email: string;
+  referral_code: string;
+  is_blocked: number;
+  verification_method: string | null;
+  status: string | null;
+}
+
+export interface BlockedUserReport {
+  id: number;
+  user: BlockUser;
+  reason: string;
+  created_at: string;
+  updated_at: string;
+}
