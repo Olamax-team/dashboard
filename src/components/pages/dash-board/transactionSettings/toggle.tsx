@@ -1,8 +1,15 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Check, Edit, InfoIcon, X } from "lucide-react";
 import { HiFolderArrowDown } from "react-icons/hi2";
 import { Input } from "@/components/ui/input";
+import axios from "axios";
+import { apiRequestHandler } from "@/api/api-request-handler";
+import { toast } from "sonner";
+import { useAdminDetails } from "@/store/admin-details-store";
+import { useApiConfigWithToken } from "@/lib/use-api-config";
+import { useQuery } from "@tanstack/react-query";
+import { ReferralBonus } from "@/lib/types";
 
 const coins = ['BTC', 'ETH', 'BNB', 'STEEM', 'LTC', 'SBD', 'HBD', 'TRX', 'HIVE', 'DOGE', 'USDT', 'BUSD'];
 
@@ -20,6 +27,64 @@ const Toggle = () => {
   const [sellingRates, setSellingRates] = useState<Record<string, boolean>>(
     coins.reduce((acc, coin) => ({ ...acc, [coin]: true }), {})
   );
+  const { token } = useAdminDetails();
+
+  const referralConfig = useApiConfigWithToken({
+    method: "get",
+    url: "admin/referral/status",
+  });
+
+  const fetchReferral = () => axios.request(referralConfig);
+
+  // React Query to fetch referral status
+  const { data:refData, status:refStatus } = useQuery({
+    queryKey: ["referral-status"],
+    queryFn: () => apiRequestHandler(fetchReferral),
+  });
+
+  const referral = refData?.data as ReferralBonus;
+useEffect(() => {
+  if (refStatus === 'success' && referral) {
+    console.log(referral);
+    setReferralEnabled(Boolean(referral.referral_system));
+  }
+}, [refStatus, refData])
+
+  if (refStatus === 'pending') {
+    return (
+        toast.error('Error fetching referral status. Please wait.')
+    );
+  }
+
+  if (refStatus === 'error' && !refData) {
+    return (
+        toast.error('Error fetching referral status. Please try again later.')
+    );
+  };
+
+const toggleReferral = async (refEnabled: boolean) => {
+  const toggle: () => Promise<any> = () => axios.request({
+    method: 'post',
+    maxBodyLength: Infinity,
+    url: `https://api.olamax.io/api/admin/referral/1`,
+    headers: {
+      'Content-Type':'application/json',
+      'Authorization': `Bearer ${token}`
+    },
+    data: {
+      referral_system: refEnabled,
+    },
+  });
+
+  const toggleReferralResult = await apiRequestHandler(toggle);
+  if (toggleReferralResult && toggleReferralResult.status === 200) {
+    toast.success(toggleReferralResult.data.message);
+    return toggleReferralResult;
+  } else {
+    toast.error('An error occurred while toggling the referral system. Please try again later.');
+    return null;
+  }
+};
 
   const handleBuyingToggle = (coin: string) => {
     setBuyingRates((prev) => ({ ...prev, [coin]: !prev[coin] }));
@@ -30,9 +95,13 @@ const Toggle = () => {
   };
   
 
-  const handleReferralToggle = () => {
-    setReferralEnabled((prev) => !prev);
-  };
+const handleReferralToggle = async () => {
+  const newValue = !referralEnabled;
+  const result = await toggleReferral(newValue);
+  if (result && result.status === 200) {
+    setReferralEnabled(newValue);
+  }
+};
 
   const handleSave = () => {
     console.log('Saving settings...');
@@ -114,7 +183,7 @@ const Toggle = () => {
             <div className="flex w-full items-center justify-center">
               <Button 
                 className="bg-primary w-[96px] h-[40px] items-center hover:bg-secondary shadow-none mt-3 text-white border-1 rounded-sm border-primary cursor-pointer"
-                onClick={() => handleSave}
+                onClick={handleSave}
                 >Save <HiFolderArrowDown size={16}/></Button>            
             </div>
           </div>
@@ -162,11 +231,11 @@ const Toggle = () => {
           <h1 className="text-lg font-semibold mb-4">Toggle Referral System</h1>
           <div className="rounded-sm bg-white py-6 px-8 space-y-4">
             <Button
-              variant={referralEnabled ? "default" : "destructive"}
-              className={`p-4 rounded-sm ${referralEnabled ? "bg-black text-white" : "bg-red-500 text-white"}`}
+              variant={referralEnabled ? "destructive" : "default" }
+              className={`p-4 rounded-sm ${referralEnabled ?  "bg-red-500 text-white" : "bg-black text-white"}`}
               onClick={() => handleReferralToggle()}
             >
-              {referralEnabled ? "Enable" : "Disable"} {referralEnabled ? <Check /> : <X className="text-white" />}
+              {referralEnabled ? "Disable" : "Enable"} {referralEnabled ?  <X className="text-white" /> : <Check />}
             </Button>
             <p className="text-sm text-black flex items-start gap-2">
               <InfoIcon size={28} />

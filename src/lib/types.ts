@@ -364,3 +364,8 @@ export interface AllTransactionsData {
   buyings: BuyingTransaction[];
   sell_transactions: SellTransaction[];
 }
+
+export interface ReferralBonus {
+  id: number;
+  referral_system: number;
+}
