@@ -388,5 +388,13 @@ export interface BlockedUserReport {
 }
 export interface ReferralBonus {
   id: number;
-  referral_system: number;
+  pause_bonus: number;
+  referral_system: string;
+  bonus_parameters: string;
+  min_transaction_amt: string,
+  min_withdrawable_amt: string,
+  max_bonus_limit: string,
+  expiry_period_in_days: number,
+  updated_at: string;
+  created_at: string;
 }

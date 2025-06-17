@@ -42,25 +42,46 @@ const Toggle = () => {
     queryFn: () => apiRequestHandler(fetchReferral),
   });
 
-  const referral = refData?.data as ReferralBonus;
+  const referral = refData?.data.referral_system as ReferralBonus['referral_system'];
 useEffect(() => {
   if (refStatus === 'success' && referral) {
-    console.log(referral);
-    setReferralEnabled(Boolean(referral.referral_system));
+    console.log('enable status', referral);
+    setReferralEnabled(Boolean(referral));
   }
 }, [refStatus, refData])
 
-  if (refStatus === 'pending') {
-    return (
-        toast.error('Error fetching referral status. Please wait.')
-    );
-  }
+  useEffect(() => {
+    if (refStatus === 'error') {
+      toast.error('Error fetching referral status. Please try again later.');
+    }
+  }, [refStatus]);
 
-  if (refStatus === 'error' && !refData) {
-    return (
-        toast.error('Error fetching referral status. Please try again later.')
-    );
-  };
+  const refBonusConfig = useApiConfigWithToken({
+    method: "get",
+    url: "bonus-setting",
+  });
+
+  const fetchRefBonus = () => axios.request(refBonusConfig);
+
+  // React Query to fetch referral bonus
+  const { data:refBonusData, status:refBonusStatus } = useQuery({
+    queryKey: ["referral-bonus"],
+    queryFn: () => apiRequestHandler(fetchRefBonus),
+  });
+
+const refBon = refBonusData?.data as ReferralBonus;
+useEffect(() => {
+  if (refBonusStatus === 'success' && refBon) {
+    console.log('ref bonus',refBon.bonus_parameters);
+    setReferralBonus(refBon.bonus_parameters);
+  }
+}, [refBonusStatus, refBonusData])
+
+useEffect(() => {
+  if (refBonusStatus === 'error') {
+    toast.error('Error fetching referral bonus. Please try again later.');
+  }
+}, [refBonusStatus]);
 
 const toggleReferral = async (refEnabled: boolean) => {
   const toggle: () => Promise<any> = () => axios.request({
@@ -82,6 +103,35 @@ const toggleReferral = async (refEnabled: boolean) => {
     return toggleReferralResult;
   } else {
     toast.error('An error occurred while toggling the referral system. Please try again later.');
+    return null;
+  }
+};
+
+const saveReferralBonus = async (refBonus: string) => {
+  const handleRefSave: () => Promise<any> = () => axios.request({
+    method: 'post',
+    maxBodyLength: Infinity,
+    url: `https://api.olamax.io/api/update-bonus-settings/1`,
+    headers: {
+      'Content-Type':'application/json',
+      'Authorization': `Bearer ${token}`
+    },
+    data: {
+      pause_bonus:referralEnabled,
+      bonus_parameters: refBonus,
+      min_transaction_amt: refBon.min_transaction_amt,
+      min_withdrawable_amt: refBon.min_withdrawable_amt,
+      max_bonus_limit: refBon.max_bonus_limit,
+      expiry_period_in_days: refBon.expiry_period_in_days,  
+    },
+  });
+
+  const refBonusResult = await apiRequestHandler(handleRefSave);
+  if (refBonusResult && refBonusResult.status === 200) {
+    toast.success(refBonusResult.data.message);
+    return refBonusResult;
+  } else {
+    toast.error('An error occurred while saving new referral bonus. Please try again.');
     return null;
   }
 };
@@ -108,6 +158,16 @@ const handleReferralToggle = async () => {
     console.log('Buying Rates:', buyingRates);
     console.log('Selling Rates:', sellingRates);
     console.log('Referral System Enabled:', referralEnabled);
+  };
+
+  const handleRefSave = async () => {
+    setEditReferralBonus(false)
+    const value = referralBonus;
+    const result = await saveReferralBonus(value);
+    if (result && result.status === 200) {
+    console.log('Saving settings...');
+    console.log('Referral System Enabled:', referralEnabled, 'ref bonus:',referralBonus)
+   };
   };
 
   return (
@@ -216,7 +276,7 @@ const handleReferralToggle = async () => {
             <div className="flex w-full items-center justify-center">
               <Button 
                 className="bg-primary w-[96px] h-[40px] items-center hover:bg-secondary shadow-none mt-3 text-white border-1 rounded-sm border-primary cursor-pointer"
-                onClick={() => handleSave}
+                onClick={handleSave}
                 >Save <HiFolderArrowDown size={16}/></Button>            
             </div>
           </div>
@@ -265,7 +325,7 @@ const handleReferralToggle = async () => {
                             onClick={() => setEditReferralBonus(true)}
                             className="bg-white w-[96px] h-[40px] items-center hover:bg-white shadow-none text-primary border-1 rounded-sm border-primary cursor-pointer">Edit <Edit size={16}/></Button>
                         <Button 
-                            onClick={() => setEditReferralBonus(false)}
+                            onClick={handleRefSave}
                             disabled={!editReferralBonus}
                             className="bg-primary w-[96px] h-[40px] items-center hover:bg-secondary shadow-none text-white border-1 rounded-sm border-primary cursor-pointer">Save <HiFolderArrowDown size={16}/></Button>
                     </div>
