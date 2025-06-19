@@ -63,7 +63,7 @@ const VerifiedUsers = ({visibleFilter}: {visibleFilter: Record<string, boolean>}
       id: 5,
       name: 'author'
     }
-  ]
+  ];
 
   const assignRole = async (userId: number, role: string) => {
 
@@ -107,7 +107,6 @@ const VerifiedUsers = ({visibleFilter}: {visibleFilter: Record<string, boolean>}
       </div>
     );
   };
-
 
   if (allUserStatus === 'success' && verifiedUsers && verifiedUsers.length === 0) {
     return (

@@ -3,19 +3,22 @@ import { Button } from "@/components/ui/button";
 import Avatar from "../../../../assets/avatar.svg";
 import { useNavigate, useParams } from "react-router-dom";
 import PageHeader from "../escrow/pageHeader";
-import idcard from "../../../../assets/idCard.svg";
 import DashboardLayout from "@/layout/dash-board-layout";
 import { useApiConfigWithToken } from "@/lib/use-api-config";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import { apiRequestHandler } from "@/api/api-request-handler";
-import { userDetailsProps } from "@/lib/types";
+import { userDetailsProps, UserKYCData } from "@/lib/types";
 import { extractFirstName } from "@/lib/utils";
 import { toast } from "sonner";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
+import React from "react";
+import { useAdminDetails } from "@/store/admin-details-store";
 
 export default function UserDetails() {
   const navigate = useNavigate();
   const { id } = useParams();
+  const { token } = useAdminDetails();
 
   // Function to copy the user ID to clipboard
   const copyToClipboard = () => {
@@ -28,16 +31,84 @@ export default function UserDetails() {
     url: `admin/get-user-detail-by-id/${id}`
   });
 
-  const fetchUsers = () => axios.request(userConfig);
+  const userKycConfig = useApiConfigWithToken({
+    method: 'get',
+    url: `get-kyc-details/${id}/id`
+  });
 
-  const { data:userDetailsResponse, status } = useQuery({
+  const kycProceedingConfig = useApiConfigWithToken({
+    method: 'get',
+    url: 'kyc-proceeding'
+  });
+
+  const fetchUsers = () => axios.request(userConfig);
+  const fetchKyc = () => axios.request(userKycConfig);
+  const fetchKycProceeding = () => axios.request(kycProceedingConfig);
+
+  const { data:userDetailsResponse, status:userDetailStatus } = useQuery({
     queryKey: ['user-details', id],
     queryFn: () =>apiRequestHandler(fetchUsers)
   });
 
-  const userDetail = userDetailsResponse?.data.data as userDetailsProps
+  const { data:userKycResponse, status:userKycStatus } = useQuery({
+    queryKey: ['user-kyc', id],
+    queryFn: () =>apiRequestHandler(fetchKyc)
+  });
 
-  if (status === 'pending') {
+  const { data:kycProceedingResponse } = useQuery({
+    queryKey: ['kyc-proceeding'],
+    queryFn: () =>apiRequestHandler(fetchKycProceeding)
+  });
+
+  console.log(kycProceedingResponse?.data);
+
+  console.log(userKycResponse);
+
+  const userDetail = userDetailsResponse?.data.data as userDetailsProps
+  const userKycDetail = userKycResponse?.data[0] as UserKYCData;
+
+  const [labels, setLabels] = React.useState<string>('');
+  const [targets, setTargets] = React.useState<string>('');
+  const [status, setStatus] = React.useState<string>('');
+
+  console.log(labels);
+  console.log(targets);
+  console.log(status);
+
+  const resetFields = () => {
+    setLabels('');
+    setTargets('');
+    setStatus('');
+  }
+
+
+  const updateUserKyc = async () => {
+    const formdata = {
+      label: labels,
+      target: targets,
+      status: status,
+      user_id: userDetail?.id,
+    }
+    const config = {
+      method: 'put',
+      maxBodyLength: Infinity,
+      url: `https://api.olamax.io/api/update-kyc-status`,
+      headers: {
+        'Content-Type':'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      data: formdata,
+    };
+
+    const updateUser = () => axios.request(config);
+    const response = await apiRequestHandler(updateUser);
+    if (response && response.status === 200) {
+      toast.success('User KYC status updated successfully');
+      resetFields();
+    }
+  }
+
+  if (userDetailStatus === 'pending' && userKycStatus === 'pending') {
    return (
     <DashboardLayout>
       <div className="flex w-full min-h-screen items-center justify-center">
@@ -47,7 +118,7 @@ export default function UserDetails() {
    ) 
   };
 
-  if (status === 'error') {
+  if (userDetailStatus === 'error' && userKycStatus === 'error') {
     <DashboardLayout>
       <div className="w-full min-h-screen flex justify-center py-24">
         Error occurred while loading user details
@@ -55,7 +126,7 @@ export default function UserDetails() {
     </DashboardLayout>
   };
 
-  if (status === 'success' && !userDetail) {
+  if ((userDetailStatus === 'success' && !userDetail) && (userDetailStatus === 'success' && !userKycDetail)) {
     <DashboardLayout>
       <div className="w-full flex justify-center py-24">
         User detail not available, refresh page
@@ -63,7 +134,7 @@ export default function UserDetails() {
     </DashboardLayout>
   }
 
-  if (status === 'success' && userDetail) {
+  if ((userDetailStatus === 'success' && userDetail) && (userKycStatus === 'success' && userKycDetail)) {
     return (
       <DashboardLayout>
         <div className="flex flex-col min-h-screen">
@@ -132,7 +203,7 @@ export default function UserDetails() {
                     <span>{userDetail?.uid}</span>
                     <button
                       className="text-[#121826] cursor-pointer"
-                      onClick={copyToClipboard} // Enable copy function
+                      onClick={copyToClipboard}
                     >
                       <Copy className="h-4 w-4" />
                     </button>
@@ -240,12 +311,71 @@ export default function UserDetails() {
   
               <div className="space-y-4">
                 {/* If there is any specific data here, you can map through it */}
-                <div className="border  overflow-hidden">
-                  <div>
-                    <img src={idcard} alt="User ID" />
+                <div className="overflow-hidden">
+                  <div className="flex flex-col gap-3">
+                    <div className="w-full h-[160px] border rounded">
+                      <img src={userKycDetail.front} alt="document_front" />
+                    </div>
+                    <div className="w-full h-[160px] border rounded">
+                      <img src={userKycDetail.back} alt="document_back" />
+                    </div>
+                    <div className="w-full h-[160px] border rounded">
+                      <img src={userKycDetail.hold} alt="document_hold" />
+                    </div>
                   </div>
                 </div>
               </div>
+            </div>
+          </div>
+          <div className="container px-4 py-6">
+            <div className="rounded-lg px-4 py-6 grid grid-cols-4 gap-3  bg-white shadow-sm">
+              <div className="w-full">
+                <Select value={labels} onValueChange={(value) => setLabels(value)}>
+                  <SelectTrigger className="w-full h-11">
+                    <SelectValue placeholder="Select KYC Labels" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectLabel>Labels</SelectLabel>
+                      <SelectItem value="kyc_documents">KYC Documents</SelectItem>
+                      <SelectItem value="kyc_user_details">KYC User Details</SelectItem>
+                      <SelectItem value="users">Users</SelectItem>
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="w-full">
+                <Select value={targets} onValueChange={(value) => setTargets(value)}>
+                  <SelectTrigger className="w-full h-11">
+                    <SelectValue placeholder="Select Targets" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectLabel>Targets</SelectLabel>
+                      <SelectItem value="status">Status</SelectItem>
+                      <SelectItem value="video_status">Video Status</SelectItem>
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="w-full">
+                <Select value={status} onValueChange={(value) => setStatus(value)}>
+                  <SelectTrigger className="w-full h-11">
+                    <SelectValue placeholder="Select KYC Status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectLabel>Status</SelectLabel>
+                      <SelectItem value="reject">Reject</SelectItem>
+                      <SelectItem value="verified">Verified</SelectItem>
+                      <SelectItem value="Pending">Pending</SelectItem>
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </div>
+              <button className="w-full border-primary rounded-lg flex items-center justify-center bg-primary" onClick={() => updateUserKyc()}>
+                <p className="text-sm text-white leading-[22px] cursor-pointer">Update {labels === '' ? 'User' : labels.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}</p>
+              </button>
             </div>
           </div>
         </div>
