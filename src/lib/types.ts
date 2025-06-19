@@ -433,3 +433,18 @@ export interface ReferralBonus {
   updated_at: string;
   created_at: string;
 }
+
+interface Role {
+  role: string;
+  is_active: boolean;
+  access_right: string;
+}
+
+export interface AdminUserData {
+  user_id: number;
+  name: string;
+  email: string;
+  phone: string | null;
+  roles: Role[];
+}
+

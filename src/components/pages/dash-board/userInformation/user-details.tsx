@@ -71,24 +71,21 @@ export default function UserDetails() {
   const [targets, setTargets] = React.useState<string>('');
   const [status, setStatus] = React.useState<string>('');
 
-  console.log(labels);
-  console.log(targets);
-  console.log(status);
-
   const resetFields = () => {
     setLabels('');
     setTargets('');
     setStatus('');
-  }
-
+  };
 
   const updateUserKyc = async () => {
+
     const formdata = {
       label: labels,
       target: targets,
       status: status,
       user_id: userDetail?.id,
-    }
+    };
+
     const config = {
       method: 'put',
       maxBodyLength: Infinity,
@@ -105,7 +102,7 @@ export default function UserDetails() {
     if (response && response.status === 200) {
       toast.success('User KYC status updated successfully');
       resetFields();
-    }
+    };
   }
 
   if (userDetailStatus === 'pending' && userKycStatus === 'pending') {
