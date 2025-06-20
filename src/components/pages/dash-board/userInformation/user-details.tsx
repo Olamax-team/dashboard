@@ -159,6 +159,7 @@ export default function UserDetails() {
                 <Button
                   variant="outline"
                   className="text-[#E41D03]  text-[13px] border-[#E41D03] hover:bg-red-50 font-medium"
+                  onClick={() => { if (userDetail.id !== undefined) blockUser(userDetail.id); }}
                 >
                   Block User
                 </Button>
