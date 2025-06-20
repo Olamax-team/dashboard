@@ -386,6 +386,41 @@ export interface BlockedUserReport {
   created_at: string;
   updated_at: string;
 }
+
+export interface UserKYCData {
+  user_id: number;
+  uid: string;
+  email: string;
+  referral_code: string;
+  verification_method: string;
+  fname: string;
+  mname: string | null;
+  status: string;
+  phone_number: string;
+  gender: string;
+  dateOfBirth: string; // format: YYYY-MM-DD
+  nationality: string;
+  documents_id: number;
+  front: string;
+  back: string;
+  hold: string;
+  short_video: string | null;
+  kyc_documents_created_at: string; // format: YYYY-MM-DD HH:mm:ss
+  kyc_documents_updated_at: string; // format: YYYY-MM-DD HH:mm:ss
+  kyc_documents_video_status: string;
+  kyc_documents_status: string;
+  kyc_user_details_id: number | null;
+  kyc_user_details_status: string | null;
+  kyc_fname: string | null;
+  kyc_lname: string | null;
+  kyc_gender: string | null;
+  kyc_dateOfBirth: string | null;
+  kyc_phone_number: string | null;
+  kyc_picture: string | null;
+  kyc_user_details_created_at: string | null;
+  kyc_user_details_updated_at: string | null;
+}
+
 export interface ReferralBonus {
   id: number;
   pause_bonus: number;
@@ -398,3 +433,18 @@ export interface ReferralBonus {
   updated_at: string;
   created_at: string;
 }
+
+interface Role {
+  role: string;
+  is_active: boolean;
+  access_right: string;
+}
+
+export interface AdminUserData {
+  user_id: number;
+  name: string;
+  email: string;
+  phone: string | null;
+  roles: Role[];
+}
+

@@ -2,9 +2,9 @@ import { apiRequestHandler } from "@/api/api-request-handler";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Switch } from "@/components/ui/switch";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow,} from "@/components/ui/table";
-import { userDetailsProps } from "@/lib/types";
+import { AdminUserData } from "@/lib/types";
 import { useApiConfigWithToken } from "@/lib/use-api-config";
-import { cn, extractFirstName } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import { useAdminDetails } from "@/store/admin-details-store";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
@@ -22,7 +22,7 @@ const AdminTable = ({ visibleFilter }: {visibleFilter: Record<string, boolean>})
 
   const userConfig = useApiConfigWithToken({
     method: 'get',
-    url: 'admin/users'
+    url: 'admin/list-admin'
   });
 
   const fetchUsers = () => axios.request(userConfig);
@@ -32,7 +32,9 @@ const AdminTable = ({ visibleFilter }: {visibleFilter: Record<string, boolean>})
     queryFn: () =>apiRequestHandler(fetchUsers)
   });
 
-  const allUsers:userDetailsProps[] = usersResponse?.data.data.filter((user: userDetailsProps) => user.uid !== null) || [];
+  console.log(usersResponse?.data?.data)
+
+  const allAdmins:AdminUserData[] = usersResponse?.data.data || [];
 
   const { token } = useAdminDetails();
 
@@ -94,7 +96,7 @@ const AdminTable = ({ visibleFilter }: {visibleFilter: Record<string, boolean>})
     );
   }
 
-  if (status === 'error' && !allUsers) {
+  if (status === 'error' && !allAdmins) {
     return (
       <div className="w-full py-[50px] flex items-center justify-center">
         <p className="text-red-500">Error fetching data</p>
@@ -102,7 +104,7 @@ const AdminTable = ({ visibleFilter }: {visibleFilter: Record<string, boolean>})
     );
   };
 
-  if (status === 'success' && allUsers && allUsers.length === 0) {
+  if (status === 'success' && allAdmins && allAdmins.length === 0) {
     return (
       <div className="w-full py-[50px] flex items-center justify-center">
         <p className="text-gray-500">No users available</p>
@@ -110,7 +112,7 @@ const AdminTable = ({ visibleFilter }: {visibleFilter: Record<string, boolean>})
     );
   };
 
-  if (status === 'success' && allUsers && allUsers.length > 0) {
+  if (status === 'success' && allAdmins && allAdmins.length > 0) {
     return (
       <div className="border-2 border-gray-300">
         <Table className="border-collapse">
@@ -157,15 +159,15 @@ const AdminTable = ({ visibleFilter }: {visibleFilter: Record<string, boolean>})
             </TableRow>
           </TableHeader>
           <TableBody>
-            {allUsers && allUsers.length > 0 && allUsers.filter((item) => item.role === 'admin' || item.role === 'superAdmin').map((user) => (
+            {allAdmins && allAdmins.length > 0 && allAdmins.map((user) => (
               <TableRow
-                key={user.id}
+                key={user.user_id}
                 className={`odd:bg-[#f3f3f3] cursor-pointer even:bg-[#e0e0e0] h-[50px] hover:bg-[#d1d1d1] text-[#121826] font-semibold text-[12px] leading-[150%] ml-5`}
               >
                 {visibleFilter.name && (
                   <TableCell className="py-2 text-center border-r border-gray-300">
                     <div className="text-sm text-[#121826] capitalize">
-                      {extractFirstName(user.first_name)} {extractFirstName(user.last_name)}
+                      {user.name}
                     </div>
                   </TableCell>
                 )}
@@ -177,26 +179,25 @@ const AdminTable = ({ visibleFilter }: {visibleFilter: Record<string, boolean>})
                 )}
                 {visibleFilter.phoneNo && (
                   <TableCell className="py-2 text-center border-r border-gray-300 text-sm">
-                    {user.phone_number}
+                    {user.phone}
                   </TableCell>
                 )}
                 {visibleFilter.role && (
-                  <TableCell className="py-2 text-center border-r border-gray-300 text-sm">
-                    {user.role ? user.role : null}
+                  <TableCell className="py-2 text-center border-r border-gray-300 text-sm capitalize">
+                    {user.roles.map(role => role.role).join(', ')}
                   </TableCell>
                 )}
                 {visibleFilter.status && (
-                  <TableCell className="py-2 text-center border-r border-gray-300 text-sm">
-                    {user.role_status}
+                  <TableCell className="py-2 text-center border-r border-gray-300 text-sm capitalize">
+                    {user.roles.map(role => role.is_active).join(', ')}
                   </TableCell>
                 )}
   
                 {visibleFilter.roleDescription && (
                   <TableCell className="py-2 text-center border-r border-gray-300 text-sm">
-                    {user.role_access}
+                    {user.roles.map(role => role.access_right).join(', ')}
                   </TableCell>
                 )}
-  
                 {visibleFilter.action && (
                   <TableCell className="text-center py-2 border-r border-gray-300">
                       <Switch
@@ -222,7 +223,7 @@ const AdminTable = ({ visibleFilter }: {visibleFilter: Record<string, boolean>})
                         value={completedMenu}
                         onValueChange={setCompletedMenu}
                       >
-                        {allRoles && (allRoles as { id: number; name: string }[])
+                        { allRoles && (allRoles as { id: number; name: string }[])
                           .filter((role: { id: number; name: string }) => role.name !== "user")
                           .map((role: { id: number; name: string }) => (
                           <DropdownMenuRadioItem
@@ -230,9 +231,12 @@ const AdminTable = ({ visibleFilter }: {visibleFilter: Record<string, boolean>})
                             value={role.name}
                             onClick={(e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
                             e.stopPropagation();
-                            assignRole(user.id, role.name);
+                            assignRole(user.user_id, role.name);
                             }}
-                            className={cn("capitalize rounded-lg py-2 px-4 text-sm pl-6 text-[#000000] hover:bg-blue-50 focus:ring-2 focus:ring-black transition-all duration-150", (user && user.role) === role.name ? 'hidden' : 'block' )}
+                            className={cn(
+                              "capitalize rounded-lg py-2 px-4 text-sm pl-6 text-[#000000] hover:bg-blue-50 focus:ring-2 focus:ring-black transition-all duration-150",
+                              user.roles.some(r => r.role === role.name) ? 'hidden' : 'block'
+                            )}
                           >
                             Assign {role.name}
                           </DropdownMenuRadioItem>
