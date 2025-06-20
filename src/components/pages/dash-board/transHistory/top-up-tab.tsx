@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { HiFilter, HiOutlineSortDescending, HiOutlineSortAscending, HiDownload } from "react-icons/hi";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import BuyingHistory from "./buyingHistory";
 import { useLocation, useNavigate } from "react-router-dom";
+import TopUpHistory from "./topUpHistory";
 
 const TopUpTab = () => {
   const [sortOrder, setSortOrder] = useState<"ascending" | "descending">("descending");
@@ -17,7 +17,9 @@ const TopUpTab = () => {
     nairaEquivalent: true,
     coinPriceUsd: true,
     dollarRate: true,
+    billType: true,
     networkFees: true,
+    ref: true,  
     nairaAmount: true,
     networkFeesRepeat: true,
     walletAddress: true,
@@ -50,7 +52,7 @@ const TopUpTab = () => {
   // const renderComponent = () => {
   //   switch (activeTab) {
   //     case "buying":
-  //       return <BuyingHistory visibleFilter={visibleFilter} />;
+  //       return <TopUpHistory visibleFilter={visibleFilter} />;
   //     case "selling":
   //       return <SellingHistory visibleFilter={visibleFilter} />;
   //     case "top-up":
@@ -161,7 +163,7 @@ const TopUpTab = () => {
         </div>
       </div>
       <div>
-        <BuyingHistory visibleFilter={visibleFilter} />;
+        <TopUpHistory visibleFilter={visibleFilter} />;
       </div>
     </React.Fragment>
   );

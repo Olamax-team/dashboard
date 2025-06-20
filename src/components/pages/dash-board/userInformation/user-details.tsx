@@ -12,6 +12,7 @@ import { apiRequestHandler } from "@/api/api-request-handler";
 import { userDetailsProps } from "@/lib/types";
 import { extractFirstName } from "@/lib/utils";
 import { toast } from "sonner";
+import { useFetch } from "@/lib/use-fetch";
 
 export default function UserDetails() {
   const navigate = useNavigate();
@@ -36,7 +37,7 @@ export default function UserDetails() {
   });
 
   const userDetail = userDetailsResponse?.data.data as userDetailsProps
-
+  const { blockUser } = useFetch();
   if (status === 'pending') {
    return (
     <DashboardLayout>
@@ -91,6 +92,7 @@ export default function UserDetails() {
                 <Button
                   variant="outline"
                   className="text-[#E41D03]  text-[13px] border-[#E41D03] hover:bg-red-50 font-medium"
+                  onClick={() => { if (userDetail.id !== undefined) blockUser(userDetail.id); }}
                 >
                   Block User
                 </Button>

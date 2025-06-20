@@ -232,7 +232,7 @@ interface TopUp {
 interface TopUpTransaction {
   bills_transaction_id: number;
   user: User;
-  coin: string | null;
+  coin: string;
   blockchain: string | null;
   coin_value: string | null;
   naira_value: string;
