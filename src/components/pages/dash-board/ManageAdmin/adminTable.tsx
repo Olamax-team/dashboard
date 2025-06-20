@@ -32,8 +32,6 @@ const AdminTable = ({ visibleFilter }: {visibleFilter: Record<string, boolean>})
     queryFn: () =>apiRequestHandler(fetchUsers)
   });
 
-  console.log(usersResponse?.data?.data)
-
   const allAdmins:AdminUserData[] = usersResponse?.data.data || [];
 
   const { token } = useAdminDetails();
@@ -59,7 +57,7 @@ const AdminTable = ({ visibleFilter }: {visibleFilter: Record<string, boolean>})
       id: 5,
       name: 'author'
     }
-  ]
+  ];
 
   const assignRole = async (userId: number, role: string) => {
 
