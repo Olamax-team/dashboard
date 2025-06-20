@@ -30,6 +30,8 @@ import DashboardSelling from './components/pages/dash-board/pending/dasboard-sel
 import UserDetails from './components/pages/dash-board/userInformation/user-details.tsx'
 import BuyingTransactionHistory from './components/pages/dash-board/transHistory/buying-transaction-history.tsx'
 import SellingTransactionHistory from './components/pages/dash-board/transHistory/selling-transaction-history.tsx'
+import BillsTransactionHistory from './components/pages/dash-board/transHistory/bill-transaction.tsx'
+import TopUpTransactionHistory from './components/pages/dash-board/transHistory/top-up-transaction-history.tsx'
 
 
 const router = createBrowserRouter([
@@ -105,6 +107,20 @@ const router = createBrowserRouter([
         element: 
           <ProtectRoute>
             <SellingTransactionHistory/>
+          </ProtectRoute>
+      },
+      {
+        path: '/dashboard/transaction-history/top-up',
+        element: 
+          <ProtectRoute>
+            <TopUpTransactionHistory/>
+          </ProtectRoute>
+      },
+      {
+        path: '/dashboard/transaction-history/bills',
+        element: 
+          <ProtectRoute>
+            <BillsTransactionHistory/>
           </ProtectRoute>
       },
       {
