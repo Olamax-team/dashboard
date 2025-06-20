@@ -14,11 +14,13 @@ import { toast } from "sonner";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 import React from "react";
 import { useAdminDetails } from "@/store/admin-details-store";
+import { useFetch } from "@/lib/use-fetch";
 
 export default function UserDetails() {
   const navigate = useNavigate();
   const { id } = useParams();
   const { token } = useAdminDetails();
+  const { blockUser } = useFetch();
 
   // Function to copy the user ID to clipboard
   const copyToClipboard = () => {

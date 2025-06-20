@@ -2,7 +2,7 @@ import { apiRequestHandler } from "@/api/api-request-handler";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { AllTransactionsData } from "@/lib/types";
 import { useApiConfigWithToken } from "@/lib/use-api-config";
-import { extractFirstName } from "@/lib/utils";
+import { cn, extractFirstName } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { Loader2 } from "lucide-react";
@@ -76,7 +76,7 @@ const SellingHistory = ({visibleFilter}: {visibleFilter: Record<string, boolean>
                       Amount Sent(COIN)
                     </TableHead>
                   )}
-                  {visibleFilter.coinPriceUsd && (
+                  {visibleFilter.nairaAmount && (
                     <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
                       Naira Equivalent (NGN)
                     </TableHead>
@@ -86,62 +86,47 @@ const SellingHistory = ({visibleFilter}: {visibleFilter: Record<string, boolean>
                       Dollar Rate
                     </TableHead>
                   )}
-                  {visibleFilter.networkFees && (
+                  {visibleFilter.coinPrice && (
                     <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
                       Coin Price ($)
                     </TableHead>
                   )}
-                  {visibleFilter.nairaAmount && (
+                  {visibleFilter.bonus && (
                     <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
                       Bonus
                     </TableHead>
                   )}
-                  {visibleFilter.networkFeesRepeat && (
-                    <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
-                      Payment Method
-                    </TableHead>
-                  )}
                   {visibleFilter.walletAddress && (
                     <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
-                      Payment Details
+                      Wallet Address
                     </TableHead>
                   )}
-                  {visibleFilter.steem && (
+                  {visibleFilter.transactionStatus && (
                     <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
-                      Payment Status
-                    </TableHead>
-                  )}
-                  {visibleFilter.method && (
-                    <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
-                      Transaction Status
-                    </TableHead>
-                  )}
-                  {visibleFilter.paymentStatus && (
-                    <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
-                      Amount Sent(COIN)
+                      Status
                     </TableHead>
                   )}
                   {visibleFilter.referrer && (
                     <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
-                      Naira Equivalent (NGN)
-                    </TableHead>
-                  )}
-                  {visibleFilter.Timestamp && (
-                    <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
                       Referrer
                     </TableHead>
                   )}
-                  {visibleFilter.finish && (
+                  {visibleFilter.checkBalance && (
                     <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
                       Check Balance
                     </TableHead>
                   )}
-                  {visibleFilter.finish && (
+                  {visibleFilter.phone && (
                     <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
                       Phone No
                     </TableHead>
                   )}
-                  {visibleFilter.Timestamp && (
+                  {visibleFilter.timeStamp && (
+                    <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
+                      Time Stamp
+                    </TableHead>
+                  )}
+                  {visibleFilter.action && (
                     <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
                       Time Stamp
                     </TableHead>
@@ -176,7 +161,7 @@ const SellingHistory = ({visibleFilter}: {visibleFilter: Record<string, boolean>
                         {transaction.amount_sent}
                       </TableCell>
                     )}
-                    {visibleFilter.coinPriceUsd && (
+                    {visibleFilter.nairaAmount && (
                       <TableCell className="py-2 text-center border-r border-gray-300">
                         {transaction.naira_value}
                       </TableCell>
@@ -186,19 +171,14 @@ const SellingHistory = ({visibleFilter}: {visibleFilter: Record<string, boolean>
                         {transaction.naira_value}
                       </TableCell>
                     )}
-                    {visibleFilter.networkFees && (
+                    {visibleFilter.coinPrice && (
                       <TableCell className="py-2 text-center border-r border-gray-300">
                         {transaction.naira_value}
                       </TableCell>
                     )}
-                    {visibleFilter.nairaAmount && (
+                    {visibleFilter.bonus && (
                       <TableCell className="py-2 text-center border-r border-gray-300">
                         {transaction.naira_value}
-                      </TableCell>
-                    )}
-                    {visibleFilter.networkFeesRepeat && (
-                      <TableCell className="py-2 text-center border-r border-gray-300">
-                        {transaction.selling.currency}
                       </TableCell>
                     )}
                     {visibleFilter.walletAddress && (
@@ -206,52 +186,27 @@ const SellingHistory = ({visibleFilter}: {visibleFilter: Record<string, boolean>
                         {transaction.sell_details.account_name}
                       </TableCell>
                     )}
-                    {visibleFilter.steem && (
-                      <TableCell className="py-2 text-center border-r border-gray-300">
-                        <span
-                          className={`px-2 py-1 rounded-sm text-xs font-medium ${
-                            transaction.status === "pending"
-                              ? " text-red-700"
-                              : transaction.status === "Successful"
-                              ? " text-green-700"
-                              : " text-yellow-700"
-                          }`}
-                        >
-                          {transaction.status}
-                        </span>
-                      </TableCell>
-                    )}
-                    {visibleFilter.method && (
-                      <TableCell className="py-2 text-center border-r border-gray-300">
+                    {visibleFilter.transactionStatus && (
+                      <TableHead className={cn("text-center font-bold text-[#121826] border-r border-gray-300", transaction.status === 'pending' ? 'text-yellow-500' : transaction.status === 'completed' ? 'text-green-500' : 'text-red-500')}>
                         {transaction.status}
-                      </TableCell>
-                    )}
-                    {visibleFilter.paymentStatus && (
-                      <TableCell className="py-2 text-center border-r border-gray-300">
-                        {transaction.amount_sent}
-                      </TableCell>
+                      </TableHead>
                     )}
                     {visibleFilter.referrer && (
                       <TableCell className="py-2 text-center border-r border-gray-300">
                         {transaction.naira_value}
                       </TableCell>
                     )}
-                    {visibleFilter.referrer && (
+                    {visibleFilter.checkBalance && (
                       <TableCell className="py-2 text-center border-r border-gray-300">
-                        {transaction.referer}
+                        {transaction.amount_sent}
                       </TableCell>
                     )}
-                    {visibleFilter.finish && (
+                    {visibleFilter.phone && (
                       <TableCell className="py-2 text-center border-r border-gray-300">
-                        {transaction.sell_details.account_name}
+                        {transaction.amount_sent}
                       </TableCell>
                     )}
-                    {visibleFilter.finish && (
-                      <TableCell className="py-2 text-center border-r border-gray-300">
-                        {transaction.user.phone}
-                      </TableCell>
-                    )}
-                    {visibleFilter.Timestamp && (
+                    {visibleFilter.timeStamp && (
                       <TableCell className="py-2 text-center border-r border-gray-300">
                         {formatTimestamp(transaction.created_at)}
                       </TableCell>
