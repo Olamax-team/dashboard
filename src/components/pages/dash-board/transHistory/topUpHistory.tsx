@@ -215,7 +215,7 @@ const TopUpHistory = ({visibleFilter}: {visibleFilter: Record<string, boolean>})
                   <TableCell className="py-2 text-center border-r border-gray-300">
                     <span
                       className={`px-2 py-1 rounded-sm text-xs font-medium ${
-                        transaction.status === "pending"
+                        transaction.status === "Pending"
                           ? "text-red-700"
                           : transaction.status === "Successful"
                           ? "text-green-700"
