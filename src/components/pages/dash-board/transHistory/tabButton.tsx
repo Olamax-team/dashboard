@@ -66,9 +66,9 @@ const TabButton = () => {
       case "selling":
         return <SellingHistory visibleFilter={visibleFilter} />;
       case "top-up":
-        return <TopUpHistory />;
+        return <TopUpHistory visibleFilter={visibleFilter} />;
       case "bills":
-        return <BillHistory />;
+        return <BillHistory visibleFilter={visibleFilter} />;
       default:
         return <div>Default Content</div>;
     }
