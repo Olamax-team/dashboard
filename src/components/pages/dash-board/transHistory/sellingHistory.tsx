@@ -1,12 +1,15 @@
 import { apiRequestHandler } from "@/api/api-request-handler";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { AllTransactionsData } from "@/lib/types";
 import { useApiConfigWithToken } from "@/lib/use-api-config";
 import { cn, extractFirstName } from "@/lib/utils";
+import { useAdminDetails } from "@/store/admin-details-store";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { Loader2 } from "lucide-react";
 import React from "react";
+import { HiMiniEllipsisVertical } from "react-icons/hi2";
 
 const SellingHistory = ({visibleFilter}: {visibleFilter: Record<string, boolean>}) => {
 
@@ -29,6 +32,44 @@ const SellingHistory = ({visibleFilter}: {visibleFilter: Record<string, boolean>
 
     const allTransaction = data?.data.data as AllTransactionsData;
     const transaction = allTransaction?.sell_transactions;
+
+    const { token } = useAdminDetails();
+
+    const finishTransaction = async (transactionId:number) => {
+  
+      const formdata = {
+        transaction_id: transactionId
+      };
+  
+      const finishConfig = {
+        method: 'post',
+        maxBodyLength: Infinity,
+        url: `https://api.olamax.io/api/admin/complete-selling-transaction`,
+        headers: {
+          'Content-Type':'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        data: formdata,
+      };
+  
+      const finish = () => axios.request(finishConfig);
+      const completeTransaction = await apiRequestHandler(finish)
+  
+      console.log(completeTransaction)
+  
+      // if (completeTransaction && completeTransaction.status === 200) {
+      //   if (completeTransaction.data.status === 'pending') {
+      //     toast.info(completeTransaction.data.message)
+      //   } else if (completeTransaction.data.status === 'success') {
+      //     toast.success(completeTransaction.data.message)
+      //   } else {
+      //     toast.warning(completeTransaction.data.message)
+      //   }
+      // } else {
+      //   console.log(completeTransaction);
+      //   toast.error('Something went wrong try again later')
+      // }
+    };
 
     if (status === 'error') {
       return (
@@ -126,11 +167,9 @@ const SellingHistory = ({visibleFilter}: {visibleFilter: Record<string, boolean>
                       Time Stamp
                     </TableHead>
                   )}
-                  {visibleFilter.action && (
                     <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
-                      Time Stamp
+                      Action
                     </TableHead>
-                  )}
                 </TableRow>
               </TableHeader>
     
@@ -211,6 +250,28 @@ const SellingHistory = ({visibleFilter}: {visibleFilter: Record<string, boolean>
                         {formatTimestamp(transaction.created_at)}
                       </TableCell>
                     )}
+                    <TableCell>
+                    <DropdownMenu modal={false}>
+                      <DropdownMenuTrigger className="outline-none">
+                        <button
+                          type="button"
+                          className="flex items-center justify-center h-full w-full p-2 hover:bg-gray-300 rounded-md transition-all duration-200"
+                        >
+                          <HiMiniEllipsisVertical className="text-[#121826] size-7" />
+                        </button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent className="cursor-pointer rounded-xl bg-white shadow-lg p-2 w-[180px] ring-1 ring-gray-200 transition-all duration-200 transform scale-95 hover:scale-100">
+                        <DropdownMenuGroup>
+                          <DropdownMenuItem
+                           onClick={() => finishTransaction(transaction.sell_transaction_id)}
+                            className="rounded-lg py-2 px-1 text-sm pl-3 text-[#000000] hover:bg-blue-50 focus:ring-2 focus:ring-black transition-all duration-150"
+                          >
+                            <span className="text-sm">Complete transaction</span>
+                          </DropdownMenuItem>
+                        </DropdownMenuGroup>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>

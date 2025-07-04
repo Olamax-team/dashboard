@@ -5,6 +5,8 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Form, FormControl, FormField, FormItem, FormMessage } from "./components/ui/form";
 import { Input } from "./components/ui/input";
 import { useNavigate } from "react-router-dom";
+import React from "react";
+import { EyeClosed, EyeIcon } from "lucide-react";
 
 function App() {
 
@@ -17,6 +19,12 @@ function App() {
   });
 
   const navigate = useNavigate();
+
+  const [inputType, setInputType] = React.useState('password');
+
+    const togglePassword = () => {
+      setInputType(inputType === 'password' ? 'text' : 'password');
+    }
 
   const onSubmit = async (values:loginValues) => {
     localStorage.setItem('loginDetails', JSON.stringify(values));
@@ -51,8 +59,11 @@ function App() {
             render={({ field }) => (
               <FormItem>
                 <FormControl>
-                  <div className="w-full lg:h-[70px] h-[60px] rounded-md">
-                    <Input {...field} className="w-full h-full placeholder:text-black px-8" placeholder="Enter Password" type="password"/>
+                  <div className="w-full lg:h-[70px] h-[60px] rounded-md relative">
+                    <Input {...field} className="w-full h-full placeholder:text-black px-8" placeholder="Enter Password" type={inputType}/>
+                    <button className="absolute top-1/2 right-4 -translate-y-1/2 cursor-pointer" onClick={togglePassword} type="button">
+                      { inputType === 'text' ? <EyeIcon/> : <EyeClosed/> }
+                    </button>
                   </div>
                 </FormControl>
                 <FormMessage/>
@@ -60,7 +71,7 @@ function App() {
             )}
           />
           <div className="mt-8">
-            <button type="submit" className="w-full lg:h-[70px] h-[60px] rounded-md bg-black text-white">
+            <button type="submit" className="w-full lg:h-[70px] h-[60px] rounded-md bg-black text-white cursor-pointer">
               Continue
             </button>
             <div className="mt-8 text-center font-semibold">Contact support</div>

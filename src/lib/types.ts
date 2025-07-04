@@ -392,28 +392,28 @@ export interface UserKYCData {
   uid: string;
   email: string;
   referral_code: string;
-  verification_method: string;
-  fname: string;
+  verification_method: string | null;
+  fname: string | null;
   mname: string | null;
-  status: string;
-  phone_number: string;
-  gender: string;
-  dateOfBirth: string; // format: YYYY-MM-DD
+  status: 'verified' | 'unverified' | string;
+  phone_number: string | null;
+  gender: 'male' | 'female' | string | null;
+  dateOfBirth: string;
   nationality: string;
   documents_id: number;
-  front: string;
-  back: string;
-  hold: string;
-  short_video: string | null;
-  kyc_documents_created_at: string; // format: YYYY-MM-DD HH:mm:ss
-  kyc_documents_updated_at: string; // format: YYYY-MM-DD HH:mm:ss
-  kyc_documents_video_status: string;
-  kyc_documents_status: string;
+  kyc_documents_front: string;
+  kyc_documents_back: string;
+  kyc_documents_hold: string;
+  kyc_documents_short_video: string;
+  kyc_documents_created_at: string;
+  kyc_documents_updated_at: string;
+  kyc_documents_video_status: 'verified' | 'pending' | 'rejected' | string;
+  kyc_documents_status: 'verified' | 'pending' | 'rejected' | string;
   kyc_user_details_id: number | null;
-  kyc_user_details_status: string | null;
+  kyc_user_details_status: 'verified' | 'pending' | 'rejected' | string | null;
   kyc_fname: string | null;
   kyc_lname: string | null;
-  kyc_gender: string | null;
+  kyc_gender: 'male' | 'female' | string | null;
   kyc_dateOfBirth: string | null;
   kyc_phone_number: string | null;
   kyc_picture: string | null;

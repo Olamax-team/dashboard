@@ -1,13 +1,20 @@
 import { apiRequestHandler } from "@/api/api-request-handler";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { pendingTransactionDataResponse } from "@/lib/types";
 import { useApiConfigWithToken } from "@/lib/use-api-config";
+import { cn } from "@/lib/utils";
+import { useAdminDetails } from "@/store/admin-details-store";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { Loader2 } from "lucide-react";
 import React from "react";
+import { HiMiniEllipsisVertical } from "react-icons/hi2";
+import { toast } from "sonner";
 
 const Selling = ({visibleColumns}: {visibleColumns: Record<string, boolean>}) => {
+
+  const { token } = useAdminDetails();
 
   const formatTimestamp = (timestamp: string) => {
     const date = new Date(timestamp);
@@ -28,6 +35,40 @@ const Selling = ({visibleColumns}: {visibleColumns: Record<string, boolean>}) =>
 
   const fullData = data?.data as pendingTransactionDataResponse
   const pendingSelling = fullData?.data.sell_transactions;
+
+  const revalidateTransaction = async (transactionId:number) => {
+
+    const formdata = {
+      transaction_id: transactionId
+    };
+
+    const finishConfig = {
+      method: 'post',
+      maxBodyLength: Infinity,
+      url: `https://api.olamax.io/api/admin/revalidate-transaction`,
+      headers: {
+        'Content-Type':'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      data: formdata,
+    };
+
+    const finish = () => axios.request(finishConfig);
+    const completeTransaction = await apiRequestHandler(finish)
+
+    if (completeTransaction && completeTransaction.status === 200) {
+      if (completeTransaction.data.status === 'pending') {
+        toast.info(completeTransaction.data.message)
+      } else if (completeTransaction.data.status === 'success') {
+        toast.success(completeTransaction.data.message)
+      } else {
+        toast.warning(completeTransaction.data.message)
+      }
+    } else {
+      console.log(completeTransaction);
+      toast.error('Something went wrong try again later')
+    }
+  };
 
   if (status === 'error') {
     return (
@@ -105,12 +146,12 @@ const Selling = ({visibleColumns}: {visibleColumns: Record<string, boolean>}) =>
                     Dollar Rate
                   </TableHead>
                 )}
-                {visibleColumns.steem && (
+                {/* {visibleColumns.steem && (
                   <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
                     Coin Price($)
                   </TableHead>
-                )}
-                {visibleColumns.method && (
+                )} */}
+                {/* {visibleColumns.method && (
                   <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
                     Referred By
                   </TableHead>
@@ -119,7 +160,7 @@ const Selling = ({visibleColumns}: {visibleColumns: Record<string, boolean>}) =>
                   <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
                     Bonus
                   </TableHead>
-                )}
+                )} */}
                 {visibleColumns.referrer && (
                   <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
                     Status
@@ -130,7 +171,7 @@ const Selling = ({visibleColumns}: {visibleColumns: Record<string, boolean>}) =>
                     Time Stamp
                   </TableHead>
                 )}
-                {visibleColumns.referrer && (
+                {/* {visibleColumns.referrer && (
                   <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
                     Check Balance
                   </TableHead>
@@ -149,33 +190,32 @@ const Selling = ({visibleColumns}: {visibleColumns: Record<string, boolean>}) =>
                   <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
                     Send Bill Payment
                   </TableHead>
-                )}
+                )} */}
                 {visibleColumns.finish && (
                   <TableHead className="text-center font-bold text-[#121826] border-gray-300">
-                    Finish
+                    Action
                   </TableHead>
                 )}
               </TableRow>
             </TableHeader>
   
             <TableBody>
-              {pendingSelling && pendingSelling.length > 0 && pendingSelling.map((transaction, index) => (
+              { pendingSelling && pendingSelling.length > 0 && pendingSelling.map((transaction, index) => (
                 <TableRow
                   key={index}
-                  className="odd:bg-[#f3f3f3] even:bg-[#e0e0e0] hover:bg-[#d1d1d1] border border-gray-300"
-                >
+                  className="odd:bg-[#f3f3f3] even:bg-[#e0e0e0] hover:bg-[#d1d1d1] border border-gray-300">
                   {visibleColumns.user && (
-                    <TableCell className="py-2 text-center border-r border-gray-300">
-                      <div>{transaction.user.first_name} {transaction.user.last_name}</div>
-                      <div className="text-xs text-[#121826]">
+                    <TableCell className="py-2 text-center border-r border-gray-300 text-sm">
+                      <div className="capitalize text-sm">{transaction.user.first_name} {transaction.user.last_name}</div>
+                      <div className="text-xs text-[#121826] ">
                         UID {transaction.user.uid}
                       </div>
                     </TableCell>
                   )}
                   {visibleColumns.coin && (
                     <TableCell className="py-2 text-center border-r border-gray-300">
-                      <div>{transaction.coin}</div>
-                      <div className="text-xs text-[#121826]">
+                      <div className="capitalize">{transaction.coin}</div>
+                      <div className="text-xs text-[#121826] capitalize">
                         {transaction.coin}
                       </div>
                     </TableCell>
@@ -192,7 +232,7 @@ const Selling = ({visibleColumns}: {visibleColumns: Record<string, boolean>}) =>
                   )}
                   {visibleColumns.dollarRate && (
                     <TableCell className="py-2 text-center border-r border-gray-300">
-                      {transaction.naira_value}
+                      {transaction.amount_sent}
                     </TableCell>
                   )}
                   {visibleColumns.networkFees && (
@@ -212,17 +252,41 @@ const Selling = ({visibleColumns}: {visibleColumns: Record<string, boolean>}) =>
                   )}
                   {visibleColumns.walletAddress && (
                     <TableCell className="py-2 text-center border-r border-gray-300">
-                      {transaction.selling.currency}
+                      {transaction.naira_value}
                     </TableCell>
                   )}
                   {visibleColumns.referrer && (
-                    <TableCell className="py-2 text-center border-r border-gray-300">
-                      {transaction.referer}
+                    <TableCell className="py-2 text-center border-r border-gray-300 text-sm">
+                      <span className={cn("capitalize", transaction.status === 'pending' ? 'text-orange-400' : transaction.status === 'success' ? 'text-green-600': 'text-gray-600')}>{transaction.status}</span>
                     </TableCell>
                   )}
                   {visibleColumns.Timestamp && (
-                    <TableCell className="py-2 text-center border-gray-300">
+                    <TableCell className="py-2 text-center border-gray-300 text-sm">
                       {formatTimestamp(transaction.created_at)}
+                    </TableCell>
+                  )}
+                  {visibleColumns.finish && (
+                    <TableCell className="text-center text-sm border-l border-gray-300 cursor-pointer text-blue-600">
+                    <DropdownMenu modal={false}>
+                      <DropdownMenuTrigger className="outline-none">
+                        <button
+                          type="button"
+                          className="flex items-center justify-center h-full w-full p-2 hover:bg-gray-300 rounded-md transition-all duration-200"
+                        >
+                          <HiMiniEllipsisVertical className="text-[#121826] size-7" />
+                        </button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent className="cursor-pointer rounded-xl bg-white shadow-lg p-2 w-[180px] ring-1 ring-gray-200 transition-all duration-200 transform scale-95 hover:scale-100">
+                        <DropdownMenuGroup>
+                          <DropdownMenuItem
+                            onClick={() => revalidateTransaction(transaction.sell_transaction_id)}
+                            className="rounded-lg py-2 px-1 text-sm pl-3 text-[#000000] hover:bg-blue-50 focus:ring-2 focus:ring-black transition-all duration-150"
+                          >
+                            <span className="text-sm">Revalidate</span>
+                          </DropdownMenuItem>
+                        </DropdownMenuGroup>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
                     </TableCell>
                   )}
                 </TableRow>

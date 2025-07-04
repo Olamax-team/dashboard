@@ -20,8 +20,11 @@ export const useFetch = () => {
     });
 
     const deleteResult = await apiRequestHandler(dlt);
-    if (deleteResult) {
-      console.log(deleteResult);
+    if (deleteResult && deleteResult.status === 200) {
+      toast.success('User account successfully deleted');
+      queryClient.invalidateQueries({queryKey: ['verified-users']});
+      queryClient.invalidateQueries({queryKey: ['unverified-users']});
+      queryClient.invalidateQueries({queryKey: ['pending-users']});
     }
   };
   
@@ -42,7 +45,6 @@ export const useFetch = () => {
     });
 
     const blockResult = await apiRequestHandler(block);
-    
     if (blockResult && blockResult.status === 200) {
       toast.success('User successfully block');
       queryClient.invalidateQueries({queryKey: ['verified-users']});
