@@ -16,6 +16,7 @@ import { useAdminDetails } from "@/store/admin-details-store";
 import { useFetch } from "@/lib/use-fetch";
 import { HiOutlineShieldCheck, HiXMark } from "react-icons/hi2";
 import Avatar from "@/components/ui/Avatar";
+import { useRejectionReportModal } from "@/store/general-store";
 
 export default function UserDetails() {
   const navigate = useNavigate();
@@ -65,6 +66,10 @@ export default function UserDetails() {
     queryFn: () =>apiRequestHandler(fetchKycProceeding)
   });
 
+  console.log(kycProceedingResponse);
+
+  const { onOpen } = useRejectionReportModal();
+
   const [viewImage, setViewImage] = React.useState(false);
   const [imageUrl, setImageUrl] = React.useState('');
 
@@ -78,11 +83,8 @@ export default function UserDetails() {
     setImageUrl('');
   }
 
-  console.log(kycProceedingResponse?.data);
-
   const userDetail = userDetailsResponse?.data.data as userDetailsProps
   const userKycDetail = userKycResponse?.data as UserKYCData;
-  console.log(userKycDetail)
 
   function hasProfileImage(imageUrl: string): boolean {
     const base = 'https://api.olamax.io/storage/app/public/';
@@ -118,7 +120,8 @@ export default function UserDetails() {
     const response = await apiRequestHandler(updateUser);
     if (response && response.status === 200) {
       toast.success('User status updated successfully');
-      setDetailStatus(status)
+      setDetailStatus(status);
+      if (status === 'reject') {onOpen();}
     };
   };
 
@@ -146,8 +149,10 @@ export default function UserDetails() {
     if (response && response.status === 200) {
       toast.success('User status updated successfully');
       setDocumentStatus(status);
+      if (status === 'reject') {onOpen();}
     };
-  }
+  };
+
   const updateVideoKyc = async (status:string) => {
 
     const formdata = {
@@ -171,7 +176,8 @@ export default function UserDetails() {
     const response = await apiRequestHandler(updateUser);
     if (response && response.status === 200) {
       toast.success('User status updated successfully');
-      setVideoStatus(status)
+      setVideoStatus(status);
+      if (status === 'reject') {onOpen();}
     };
   }
 
