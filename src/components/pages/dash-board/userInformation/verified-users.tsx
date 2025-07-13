@@ -241,26 +241,26 @@ const VerifiedUsers = ({visibleFilter}: {visibleFilter: Record<string, boolean>}
                               e.stopPropagation(); // Prevent row click
                               navigate(`/dashboard/user-information/user-details/${item.id}`);
                             }}
-                            className="rounded-lg py-2 px-4 text-sm pl-6 text-[#000000] hover:bg-blue-50 focus:ring-2 focus:ring-black transition-all duration-150"
+                            className="rounded-lg py-2 px-2 text-sm pl-3 text-[#000000] hover:bg-blue-50 focus:ring-2 focus:ring-black transition-all duration-150"
                           >
-                            View
+                            <span className="text-sm">View</span>
                           </DropdownMenuItem>
                           <DropdownMenuItem
                             onClick={() => { if (item.id !== undefined) blockUser(item.id); }}
-                            className="rounded-lg py-2 px-4 text-sm pl-6 text-[#000000] hover:bg-blue-50 focus:ring-2 focus:ring-black transition-all duration-150"
+                            className="rounded-lg py-2 px-2 text-sm pl-3 text-[#000000] hover:bg-blue-50 focus:ring-2 focus:ring-black transition-all duration-150"
                           >
-                            Block User
+                            <span className="text-sm">Block User</span>
                           </DropdownMenuItem>
                           <DropdownMenuItem
                             onClick={() => { if (item.id !== undefined) deleteUser(item.id); }}
-                            className="rounded-lg py-2 px-4 text-sm pl-6 text-[#000000] hover:bg-blue-50 focus:ring-2 focus:ring-black transition-all duration-150"
+                            className="rounded-lg py-2 px-2 text-sm pl-3 text-[#000000] hover:bg-blue-50 focus:ring-2 focus:ring-black transition-all duration-150"
                           >
-                            Delete User
+                            <span className="text-sm">Delete User</span>
                           </DropdownMenuItem>
                           <DropdownMenuItem
-                            className="rounded-lg py-2 px-4 text-sm pl-6 text-[#000000] hover:bg-blue-50 focus:ring-2 focus:ring-black transition-all duration-150"
+                            className="rounded-lg py-2 px-2 text-sm pl-3 text-[#000000] hover:bg-blue-50 focus:ring-2 focus:ring-black transition-all duration-150"
                           >
-                            Export Details
+                            <span className="text-sm">Export Details</span>
                           </DropdownMenuItem>
                           { allRoles && (allRoles as { id: number; name: string }[])
                           .filter((role: { id: number; name: string }) => role.name !== "user")
@@ -275,7 +275,7 @@ const VerifiedUsers = ({visibleFilter}: {visibleFilter: Record<string, boolean>}
                             }}
                             className={cn("capitalize rounded-lg py-2 px-4 text-sm pl-6 text-[#000000] hover:bg-blue-50 focus:ring-2 focus:ring-black transition-all duration-150", (item && item.role) === role.name ? 'hidden' : 'block' )}
                           >
-                            Assign {role.name}
+                            <span className="text-sm">Assign {role.name}</span>
                           </DropdownMenuItem>
                           ))}
                         </DropdownMenuGroup>

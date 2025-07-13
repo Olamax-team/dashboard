@@ -1,6 +1,5 @@
-import { Copy, Loader2, MoveLeft, ShieldCheck } from "lucide-react";
+import { Copy, Loader2, MoveLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import Avatar from "../../../../assets/avatar.svg";
 import { useNavigate, useParams } from "react-router-dom";
 import PageHeader from "../escrow/pageHeader";
 import DashboardLayout from "@/layout/dash-board-layout";
@@ -14,11 +13,16 @@ import { toast } from "sonner";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 import React from "react";
 import { useAdminDetails } from "@/store/admin-details-store";
+import { useFetch } from "@/lib/use-fetch";
+import { HiOutlineShieldCheck, HiXMark } from "react-icons/hi2";
+import Avatar from "@/components/ui/Avatar";
+import { useRejectionReportModal } from "@/store/general-store";
 
 export default function UserDetails() {
   const navigate = useNavigate();
   const { id } = useParams();
   const { token } = useAdminDetails();
+  const { blockUser } = useFetch();
 
   // Function to copy the user ID to clipboard
   const copyToClipboard = () => {
@@ -33,8 +37,10 @@ export default function UserDetails() {
 
   const userKycConfig = useApiConfigWithToken({
     method: 'get',
-    url: `get-kyc-details/${id}/id`
+    url: `admin/get-kyc-details/${id}/id`
   });
+
+  console.log(userKycConfig)
 
   const kycProceedingConfig = useApiConfigWithToken({
     method: 'get',
@@ -60,31 +66,44 @@ export default function UserDetails() {
     queryFn: () =>apiRequestHandler(fetchKycProceeding)
   });
 
-  console.log(kycProceedingResponse?.data);
+  console.log(kycProceedingResponse);
 
-  console.log(userKycResponse);
+  const { onOpen } = useRejectionReportModal();
+
+  const [viewImage, setViewImage] = React.useState(false);
+  const [imageUrl, setImageUrl] = React.useState('');
+
+  const toggleImage = (image:string) => {
+    setViewImage(true);
+    setImageUrl(image);
+  }
+
+  const closeImage = () => {
+    setViewImage(false);
+    setImageUrl('');
+  }
 
   const userDetail = userDetailsResponse?.data.data as userDetailsProps
-  const userKycDetail = userKycResponse?.data[0] as UserKYCData;
+  const userKycDetail = userKycResponse?.data as UserKYCData;
 
-  const [labels, setLabels] = React.useState<string>('');
-  const [targets, setTargets] = React.useState<string>('');
-  const [status, setStatus] = React.useState<string>('');
+  function hasProfileImage(imageUrl: string): boolean {
+    const base = 'https://api.olamax.io/storage/app/public/';
+    return imageUrl.startsWith(base) && imageUrl.length > base.length;
+  }
 
-  const resetFields = () => {
-    setLabels('');
-    setTargets('');
-    setStatus('');
-  };
+  const profileImagePresent = hasProfileImage(userDetail?.profile_image ?? '');
 
-  const updateUserKyc = async () => {
+  const [detailStatus, setDetailStatus] = React.useState<string>(userKycDetail ? userKycDetail.status : '');
+  const [videoStatus, setVideoStatus] = React.useState<string>(userKycDetail ? userKycDetail.kyc_documents_video_status : '');
+  const [documentStatus, setDocumentStatus] = React.useState<string>(userKycDetail?.kyc_documents_status);
+
+  const updateUserKyc = async (status:string) => {
 
     const formdata = {
-      label: labels,
-      target: targets,
-      status: status,
-      user_id: userDetail?.id,
-    };
+      label: 'users',
+      target: 'status',
+      status: status
+    }
 
     const config = {
       method: 'put',
@@ -100,8 +119,65 @@ export default function UserDetails() {
     const updateUser = () => axios.request(config);
     const response = await apiRequestHandler(updateUser);
     if (response && response.status === 200) {
-      toast.success('User KYC status updated successfully');
-      resetFields();
+      toast.success('User status updated successfully');
+      setDetailStatus(status);
+      if (status === 'reject') {onOpen();}
+    };
+  };
+
+  const updateDocumentKyc = async (status:string) => {
+
+    const formdata = {
+      label: 'kyc_documents',
+      target: 'status',
+      status: status
+    }
+
+    const config = {
+      method: 'put',
+      maxBodyLength: Infinity,
+      url: `https://api.olamax.io/api/update-kyc-status`,
+      headers: {
+        'Content-Type':'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      data: formdata,
+    };
+
+    const updateUser = () => axios.request(config);
+    const response = await apiRequestHandler(updateUser);
+    if (response && response.status === 200) {
+      toast.success('User status updated successfully');
+      setDocumentStatus(status);
+      if (status === 'reject') {onOpen();}
+    };
+  };
+
+  const updateVideoKyc = async (status:string) => {
+
+    const formdata = {
+      label: 'kyc_documents',
+      target: 'video_status',
+      status: status
+    }
+
+    const config = {
+      method: 'put',
+      maxBodyLength: Infinity,
+      url: `https://api.olamax.io/api/update-kyc-status`,
+      headers: {
+        'Content-Type':'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      data: formdata,
+    };
+
+    const updateUser = () => axios.request(config);
+    const response = await apiRequestHandler(updateUser);
+    if (response && response.status === 200) {
+      toast.success('User status updated successfully');
+      setVideoStatus(status);
+      if (status === 'reject') {onOpen();}
     };
   }
 
@@ -131,7 +207,7 @@ export default function UserDetails() {
     </DashboardLayout>
   }
 
-  if ((userDetailStatus === 'success' && userDetail) && (userKycStatus === 'success' && userKycDetail)) {
+  if ((userDetailStatus === 'success' && userDetail)) {
     return (
       <DashboardLayout>
         <div className="flex flex-col min-h-screen">
@@ -178,21 +254,43 @@ export default function UserDetails() {
                 <h3 className="text-lg font-bold  leading-[150%] text-[#1C1C1C]">
                   Personal Details
                 </h3>
-                <p className="text-sm text-[#5C5C5C] leading-[22px]">
-                  Manage User's Information
-                </p>
+                { userKycDetail && userKycDetail.status !== 'verified' &&
+                  <div className="w-full flex items-center justify-between gap-4">
+                    <p className="text-sm text-[#5C5C5C] leading-[22px] flex-1">
+                      Manage User's Information
+                    </p>
+                    <div className="flex-1">
+                      <Select value={detailStatus} onValueChange={(value) => updateUserKyc(value)}>
+                        <SelectTrigger className="w-full h-11">
+                          <SelectValue placeholder="Select KYC Status" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectGroup>
+                            <SelectLabel>Status</SelectLabel>
+                            <SelectItem value="reject">Reject</SelectItem>
+                            <SelectItem value="verified">Verified</SelectItem>
+                            <SelectItem value="pending">Pending</SelectItem>
+                          </SelectGroup>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                }
               </div>
   
               <div className="flex items-center gap-4 pb-6 border-b mb-6">
-                <div className="h-16 w-16 overflow-hidden items-center justify-center rounded-full">
-                  <img
-                    src={userDetail ? userDetail.profile_image : Avatar }
-                    alt="User"
-                    width={64}
-                    height={64}
-                    className="rounded-full"
-                  />
-                </div>
+                {profileImagePresent ?
+                  <div className="size-16 overflow-hidden items-center justify-center rounded-full">
+                    <img
+                      src={userDetail && userDetail.profile_image }
+                      alt="User"
+                      width={64}
+                      height={64}
+                      className="rounded-full"
+                    />
+                  </div> :
+                  <Avatar email={userDetail.email}/>
+                }
                 <div>
                   <h4 className="font-bold  text-[#121826] text-[18px] capitalize">
                     {extractFirstName(userDetail.first_name)  ?? ''} {extractFirstName(userDetail?.last_name) ?? ''}
@@ -208,89 +306,100 @@ export default function UserDetails() {
                   </div>
                 </div>
                 {userDetail?.status === 'verified' && (
-                  <span className="ml-auto border-[#FF9C00] text-[#FF9C00] flex items-center gap-1">
-                    <ShieldCheck className="w-[24px] h-[24px] text-textDark cursor-pointer" />
+                  <span className="ml-auto border-[#FF9C00] text-green-600 flex items-center gap-1">
+                    <HiOutlineShieldCheck className="w-[24px] h-[24px] text-textDark cursor-pointer" />
                     Verified
                   </span>
                 )}
               </div>
   
-              <div className="grid grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-[16px] font-medium text-[#1C1C1C] leading-[100%] mb-1">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="w-full">
+                  <label className="block text-[16px] font-medium text-[#1C1C1C] leading-[100%] mb-2">
                     Last Name
                   </label>
                   <input
                     value={extractFirstName(userDetail.last_name)  ?? ''}
                     type="text"
                     placeholder="last name"
-                    className="xl:w-[230px] w-[100px] h-[30px] rounded-sm p-2 leading-[27px] mt-0 text-[16px] xl:h-[60px] xl:text-[18px] text-[#121826] bg-[#f5f5f5f5] border-none  focus:outline-none font-bold font-Inter xl:leading-[34.5px] capitalize "
+                    className="w-full xl:h-14 h-10 rounded-sm px-3 leading-[27px] mt-0 text-[16px] xl:text-[18px] text-[#121826] bg-[#f5f5f5f5] border-none  focus:outline-none font-bold font-Inter xl:leading-[34.5px] capitalize "
                   />
                 </div>
-                <div>
-                  <label className="block text-[16px] font-medium text-[#1C1C1C] leading-[100%] mb-1">
+                <div className="w-full ">
+                  <label className="block text-[16px] font-medium text-[#1C1C1C] leading-[100%] mb-2">
                     First Name
                   </label>
                   <input
                     value={extractFirstName(userDetail.first_name)  ?? ''}
                     type="text"
                     placeholder="first name"
-                    className="xl:w-[230px] w-[100px] h-[30px] rounded-sm p-2 leading-[27px] mt-0 text-[16px] xl:h-[60px] xl:text-[18px] text-[#121826] bg-[#f5f5f5f5] border-none  focus:outline-none font-bold font-Inter xl:leading-[34.5px] capitalize "
+                    className="w-full rounded-sm px-3 leading-[27px] mt-0 text-[16px] xl:h-14 h-10 xl:text-[18px] text-[#121826] bg-[#f5f5f5f5] border-none  focus:outline-none font-bold font-Inter xl:leading-[34.5px] capitalize "
                   />
                 </div>
-                <div>
-                  <label className="block text-[16px] font-medium text-[#1C1C1C] leading-[100%] mb-1">
+                <div className="w-full ">
+                  <label className="block text-[16px] font-medium text-[#1C1C1C] leading-[100%] mb-2">
+                    Middle Name
+                  </label>
+                  <input
+                    value={extractFirstName(userDetail.middle_name)  ?? ''}
+                    type="text"
+                    placeholder="middle name"
+                    className="w-full rounded-sm px-3 leading-[27px] mt-0 text-[16px] xl:h-14 h-10 xl:text-[18px] text-[#121826] bg-[#f5f5f5f5] border-none  focus:outline-none font-bold font-Inter xl:leading-[34.5px] capitalize "
+                  />
+                </div>
+                <div className="w-full">
+                  <label className="block text-[16px] font-medium text-[#1C1C1C] leading-[100%] mb-2">
                     Email
                   </label>
                   <input
                     value={userDetail?.email ?? ''}
                     type="text"
                     placeholder="name@email.com"
-                    className="xl:w-[230px] w-[100px] h-[30px]  rounded-sm p-2 leading-[27px] mt-0 text-[16px] xl:h-[60px] xl:text-[18px] text-[#121826] bg-[#f5f5f5f5] border-none  focus:outline-none font-bold font-Inter xl:leading-[34.5px]"
+                    className="w-full rounded-sm px-3 leading-[27px] mt-0 text-[16px] xl:h-14 h-10 xl:text-[18px] text-[#121826] bg-[#f5f5f5f5] border-none  focus:outline-none font-bold font-Inter xl:leading-[34.5px]"
                   />
                 </div>
-                <div>
-                  <label className="block text-[16px] font-medium text-[#1C1C1C] leading-[100%] mb-1">
+                <div className="w-full">
+                  <label className="block text-[16px] font-medium text-[#1C1C1C] leading-[100%] mb-2">
                     Phone Number
                   </label>
                   <input
                     value={userDetail?.phone_number ?? ''}
                     type="text"
-                    placeholder="phone "
-                    className="xl:w-[230px] w-[100px] h-[30px]  rounded-sm p-2 leading-[27px] mt-0 text-[16px] xl:h-[60px] xl:text-[18px] text-[#121826] bg-[#f5f5f5f5] border-none  focus:outline-none font-bold font-Inter xl:leading-[34.5px]"
+                    placeholder="phone"
+                    className="w-full rounded-sm p-2 leading-[27px] mt-0 text-[16px] xl:h-14 h-10 xl:text-[18px] text-[#121826] bg-[#f5f5f5f5] border-none  focus:outline-none font-bold font-Inter xl:leading-[34.5px] px-3"
                   />
                 </div>
                 <div>
-                  <label className="block text-[16px] font-medium text-[#1C1C1C] leading-[100%] mb-1">
+                  <label className="block text-[16px] font-medium text-[#1C1C1C] leading-[100%] mb-2">
                     Date Of Birth
                   </label>
                   <input
                     value={userDetail?.date_of_birth ?? ''}
                     type="text"
                     placeholder="5/8/1987"
-                    className="xl:w-[230px] w-[100px] h-[30px] leading-[27px] mt-0 text-[16px] xl:h-[60px] xl:text-[18px] text-[#121826] bg-[#f5f5f5f5] border-none rounded-sm p-2 focus:outline-none font-bold font-Inter xl:leading-[34.5px]"
+                    className="w-full xl:h-14 h-10 leading-[27px] mt-0 text-[16px] xl:text-[18px] text-[#121826] bg-[#f5f5f5f5] border-none rounded-sm p-2 focus:outline-none font-bold font-Inter xl:leading-[34.5px] px-3"
                   />
                 </div>
                 <div>
-                  <label className="block text-[16px] font-medium text-[#1C1C1C] leading-[100%] mb-1">
+                  <label className="block text-[16px] font-medium text-[#1C1C1C] leading-[100%] mb-2">
                     Gender
                   </label>
                   <input
                     value={userDetail?.gender ?? ''}
                     type="text"
                     placeholder="male"
-                    className="xl:w-[230px] w-[100px] h-[30px] leading-[27px] mt-0 text-[16px] xl:h-[60px] xl:text-[18px] text-[#121826] bg-[#f5f5f5f5] border-none rounded-sm p-2 focus:outline-none font-bold font-Inter xl:leading-[34.5px]"
+                    className="w-full xl:h-14 h-10 leading-[27px] mt-0 text-[16px] xl:text-[18px] text-[#121826] bg-[#f5f5f5f5] border-none rounded-sm p-2 focus:outline-none font-bold font-Inter xl:leading-[34.5px] px-3"
                   />
                 </div>
                 <div>
-                  <label className="block text-[16px] font-medium text-[#1C1C1C] leading-[100%] mb-1">
+                  <label className="block text-[16px] font-medium text-[#1C1C1C] leading-[100%] mb-2">
                     Nationality
                   </label>
                   <input
                     value={userDetail?.nationality ?? ''}
                     type="text"
                     placeholder="America"
-                    className="xl:w-[230px] w-[100px] h-[30px] leading-[27px] mt-0 text-[16px] xl:h-[60px] xl:text-[18px] text-[#121826] bg-[#f5f5f5f5] border-none rounded-sm p-2 focus:outline-none font-bold font-Inter xl:leading-[34.5px]"
+                    className=" w-full xl:h-14 h-10 leading-[27px] mt-0 text-[16px] xl:text-[18px] text-[#121826] bg-[#f5f5f5f5] border-none rounded-sm p-2 focus:outline-none font-bold font-Inter xl:leading-[34.5px] px-3"
                   />
                 </div>
               </div>
@@ -298,34 +407,92 @@ export default function UserDetails() {
   
             {/* ID Card Information */}
             <div className="bg-white rounded-lg p-6 shadow-sm">
-              <div className="mb-6">
+              <div className="mb-3">
                 <h3 className="text-lg font-bold  leading-[150%] text-[#1C1C1C]">
-                  ID Card Information
+                  Document Information
                 </h3>
-                <p className="text-sm text-[#5C5C5C] leading-[22px]">
-                  Manage User's Information
-                </p>
+                {userKycDetail && userKycDetail.kyc_documents_status !== 'verified' &&
+                  <div className="w-full flex items-center justify-between gap-4">
+                    <p className="text-sm text-[#5C5C5C] leading-[22px] flex-1">
+                      Manage User's Information
+                    </p>
+                    <div className="flex-1">
+                      <Select value={documentStatus} onValueChange={(value) => updateDocumentKyc(value)}>
+                        <SelectTrigger className="w-full h-11">
+                          <SelectValue placeholder="Select KYC Status" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectGroup>
+                            <SelectLabel>Status</SelectLabel>
+                            <SelectItem value="reject">Reject</SelectItem>
+                            <SelectItem value="verified">Verified</SelectItem>
+                            <SelectItem value="pending">Pending</SelectItem>
+                          </SelectGroup>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                }
               </div>
   
               <div className="space-y-4">
                 {/* If there is any specific data here, you can map through it */}
-                <div className="overflow-hidden">
-                  <div className="flex flex-col gap-3">
-                    <div className="w-full h-[160px] border rounded">
-                      <img src={userKycDetail.front} alt="document_front" />
+                <div className="relative">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="w-full h-[140px] border rounded overflow-hidden flex items-center justify-center cursor-pointer" onClick={() =>toggleImage(userKycDetail?.kyc_documents_front)}>
+                      <img src={userKycDetail?.kyc_documents_front} alt="document_front" className="object-contain w-fit h-auto" />
                     </div>
-                    <div className="w-full h-[160px] border rounded">
-                      <img src={userKycDetail.back} alt="document_back" />
+                    <div className="w-full h-[140px] border rounded overflow-hidden flex items-center justify-center cursor-pointer" onClick={() =>toggleImage(userKycDetail?.kyc_documents_back)}>
+                      <img src={userKycDetail?.kyc_documents_back} alt="document_back" className="object-contain w-fit h-auto" />
                     </div>
-                    <div className="w-full h-[160px] border rounded">
-                      <img src={userKycDetail.hold} alt="document_hold" />
+                    <div className="w-full h-[140px] border rounded overflow-hidden flex items-center justify-center cursor-pointer" onClick={() =>toggleImage(userKycDetail?.kyc_documents_hold)}>
+                      <img src={userKycDetail?.kyc_documents_hold} alt="document_hold" className="object-contain w-fit h-auto" />
                     </div>
                   </div>
+                  { viewImage &&
+                    <div className="absolute left-0 top-0 w-full 2xl:h-[500px] h-[400px] bg-black/40 z-40 rounded-md flex items-center justify-center">
+                      <div className="absolute right-2 top-2 text-white cursor-pointer border rounded p-1 border-transparent hover:border-white/60" onClick={closeImage}>
+                        <HiXMark className="size-7"/>
+                      </div>
+                      <img src={imageUrl} className="object-contain w-[180px] 2xl:w-[230px] h-auto"/>
+                    </div>
+                  }
+                </div>
+                <hr/>
+                <div className="mb-6">
+                  <h3 className="text-lg font-bold  leading-[150%] text-[#1C1C1C]">
+                    Video Information
+                  </h3>
+                  {userKycDetail && userKycDetail.kyc_documents_video_status !== 'verified' &&
+                    <div className="w-full flex items-center justify-between gap-4">
+                      <p className="text-sm text-[#5C5C5C] leading-[22px] flex-1">
+                        Manage User's Information
+                      </p>
+                      <div className="flex-1">
+                        <Select value={videoStatus} onValueChange={(value) => updateVideoKyc(value)}>
+                          <SelectTrigger className="w-full h-11">
+                            <SelectValue placeholder="Select KYC Status" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectGroup>
+                              <SelectLabel>Status</SelectLabel>
+                              <SelectItem value="reject">Reject</SelectItem>
+                              <SelectItem value="verified">Verified</SelectItem>
+                              <SelectItem value="pending">Pending</SelectItem>
+                            </SelectGroup>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+                  }
+                </div>
+                <div>
+                  <video src={userKycDetail?.kyc_documents_short_video} controls className="h-[160px] w-full"/>
                 </div>
               </div>
             </div>
           </div>
-          <div className="container px-4 py-6">
+          {/* <div className="container px-4 py-6">
             <div className="rounded-lg px-4 py-6 grid grid-cols-4 gap-3  bg-white shadow-sm">
               <div className="w-full">
                 <Select value={labels} onValueChange={(value) => setLabels(value)}>
@@ -375,7 +542,7 @@ export default function UserDetails() {
                 <p className="text-sm text-white leading-[22px] cursor-pointer">Update {labels === '' ? 'User' : labels.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}</p>
               </button>
             </div>
-          </div>
+          </div> */}
         </div>
       </DashboardLayout>
     );

@@ -1,12 +1,15 @@
 import { apiRequestHandler } from "@/api/api-request-handler";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { AllTransactionsData } from "@/lib/types";
 import { useApiConfigWithToken } from "@/lib/use-api-config";
-import { extractFirstName } from "@/lib/utils";
+import { cn, extractFirstName } from "@/lib/utils";
+import { useAdminDetails } from "@/store/admin-details-store";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { Loader2 } from "lucide-react";
 import React from "react";
+import { HiMiniEllipsisVertical } from "react-icons/hi2";
 
 const SellingHistory = ({visibleFilter}: {visibleFilter: Record<string, boolean>}) => {
 
@@ -29,6 +32,44 @@ const SellingHistory = ({visibleFilter}: {visibleFilter: Record<string, boolean>
 
     const allTransaction = data?.data.data as AllTransactionsData;
     const transaction = allTransaction?.sell_transactions;
+
+    const { token } = useAdminDetails();
+
+    const finishTransaction = async (transactionId:number) => {
+  
+      const formdata = {
+        transaction_id: transactionId
+      };
+  
+      const finishConfig = {
+        method: 'post',
+        maxBodyLength: Infinity,
+        url: `https://api.olamax.io/api/admin/complete-selling-transaction`,
+        headers: {
+          'Content-Type':'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        data: formdata,
+      };
+  
+      const finish = () => axios.request(finishConfig);
+      const completeTransaction = await apiRequestHandler(finish)
+  
+      console.log(completeTransaction)
+  
+      // if (completeTransaction && completeTransaction.status === 200) {
+      //   if (completeTransaction.data.status === 'pending') {
+      //     toast.info(completeTransaction.data.message)
+      //   } else if (completeTransaction.data.status === 'success') {
+      //     toast.success(completeTransaction.data.message)
+      //   } else {
+      //     toast.warning(completeTransaction.data.message)
+      //   }
+      // } else {
+      //   console.log(completeTransaction);
+      //   toast.error('Something went wrong try again later')
+      // }
+    };
 
     if (status === 'error') {
       return (
@@ -76,7 +117,7 @@ const SellingHistory = ({visibleFilter}: {visibleFilter: Record<string, boolean>
                       Amount Sent(COIN)
                     </TableHead>
                   )}
-                  {visibleFilter.coinPriceUsd && (
+                  {visibleFilter.nairaAmount && (
                     <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
                       Naira Equivalent (NGN)
                     </TableHead>
@@ -86,66 +127,49 @@ const SellingHistory = ({visibleFilter}: {visibleFilter: Record<string, boolean>
                       Dollar Rate
                     </TableHead>
                   )}
-                  {visibleFilter.networkFees && (
+                  {visibleFilter.coinPrice && (
                     <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
                       Coin Price ($)
                     </TableHead>
                   )}
-                  {visibleFilter.nairaAmount && (
+                  {visibleFilter.bonus && (
                     <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
                       Bonus
                     </TableHead>
                   )}
-                  {visibleFilter.networkFeesRepeat && (
-                    <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
-                      Payment Method
-                    </TableHead>
-                  )}
                   {visibleFilter.walletAddress && (
                     <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
-                      Payment Details
+                      Wallet Address
                     </TableHead>
                   )}
-                  {visibleFilter.steem && (
+                  {visibleFilter.transactionStatus && (
                     <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
-                      Payment Status
-                    </TableHead>
-                  )}
-                  {visibleFilter.method && (
-                    <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
-                      Transaction Status
-                    </TableHead>
-                  )}
-                  {visibleFilter.paymentStatus && (
-                    <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
-                      Amount Sent(COIN)
+                      Status
                     </TableHead>
                   )}
                   {visibleFilter.referrer && (
                     <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
-                      Naira Equivalent (NGN)
-                    </TableHead>
-                  )}
-                  {visibleFilter.Timestamp && (
-                    <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
                       Referrer
                     </TableHead>
                   )}
-                  {visibleFilter.finish && (
+                  {visibleFilter.checkBalance && (
                     <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
                       Check Balance
                     </TableHead>
                   )}
-                  {visibleFilter.finish && (
+                  {visibleFilter.phone && (
                     <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
                       Phone No
                     </TableHead>
                   )}
-                  {visibleFilter.Timestamp && (
+                  {visibleFilter.timeStamp && (
                     <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
                       Time Stamp
                     </TableHead>
                   )}
+                    <TableHead className="text-center font-bold text-[#121826] border-r border-gray-300">
+                      Action
+                    </TableHead>
                 </TableRow>
               </TableHeader>
     
@@ -176,7 +200,7 @@ const SellingHistory = ({visibleFilter}: {visibleFilter: Record<string, boolean>
                         {transaction.amount_sent}
                       </TableCell>
                     )}
-                    {visibleFilter.coinPriceUsd && (
+                    {visibleFilter.nairaAmount && (
                       <TableCell className="py-2 text-center border-r border-gray-300">
                         {transaction.naira_value}
                       </TableCell>
@@ -186,19 +210,14 @@ const SellingHistory = ({visibleFilter}: {visibleFilter: Record<string, boolean>
                         {transaction.naira_value}
                       </TableCell>
                     )}
-                    {visibleFilter.networkFees && (
+                    {visibleFilter.coinPrice && (
                       <TableCell className="py-2 text-center border-r border-gray-300">
                         {transaction.naira_value}
                       </TableCell>
                     )}
-                    {visibleFilter.nairaAmount && (
+                    {visibleFilter.bonus && (
                       <TableCell className="py-2 text-center border-r border-gray-300">
                         {transaction.naira_value}
-                      </TableCell>
-                    )}
-                    {visibleFilter.networkFeesRepeat && (
-                      <TableCell className="py-2 text-center border-r border-gray-300">
-                        {transaction.selling.currency}
                       </TableCell>
                     )}
                     {visibleFilter.walletAddress && (
@@ -206,56 +225,53 @@ const SellingHistory = ({visibleFilter}: {visibleFilter: Record<string, boolean>
                         {transaction.sell_details.account_name}
                       </TableCell>
                     )}
-                    {visibleFilter.steem && (
-                      <TableCell className="py-2 text-center border-r border-gray-300">
-                        <span
-                          className={`px-2 py-1 rounded-sm text-xs font-medium ${
-                            transaction.status === "pending"
-                              ? " text-red-700"
-                              : transaction.status === "Successful"
-                              ? " text-green-700"
-                              : " text-yellow-700"
-                          }`}
-                        >
-                          {transaction.status}
-                        </span>
-                      </TableCell>
-                    )}
-                    {visibleFilter.method && (
-                      <TableCell className="py-2 text-center border-r border-gray-300">
+                    {visibleFilter.transactionStatus && (
+                      <TableHead className={cn("text-center font-bold text-[#121826] border-r border-gray-300", transaction.status === 'pending' ? 'text-yellow-500' : transaction.status === 'completed' ? 'text-green-500' : 'text-red-500')}>
                         {transaction.status}
-                      </TableCell>
-                    )}
-                    {visibleFilter.paymentStatus && (
-                      <TableCell className="py-2 text-center border-r border-gray-300">
-                        {transaction.amount_sent}
-                      </TableCell>
+                      </TableHead>
                     )}
                     {visibleFilter.referrer && (
                       <TableCell className="py-2 text-center border-r border-gray-300">
                         {transaction.naira_value}
                       </TableCell>
                     )}
-                    {visibleFilter.referrer && (
+                    {visibleFilter.checkBalance && (
                       <TableCell className="py-2 text-center border-r border-gray-300">
-                        {transaction.referer}
+                        {transaction.amount_sent}
                       </TableCell>
                     )}
-                    {visibleFilter.finish && (
+                    {visibleFilter.phone && (
                       <TableCell className="py-2 text-center border-r border-gray-300">
-                        {transaction.sell_details.account_name}
+                        {transaction.amount_sent}
                       </TableCell>
                     )}
-                    {visibleFilter.finish && (
-                      <TableCell className="py-2 text-center border-r border-gray-300">
-                        {transaction.user.phone}
-                      </TableCell>
-                    )}
-                    {visibleFilter.Timestamp && (
+                    {visibleFilter.timeStamp && (
                       <TableCell className="py-2 text-center border-r border-gray-300">
                         {formatTimestamp(transaction.created_at)}
                       </TableCell>
                     )}
+                    <TableCell>
+                    <DropdownMenu modal={false}>
+                      <DropdownMenuTrigger className="outline-none">
+                        <button
+                          type="button"
+                          className="flex items-center justify-center h-full w-full p-2 hover:bg-gray-300 rounded-md transition-all duration-200"
+                        >
+                          <HiMiniEllipsisVertical className="text-[#121826] size-7" />
+                        </button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent className="cursor-pointer rounded-xl bg-white shadow-lg p-2 w-[180px] ring-1 ring-gray-200 transition-all duration-200 transform scale-95 hover:scale-100">
+                        <DropdownMenuGroup>
+                          <DropdownMenuItem
+                           onClick={() => finishTransaction(transaction.sell_transaction_id)}
+                            className="rounded-lg py-2 px-1 text-sm pl-3 text-[#000000] hover:bg-blue-50 focus:ring-2 focus:ring-black transition-all duration-150"
+                          >
+                            <span className="text-sm">Complete transaction</span>
+                          </DropdownMenuItem>
+                        </DropdownMenuGroup>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>

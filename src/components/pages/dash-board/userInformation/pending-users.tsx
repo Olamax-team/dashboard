@@ -36,7 +36,7 @@ const PendingUsers = ({visibleFilter }: {visibleFilter: Record<string, boolean>}
 
   const {  deleteUser, blockUser} = useFetch();
 
-  const verifiedUsers: Partial<userDetailsProps>[] | undefined = (usersResponse as UsersResponse | undefined)?.data.data.filter((user:Partial<userDetailsProps>) => user.uid !== null).filter((user: Partial<userDetailsProps>) => user.status === 'pending');
+  const verifiedUsers: Partial<userDetailsProps>[] | undefined = (usersResponse as UsersResponse | undefined)?.data.data.filter((user: Partial<userDetailsProps>) => user.status === 'pending' || user.status === 'Pending');
 
   if (allUserStatus === "pending") {
     return (

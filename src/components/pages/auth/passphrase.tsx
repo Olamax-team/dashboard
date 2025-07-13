@@ -11,23 +11,26 @@ import axios from "axios";
 import { useAdminDetails, userProps } from "@/store/admin-details-store";
 import { toast } from "sonner";
 import { userDetailsProps } from "@/lib/types";
+import React from "react";
+import { cn } from "@/lib/utils";
+import { Loader2 } from "lucide-react";
 
-  interface AllUsersResult {
-    data: {
-      data: userDetailsProps[];
-    };
-    status: number;
-  }
+interface AllUsersResult {
+  data: {
+    data: userDetailsProps[];
+  };
+  status: number;
+};
 
-  interface LoginUser {
+interface LoginUser {
+  data: {
+    token: string;
     data: {
-      token: string;
-      data: {
-        user: userProps;
-      };
+      user: userProps;
     };
-    status: number;
-  }
+  };
+  status: number;
+};
 
 const Passphrase = () => {
   const form = useForm<passphraseValues>({
@@ -36,6 +39,8 @@ const Passphrase = () => {
       passphrase: '',
     }
   });
+
+  const [isLoading, setIsLoading] = React.useState(false)
 
   const navigate = useNavigate();
   const loginDetails = localStorage.getItem('loginDetails');
@@ -55,6 +60,7 @@ const Passphrase = () => {
 
   const onSubmit = async () => {
 
+    setIsLoading(true);
     const loginUser = await apiRequestHandler(login);
     if (loginUser?.status === 200) {
       setToken(loginUser.data.token);
@@ -80,13 +86,14 @@ const Passphrase = () => {
           if (curentUserDetails) {
             setFullUserDetails(curentUserDetails);
           };
+          setIsLoading(false)
           toast.success('Login was successful')
           localStorage.removeItem('loginDetails');
           navigate('/dashboard');
         }
       }
     }
-  }
+  };
 
   return (
     <AuthLayout>
@@ -111,8 +118,9 @@ const Passphrase = () => {
             )}
           />
           <div className="mt-8">
-            <button type="submit" className="w-full lg:h-[70px] h-[60px] rounded-md bg-black text-white cursor-pointer">
-              Login
+            <button type="submit" className={cn("flex items-center justify-center gap-2 w-full lg:h-[70px] h-[60px] rounded-md bg-black text-white cursor-pointer")}>
+              { isLoading ? 'Logging you in...' : 'Login'}
+              { isLoading && <Loader2 className="animate-spin"/>}
             </button>
             <div className="mt-8 text-center font-semibold">Contact support</div>
           </div>
@@ -120,6 +128,6 @@ const Passphrase = () => {
       </Form>
     </AuthLayout>
   )
-}
+};
 
 export default Passphrase

@@ -1,5 +1,4 @@
 import { Input } from "@/components/ui/input";
-import rectangle from '../../../../assets/Rectangle 4871.svg';
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { ChevronDown, Search } from "lucide-react";
@@ -19,7 +18,7 @@ const PageHeader = ({ title }: { title: string }) => {
   const user: UserDetails = 
     {
       name: `${extractFirstName(fullUserDetails?.first_name)} ${extractFirstName(fullUserDetails?.last_name)}`,
-      profilePicture: fullUserDetails ? fullUserDetails.profile_image : rectangle,
+      profilePicture: fullUserDetails ? fullUserDetails.profile_image : '',
     };
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -44,7 +43,9 @@ const PageHeader = ({ title }: { title: string }) => {
         </div>
         <div className="flex gap-2 xl:gap-8">
           <div className="flex items-center gap-3">
-            <div className='h-[40px] w-[40px]  '> <img src={user.profilePicture} alt="User Avatar" className="size-[40px] rounded-full" /></div>
+            <div className='size-[40px]'>
+              <img src={user.profilePicture} alt="user_avatar" className="size-[40px] rounded-full" />
+            </div>
               <span className="font-inter hidden lg:flex font-semibold text-[14px] text-nowrap">
                 {user.name}
               </span>
