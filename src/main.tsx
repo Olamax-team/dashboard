@@ -10,7 +10,6 @@ import Passphrase from './components/pages/auth/passphrase.tsx'
 import Escrow from './components/pages/dash-board/escrow/escrow.tsx'
 import DashboardHome from './components/pages/dash-board/home.tsx'
 import UserInformation from './components/pages/dash-board/userInformation/user-information.tsx'
-import TransactionSettings from './components/pages/dash-board/transactionSettings/transactionSettings.tsx'
 import ManageRerrals from './components/pages/dash-board/manageReferrals/manageRefferrals.tsx'
 import BlockUser from './components/pages/dash-board/blockUser/blockUser.tsx'
 import Unverified from './components/pages/dash-board/blockUser/unverified.tsx'
@@ -32,6 +31,12 @@ import BuyingTransactionHistory from './components/pages/dash-board/transHistory
 import SellingTransactionHistory from './components/pages/dash-board/transHistory/selling-transaction-history.tsx'
 import BillsTransactionHistory from './components/pages/dash-board/transHistory/bill-transaction.tsx'
 import TopUpTransactionHistory from './components/pages/dash-board/transHistory/top-up-transaction-history.tsx'
+import AvailableCoin from './components/pages/dash-board/settings/availableCoin.tsx'
+import MOQTransactionsContainer from './components/pages/dash-board/settings/MOQTransactionsContainer.tsx'
+import Rates from './components/pages/dash-board/settings/rates.tsx'
+import TransactionSettings2 from './components/pages/dash-board/settings/transactionSettings.tsx'
+import Toggle from './components/pages/dash-board/settings/toggle.tsx'
+import Charges from './components/pages/dash-board/settings/cryptoCharges.tsx'
 
 
 const router = createBrowserRouter([
@@ -155,7 +160,7 @@ const router = createBrowserRouter([
         path: '/dashboard/transaction-settings',
         element: 
           <ProtectRoute>
-            <TransactionSettings/>  
+            <TransactionSettings2/>  
           </ProtectRoute>
       },
       {
@@ -219,6 +224,41 @@ const router = createBrowserRouter([
         element:
           <ProtectRoute>
             <MangeAdmin />
+          </ProtectRoute>
+      },
+      {
+        path: '/dashboard/transaction-settings/available-coins',
+        element: 
+          <ProtectRoute>
+            <AvailableCoin/>
+          </ProtectRoute>
+      },
+      {
+        path: '/dashboard/transaction-settings/moq',
+        element: 
+          <ProtectRoute>
+            <MOQTransactionsContainer/>
+          </ProtectRoute>
+      },
+      {
+        path: '/dashboard/transaction-settings/rate',
+        element: 
+          <ProtectRoute>
+            <Rates/>
+          </ProtectRoute>
+      },
+      {
+        path: '/dashboard/transaction-settings/referral',
+        element: 
+          <ProtectRoute>
+            <Toggle/>
+          </ProtectRoute>
+      },
+      {
+        path: '/dashboard/transaction-settings/charges',
+        element: 
+          <ProtectRoute>
+            <Charges/>
           </ProtectRoute>
       },
     ]
