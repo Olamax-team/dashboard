@@ -68,7 +68,7 @@ export default function UserDetails() {
 
   console.log(kycProceedingResponse);
 
-  const { onOpen } = useRejectionReportModal();
+  const { onOpen, setFormData } = useRejectionReportModal();
 
   const [viewImage, setViewImage] = React.useState(false);
   const [imageUrl, setImageUrl] = React.useState('');
@@ -98,88 +98,100 @@ export default function UserDetails() {
   const [documentStatus, setDocumentStatus] = React.useState<string>(userKycDetail?.kyc_documents_status);
 
   const updateUserKyc = async (status:string) => {
+      const formdata = {
+        label: 'users',
+        target: 'status',
+        status: status
+      };
 
-    const formdata = {
-      label: 'users',
-      target: 'status',
-      status: status
-    }
-
-    const config = {
-      method: 'put',
-      maxBodyLength: Infinity,
-      url: `https://api.olamax.io/api/update-kyc-status`,
-      headers: {
-        'Content-Type':'application/json',
-        'Authorization': `Bearer ${token}`
-      },
-      data: formdata,
-    };
-
-    const updateUser = () => axios.request(config);
-    const response = await apiRequestHandler(updateUser);
-    if (response && response.status === 200) {
-      toast.success('User status updated successfully');
+    if (status === 'reject') {
+      setFormData(formdata);
+      onOpen();
       setDetailStatus(status);
-      if (status === 'reject') {onOpen();}
-    };
+    } else {
+      const config = {
+        method: 'put',
+        maxBodyLength: Infinity,
+        url: `https://api.olamax.io/api/update-kyc-status`,
+        headers: {
+          'Content-Type':'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        data: formdata,
+      };
+  
+      const updateUser = () => axios.request(config);
+      const response = await apiRequestHandler(updateUser);
+      if (response && response.status === 200) {
+        toast.success(status === 'verified' ? 'User successfully verified' : 'User status updated successfully');
+        setDetailStatus(status);
+      };
+    }
   };
 
   const updateDocumentKyc = async (status:string) => {
-
     const formdata = {
       label: 'kyc_documents',
       target: 'status',
       status: status
     }
 
-    const config = {
-      method: 'put',
-      maxBodyLength: Infinity,
-      url: `https://api.olamax.io/api/update-kyc-status`,
-      headers: {
-        'Content-Type':'application/json',
-        'Authorization': `Bearer ${token}`
-      },
-      data: formdata,
-    };
-
-    const updateUser = () => axios.request(config);
-    const response = await apiRequestHandler(updateUser);
-    if (response && response.status === 200) {
-      toast.success('User status updated successfully');
-      setDocumentStatus(status);
-      if (status === 'reject') {onOpen();}
-    };
+    if (status === 'reject') {
+      setFormData(formdata);
+      onOpen();
+      setDetailStatus(status);
+    } else {
+      const config = {
+        method: 'put',
+        maxBodyLength: Infinity,
+        url: `https://api.olamax.io/api/update-kyc-status`,
+        headers: {
+          'Content-Type':'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        data: formdata,
+      };
+  
+      const updateUser = () => axios.request(config);
+      const response = await apiRequestHandler(updateUser);
+      if (response && response.status === 200) {
+        toast.success(status === 'verified' ? 'Documents successfully verified' : 'User status updated successfully');
+        setDocumentStatus(status);
+      };
+    }
   };
 
   const updateVideoKyc = async (status:string) => {
-
     const formdata = {
       label: 'kyc_documents',
       target: 'video_status',
       status: status
     }
 
-    const config = {
-      method: 'put',
-      maxBodyLength: Infinity,
-      url: `https://api.olamax.io/api/update-kyc-status`,
-      headers: {
-        'Content-Type':'application/json',
-        'Authorization': `Bearer ${token}`
-      },
-      data: formdata,
-    };
-
-    const updateUser = () => axios.request(config);
-    const response = await apiRequestHandler(updateUser);
-    if (response && response.status === 200) {
-      toast.success('User status updated successfully');
-      setVideoStatus(status);
-      if (status === 'reject') {onOpen();}
-    };
-  }
+    if (status === 'reject') {
+      setFormData(formdata);
+      onOpen();
+      setDetailStatus(status);
+    } else {
+      const config = {
+        method: 'put',
+        maxBodyLength: Infinity,
+        url: `https://api.olamax.io/api/update-kyc-status`,
+        headers: {
+          'Content-Type':'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        data: formdata,
+      };
+  
+      const updateUser = () => axios.request(config);
+      const response = await apiRequestHandler(updateUser);
+      if (response && response.status === 200) {
+        toast.success(status === 'verified' ? 'Liveness video successfully verified' : 'User status updated successfully');
+        setVideoStatus(status);
+      };
+    }
+  };
 
   if (userDetailStatus === 'pending' && userKycStatus === 'pending') {
    return (

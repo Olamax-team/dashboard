@@ -4,6 +4,11 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { useLocation, useNavigate } from "react-router-dom";
 import Selling from "./selling";
+import { useApiConfigWithToken } from "@/lib/use-api-config";
+import axios from "axios";
+import { useQuery } from "@tanstack/react-query";
+import { apiRequestHandler } from "@/api/api-request-handler";
+import { pendingTransactionDataResponse } from "@/lib/types";
 
 const SellingTab = () => {
   const [sortOrder, setSortOrder] = useState<"ascending" | "descending">(
@@ -49,6 +54,21 @@ const SellingTab = () => {
   const { pathname } = useLocation();
   const navigate = useNavigate();
 
+  const pendingConfig = useApiConfigWithToken({
+    method: 'get',
+    url: 'admin/transactions/pending'
+  });
+
+  const fetchPending = () => axios.request(pendingConfig);
+
+  const { data, status } = useQuery({
+    queryKey: ['pending-selling'],
+    queryFn: () => apiRequestHandler(fetchPending)
+  });
+
+  const fullData = data?.data as pendingTransactionDataResponse
+  const counts = fullData?.counts
+
   const NavButton = ({path, label, count}:{path:string, label:string, count:number}) => {
 
     return (
@@ -61,7 +81,7 @@ const SellingTab = () => {
           )}
         >
           {label}
-          {count > 0 && (
+          { status === 'success' && count > 0 && (
             <span className="absolute -top-1 -right-1 flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-[#039AE4] rounded-full">
               {count}
             </span>
@@ -74,10 +94,10 @@ const SellingTab = () => {
     <React.Fragment>
       <div className="flex justify-between font-Inter flex-wrap space-y-4">
         <div className="flex items-center lg:gap-5  gap-2 justify-center px-5 py-1 w-fit lg:mt-3  lg:px-0  lg:py-0 ">
-          <NavButton path="/dashboard" label="Buying" count={3}/>
-          <NavButton path="/dashboard/selling" label="Selling" count={4}/>
-          <NavButton path="/dashboard/top-up" label="Top Up" count={5}/>
-          <NavButton path="/dashboard/bills" label="Bills" count={9}/>
+          <NavButton path="/dashboard" label="Buying" count={counts?.buyings}/>
+          <NavButton path="/dashboard/selling" label="Selling" count={counts?.sell_transactions}/>
+          <NavButton path="/dashboard/top-up" label="Top Up" count={counts?.topUp}/>
+          <NavButton path="/dashboard/bills" label="Bills" count={counts?.bills}/>
         </div>
         <div className="flex items-center justify-center lg:px-0  lg:py-0 px-5 py-1 w-fit">
           <div className="text-[#000000] flex items-center ">

@@ -78,6 +78,13 @@ export interface minTransaction {
 };
 
 export interface pendingTransactionDataResponse {
+  counts: {
+    topUp: number,
+    bills: number,
+    buyings: number,
+    sell_transactions: number,
+    total_pending_transactions: number
+  },
   data: {
     bills: Bill[];
     buyings: Buying[];
@@ -164,6 +171,7 @@ interface Buying {
   network_fees_naira: string;
   created_at: string;
   updated_at: string;
+  ref_no: string
 }
 
 interface SellTransaction {
@@ -232,8 +240,11 @@ interface TopUp {
 interface TopUpTransaction {
   bills_transaction_id: number;
   user: User;
-  coin: string;
-  blockchain: string | null;
+  coin: Coin;
+  blockchain: {
+    blobkchain_id: number;
+    blockchain_name: string;
+  }
   coin_value: string | null;
   naira_value: string;
   method: string;
@@ -318,6 +329,7 @@ interface BuyingTransaction {
   transaction_contact: string | null;
   network_fees_dollar: string;
   referer: string | null;
+  ref_no: string;
   network_fees_naira: string;
   created_at: string;
   updated_at: string;

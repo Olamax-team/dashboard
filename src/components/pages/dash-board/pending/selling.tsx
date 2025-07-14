@@ -21,7 +21,7 @@ const Selling = ({visibleColumns}: {visibleColumns: Record<string, boolean>}) =>
     return date.toLocaleString();
   };
 
-    const pendingConfig = useApiConfigWithToken({
+  const pendingConfig = useApiConfigWithToken({
     method: 'get',
     url: 'admin/transactions/pending'
   });
@@ -35,6 +35,9 @@ const Selling = ({visibleColumns}: {visibleColumns: Record<string, boolean>}) =>
 
   const fullData = data?.data as pendingTransactionDataResponse
   const pendingSelling = fullData?.data.sell_transactions;
+  const pendingPagination = fullData?.pagination.sell_transactions
+
+  console.log(pendingPagination);
 
   const revalidateTransaction = async (transactionId:number) => {
 

@@ -251,26 +251,26 @@ const SellingHistory = ({visibleFilter}: {visibleFilter: Record<string, boolean>
                       </TableCell>
                     )}
                     <TableCell>
-                    <DropdownMenu modal={false}>
-                      <DropdownMenuTrigger className="outline-none">
-                        <button
-                          type="button"
-                          className="flex items-center justify-center h-full w-full p-2 hover:bg-gray-300 rounded-md transition-all duration-200"
-                        >
-                          <HiMiniEllipsisVertical className="text-[#121826] size-7" />
-                        </button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent className="cursor-pointer rounded-xl bg-white shadow-lg p-2 w-[180px] ring-1 ring-gray-200 transition-all duration-200 transform scale-95 hover:scale-100">
-                        <DropdownMenuGroup>
-                          <DropdownMenuItem
-                           onClick={() => finishTransaction(transaction.sell_transaction_id)}
-                            className="rounded-lg py-2 px-1 text-sm pl-3 text-[#000000] hover:bg-blue-50 focus:ring-2 focus:ring-black transition-all duration-150"
+                      <DropdownMenu modal={false}>
+                        <DropdownMenuTrigger className="outline-none">
+                          <button
+                            type="button"
+                            className="flex items-center justify-center h-full w-full p-2 hover:bg-gray-300 rounded-md transition-all duration-200"
                           >
-                            <span className="text-sm">Complete transaction</span>
-                          </DropdownMenuItem>
-                        </DropdownMenuGroup>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
+                            <HiMiniEllipsisVertical className="text-[#121826] size-7" />
+                          </button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent className="cursor-pointer rounded-xl bg-white shadow-lg p-2 w-[180px] ring-1 ring-gray-200 transition-all duration-200 transform scale-95 hover:scale-100">
+                          <DropdownMenuGroup>
+                            <DropdownMenuItem
+                            onClick={() => finishTransaction(transaction.sell_transaction_id)}
+                              className="rounded-lg py-2 px-1 text-sm pl-3 text-[#000000] hover:bg-blue-50 focus:ring-2 focus:ring-black transition-all duration-150"
+                            >
+                              <span className="text-sm">Complete transaction</span>
+                            </DropdownMenuItem>
+                          </DropdownMenuGroup>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
                     </TableCell>
                   </TableRow>
                 ))}

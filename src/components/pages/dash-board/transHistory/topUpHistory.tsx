@@ -26,6 +26,8 @@ const TopUpHistory = ({visibleFilter}: {visibleFilter: Record<string, boolean>})
   const allTransaction = data?.data.data as AllTransactionsData;
   const transaction = allTransaction?.topUp;
 
+  console.log(allTransaction)
+
   const formatTimestamp = (timestamp: string) => {
     const date = new Date(timestamp);
     return date.toLocaleString();
@@ -160,15 +162,15 @@ const TopUpHistory = ({visibleFilter}: {visibleFilter: Record<string, boolean>})
                 )}
                 {visibleFilter.coin && (
                   <TableCell className="py-2 text-center border-r border-gray-300">
-                    <div>{transaction.coin}</div>
+                    <div>{transaction?.coin?.coin}</div>
                     <div className="text-xs text-[#121826]">
-                      {transaction.coin}
+                      {transaction?.coin?.coin_name}
                     </div>
                   </TableCell>
                 )}
                 {visibleFilter.blockchain && (
                   <TableCell className="py-2 text-center border-r border-gray-300 capitalize">
-                    {transaction.blockchain}
+                    {transaction?.blockchain?.blockchain_name}
                   </TableCell>
                 )}
                 {visibleFilter.amount && (
