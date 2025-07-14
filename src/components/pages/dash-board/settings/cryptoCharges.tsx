@@ -132,10 +132,7 @@ const   ChargeCard = ({ currency, coinId }: { currency: string, coinId: number }
   };
 
   return (
-      <div className="space-y-4 bg-[#F8F9FA] px-4 py-2 md:px-10 md:py-4 gap-14 h-full">
-        <h1 className="text-lg font-semibold mb-4">
-          Charges in Crypto (e.g. 0.00001)
-        </h1>
+      <div className="space-y-4 rounded-sm bg-[#F8F9FA] border px-4 py-2 md:px-10 md:py-4 gap-14 h-full">
         {/* Currency Label */}
         <p className="font-inter font-medium xl:text-[14px] xl:leading-[150%]">
           <span className="text-lg font-bold">{currency}</span> Set Charges
@@ -255,7 +252,10 @@ console.log(allCoin);
               <Tab label={"Bonuses & Referral"} to={"/dashboard/transaction-settings/referral"} isActive={location.pathname === "/dashboard/transaction-settings/referral"}/>
               <Tab label={"Charges"} to={"/dashboard/transaction-settings/charges"} isActive={location.pathname === "/dashboard/transaction-settings/charges"}/>
           </div>
-          <div className="flex-1 w-1/2 items-start justify-start">
+          <h1 className="text-lg px-4 py-2 md:px-10 md:py-4 font-semibold mb-4">
+            Charges in Crypto (e.g. 0.00001)
+          </h1>
+          <div className="flex flex-wrap w-full px-4 py-2 md:px-10 md:py-4 gap-14 items-start justify-start">
               {allCoin.filter((item) =>item.coin !== 'NGN').map((currency) => {
                 return (
                   <ChargeCard key={currency.id} currency={currency.coin} coinId={currency.id} />
