@@ -255,7 +255,7 @@ console.log(allCoin);
           <h1 className="text-lg px-4 py-2 md:px-10 md:py-4 font-semibold mb-4">
             Charges in Crypto (e.g. 0.00001)
           </h1>
-          <div className="flex flex-wrap w-full px-4 py-2 md:px-10 md:py-4 gap-14 items-start justify-start">
+          <div className="flex flex-wrap w-full px-4 py-2 md:px-10 md:py-4 gap-10 items-start justify-between">
               {allCoin.filter((item) =>item.coin !== 'NGN').map((currency) => {
                 return (
                   <ChargeCard key={currency.id} currency={currency.coin} coinId={currency.id} />
