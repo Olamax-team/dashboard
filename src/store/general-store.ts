@@ -10,6 +10,7 @@ type modalProps = {
 };
 
 type formdataProps = {
+  user_id: number,
   label: string;
   target: string;
   status: string;

@@ -99,6 +99,7 @@ export default function UserDetails() {
 
   const updateUserKyc = async (status:string) => {
       const formdata = {
+        user_id: Number(id),
         label: 'users',
         target: 'status',
         status: status
@@ -131,6 +132,7 @@ export default function UserDetails() {
 
   const updateDocumentKyc = async (status:string) => {
     const formdata = {
+      user_id: Number(id),
       label: 'kyc_documents',
       target: 'status',
       status: status
@@ -163,6 +165,7 @@ export default function UserDetails() {
 
   const updateVideoKyc = async (status:string) => {
     const formdata = {
+      user_id: Number(id),
       label: 'kyc_documents',
       target: 'video_status',
       status: status

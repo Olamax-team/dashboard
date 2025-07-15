@@ -72,7 +72,7 @@ const DashboardLayout = ({children}:{children:React.ReactNode}) => {
             path='/dashboard/transaction-settings'
             icon={HiAdjustments}
             label='Transaction Settings'
-            isActive = {location.pathname === '/dashboard/transaction-settings'}
+            isActive = {location.pathname === '/dashboard/transaction-settings' || location.pathname.startsWith('/dashboard/transaction-settings')}
           />
         }
         { fullUserDetails && fullUserDetails.role === 'superAdmin' &&
