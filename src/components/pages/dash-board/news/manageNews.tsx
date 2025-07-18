@@ -64,8 +64,8 @@ export default function ManageNews() {
     setBlogPosts(updatedPosts);
   };
   return (
-    <section className="w-full py-12 bg-white">
-      <div className="container mx-auto px-4">
+    <section className="w-full pt-8 pb-14">
+      <div className="">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {blogPosts.map((post) => (
             <BlogCard
@@ -97,7 +97,7 @@ function BlogCard({
   setSelectedPostId: (id: number | null) => void;
 }) {
   return (
-    <Card className="overflow-hidden h-full border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow">
+    <Card className="overflow-hidden h-full border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow w-full">
       <div className="flex items-center p-4 border-b border-gray-100">
         <div className="w-12 h-12 mr-3 overflow-hidden rounded-md">
           <img
@@ -128,10 +128,10 @@ function BlogCard({
         </div>
       </div>
       <CardContent className="p-4">
-        <h3 className="text-[#121826] font-bold leading-[150%] text-[16px]">
+        <h3 className="text-[#121826] font-semibold text-base">
           {post.title}
         </h3>
-        <p className="text-[#121826] font-normal leading-[150%] text-[14px]">
+        <p className="text-[#121826] text-sm mt-3">
           {post.description}
         </p>
       </CardContent>

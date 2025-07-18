@@ -8,6 +8,8 @@ import {
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import ManageNews from "./manageNews";
+import { Plus } from "lucide-react";
+import CreateNews from "./createNews";
 
 const TabNews = () => {
   const [sortOrder, setSortOrder] = useState<"ascending" | "descending">(
@@ -18,9 +20,11 @@ const TabNews = () => {
     setSortOrder(sortOrder === "ascending" ? "descending" : "ascending");
   };
 
+  const [showCreateNewNews, setShowCreateNews] = React.useState(false)
+
   return (
     <React.Fragment>
-      <div className="flex items-center justify-between h-auto mb-5 w-full flex-wrap">
+      <div className="flex items-center justify-between h-auto w-full flex-wrap">
         <div className="flex items-center justify-center xl:mt-0 gap-5">
           <h1
             className={cn(
@@ -71,9 +75,15 @@ const TabNews = () => {
             Export <HiDownload className="size-6 text-[#ffffff]" />
           </Button>
         </div>
+        <div className="w-full h-10 rounded mt-4">
+          <button type="button" className="cursor-pointer w-fit pl-3 px-6 flex items-center gap-2 border-primary h-full rounded bg-primary text-white" onClick={()  => setShowCreateNews(true)}>
+            <Plus/>
+            <span>Create New Post</span>
+          </button>
+        </div>
       </div>
-
-      <div>
+      {showCreateNewNews && <CreateNews setShowCreateNews={setShowCreateNews}/>}
+      <div className="w-full">
         <ManageNews />
       </div>
     </React.Fragment>

@@ -63,7 +63,8 @@ const SellingTab = () => {
 
   const { data, status } = useQuery({
     queryKey: ['pending-selling'],
-    queryFn: () => apiRequestHandler(fetchPending)
+    queryFn: () => apiRequestHandler(fetchPending),
+    refetchInterval: 5000,
   });
 
   const fullData = data?.data as pendingTransactionDataResponse

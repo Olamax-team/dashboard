@@ -27,7 +27,8 @@ const SellingHistory = ({visibleFilter}: {visibleFilter: Record<string, boolean>
 
   const {data, status } = useQuery({
     queryKey: ['sell-transactions'],
-    queryFn: () => apiRequestHandler(sellTransaction)
+    queryFn: () => apiRequestHandler(sellTransaction),
+    refetchInterval: 5000,
   });
 
     const allTransaction = data?.data.data as AllTransactionsData;

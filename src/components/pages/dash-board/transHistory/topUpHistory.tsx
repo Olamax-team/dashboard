@@ -21,6 +21,7 @@ const TopUpHistory = ({visibleFilter}: {visibleFilter: Record<string, boolean>})
   const { data, status } = useQuery({
     queryKey: ["topup-transaction"],
     queryFn: () => apiRequestHandler(fetchTransactionHistory),
+    refetchInterval: 5000,
   });
 
   const allTransaction = data?.data.data as AllTransactionsData;
