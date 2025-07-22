@@ -5,6 +5,7 @@ import React from "react";
 import { useAdminDetails } from "@/store/admin-details-store";
 import axios from "axios";
 import { toast } from "sonner";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function CreateNews({setShowCreateNews}:{setShowCreateNews: (open:boolean) => void;}) {
 
@@ -18,6 +19,7 @@ export default function CreateNews({setShowCreateNews}:{setShowCreateNews: (open
   const [isCreating, setIsCreating] = React.useState(false)
 
   const { token } = useAdminDetails();
+  const queryClient = useQueryClient();
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -52,7 +54,7 @@ export default function CreateNews({setShowCreateNews}:{setShowCreateNews: (open
     formData.append('description', description);
     formData.append('title', title);
     formData.append('link', link);
-    formData.append('is_publish', '1')
+    formData.append('is_publish', '0')
 
     const config = {
       method: 'post',
@@ -71,6 +73,7 @@ export default function CreateNews({setShowCreateNews}:{setShowCreateNews: (open
         toast.success('Post successfully published')
         setIsLoading(false);
         setShowCreateNews(false);
+        queryClient.invalidateQueries({ queryKey: ['news', 'published'] });
       }
     } catch (error) {
       console.error('Upload failed', error);
@@ -82,9 +85,8 @@ export default function CreateNews({setShowCreateNews}:{setShowCreateNews: (open
     formData.append('description', description);
     formData.append('title', title);
     formData.append('link', link);
-    formData.append('is_publish', '0')
+    formData.append('is_publish', '1')
 
-    setIsCreating(true);
     const config = {
       method: 'post',
       maxBodyLength: Infinity,
@@ -95,13 +97,14 @@ export default function CreateNews({setShowCreateNews}:{setShowCreateNews: (open
       data: formData,
     }
 
-    setIsLoading(true)
+    setIsCreating(true);
     try {
       const response = await axios.request(config);
       if (response && response.status === 200) {
         toast.success('Draft successfully created');
         setIsCreating(false);
         setShowCreateNews(false);
+        queryClient.invalidateQueries({ queryKey: ['news', 'draft'] });
       }
     } catch (error) {
       console.error('Upload failed', error);

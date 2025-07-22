@@ -20,7 +20,8 @@ const TabNews = () => {
     setSortOrder(sortOrder === "ascending" ? "descending" : "ascending");
   };
 
-  const [showCreateNewNews, setShowCreateNews] = React.useState(false)
+  const [showCreateNewNews, setShowCreateNews] = React.useState(false);
+  const [activeTab, setActiveTab] = React.useState("published");
 
   return (
     <React.Fragment>
@@ -75,16 +76,28 @@ const TabNews = () => {
             Export <HiDownload className="size-6 text-[#ffffff]" />
           </Button>
         </div>
-        <div className="w-full h-10 rounded mt-4">
-          <button type="button" className="cursor-pointer w-fit pl-3 px-6 flex items-center gap-2 border-primary h-full rounded bg-primary text-white" onClick={()  => setShowCreateNews(true)}>
-            <Plus/>
-            <span>Create New Post</span>
+        <div className="w-full h-8 lg:h-10 rounded mt-4 flex items-center lg:gap-12 gap-5">
+          <button type="button" className=" text-sm cursor-pointer w-fit pl-3 px-4 lg:px-6 flex items-center gap-2 border-primary h-full rounded-md bg-primary text-white" onClick={()  => setShowCreateNews(true)}>
+            <Plus className="size-5"/>
+            <span className="hidden md:block text-sm">Create New Post</span>
+            <span className="md:hidden text-sm">Create</span>
           </button>
+          <div className="flex items-center lg:gap-4 h-full gap-2">
+            <button type="button" className={cn("text-sm cursor-pointer h-full px-4 lg:px-6 border rounded-md", {"bg-primary text-white": activeTab === 'published'})} onClick={() =>setActiveTab('published')}>
+              Published
+            </button>
+            <button type="button" className={cn("text-sm cursor-pointer h-full px-4 lg:px-6 border rounded-md", {"bg-primary text-white": activeTab === 'draft'})} onClick={() =>setActiveTab('draft')}>
+              Draft
+            </button>
+            <button type="button" className={cn("text-sm cursor-pointer h-full px-4 lg:px-6 border rounded-md", {"bg-primary text-white": activeTab === 'trash'})} onClick={() =>setActiveTab('trash')}>
+              Trash
+            </button>
+          </div>
         </div>
       </div>
       {showCreateNewNews && <CreateNews setShowCreateNews={setShowCreateNews}/>}
       <div className="w-full">
-        <ManageNews />
+        <ManageNews activeTab={activeTab}/>
       </div>
     </React.Fragment>
   );

@@ -460,3 +460,18 @@ export interface AdminUserData {
   roles: Role[];
 }
 
+export interface NewsProps {
+  id: number;
+  description: string;
+  title: string;
+  link: string;
+  image: string;
+  created_at: string; // ISO date string
+  updated_at: string; // ISO date string
+  user_id: number;
+  updated_by_id: number | null;
+  is_publish: number; // 0 or 1
+  is_trash: number;   // 0 or 1
+}
+
+

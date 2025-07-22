@@ -1,73 +1,164 @@
 import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
-import rectangle3 from "../../../../assets/Rectangle 4896 (2).svg";
-import rectangle2 from "../../../../assets/Rectangle 4896 (1).svg";
-import rectangle1 from "../../../../assets/Rectangle 4896.svg";
 import AddNews from "./addNews";
+import axios from "axios";
+import { useApiConfigWithToken } from "@/lib/use-api-config";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { apiRequestHandler } from "@/api/api-request-handler";
+import { NewsProps } from "@/lib/types";
+import { Loader2, Trash } from "lucide-react";
+import { format } from "date-fns";
+import { useAdminDetails } from "@/store/admin-details-store";
 
-interface BlogPost {
-  id: number;
-  title: string;
-  description: string;
-  date: string;
-  author: string;
-  thumbnail: string;
-  link?: string;
-}
 
-export default function ManageNews() {
+export default function ManageNews({activeTab}:{activeTab:string}) {
   const [selectedPostId, setSelectedPostId] = useState<number | null>(null);
 
-  const [blogPosts, setBlogPosts] = useState<BlogPost[]>([
-    {
-      id: 1,
-      title: "Olamax Launches New Escrow Service for Secure Transactions",
-      link: "www.facebook.com",
-      description:
-        "To enhance trust in peer-to-peer transactions, Olamax now offers a fully integrated escrow service, ensuring that funds are securely held until both parties complete their exchange, boosting security for users.",
-      date: new Date().toLocaleDateString(),
-      author: "Admin 3",
-      thumbnail: rectangle1,
-    },
-    {
-      id: 2,
-      title:
-        "Olamax Now Supports Over 20 Cryptocurrencies, Expanding Your Options",
-      link: "www.facebook.com",
+  const { token } = useAdminDetails();
+  const queryClient = useQueryClient();
 
-      description:
-        "Olamax is excited to announce the addition of several new digital assets, providing users with even more options for converting cryptocurrencies into Naira and making cross-border payments easier than ever.",
-      date: new Date().toLocaleDateString(),
-      author: "Admin 3",
-      thumbnail: rectangle2,
-    },
-    {
-      id: 3,
-      title:
-        "Olamax Partners with Top Nigerian Banks to Streamline Crypto-to-Naira Conversions",
-      link: "www.facebook.com",
+  const getNewsConfig = useApiConfigWithToken({
+    method: 'get',
+    url: activeTab === 'published' ? 'admin/get-news?per_page=15' : activeTab === 'draft' ? 'admin/get-news-draft?per_page=15' : 'admin/get-trash?per_page=15'
+  });
 
-      description:
-        "Through new partnerships with leading Nigerian banks, Olamax has enhanced its crypto conversion process, enabling faster settlements and ensuring a more seamless experience for users.",
-      date: new Date().toLocaleDateString(),
-      author: "Admin 3",
-      thumbnail: rectangle3,
-    },
-  ]);
+  const getNews = () => axios.request(getNewsConfig);
+
+  const {data:newsDataResponse, status:newsStatus } = useQuery({
+    queryKey: ['news', activeTab],
+    queryFn: () => apiRequestHandler(getNews)
+  });
+
+  const newsData:NewsProps[] = newsDataResponse?.data?.news || [];
 
   // Fetch the selected post data by ID
-  const selectedPost = blogPosts.find((post) => post.id === selectedPostId);
-  const handleSave = (updatepost: BlogPost) => {
-    const updatedPosts = blogPosts.map((post) =>
-      post.id === updatepost.id ? updatepost : post
-    );
-    setBlogPosts(updatedPosts);
+  const selectedPost = newsData.find((post) => post.id === selectedPostId);
+
+  const handleSave = (blog:NewsProps) => {
+    console.log(blog)
   };
+
+  // const handleDeleteImage = async (id:number) => {
+  //   const pictureconfig = {
+  //     method: 'get',
+  //     maxBodyLength: Infinity,
+  //     url: `https://api.olamax.io/api/admin/delete-news-picture/${id}`,
+  //     headers: {
+  //       'Content-Type':'application/json',
+  //       'Authorization': `Bearer ${token}`
+  //     },
+  //     }
+
+  //     const deletePicture = () => axios.request(pictureconfig);
+  //     await apiRequestHandler(deletePicture)
+  //   .then((response) => {
+  //     if (response) {
+  //      console.log(response) 
+  //     }
+  //   })
+  // };
+
+  const handleDelete = async (id:number) => {
+    const postconfig = {
+      method: 'get',
+      maxBodyLength: Infinity,
+      url: `https://api.olamax.io/api/admin/delete-news/${id}`,
+      headers: {
+        'Content-Type':'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+    };
+
+    const deletePost = () => axios.request(postconfig);
+    await apiRequestHandler(deletePost)
+    .then((response) => {
+      if (response && response.status === 200) {
+       queryClient.invalidateQueries({ queryKey: ['news', 'published'] });
+      }
+    })
+  };
+
+  const BlogCard = ({post,setSelectedPostId}: {post: NewsProps; setSelectedPostId: (id: number | null) => void;}) =>{
+    
+    return (
+      <Card className="overflow-hidden h-full border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow w-full">
+        <div className="flex items-center p-4 border-b border-gray-100">
+          <div className="w-12 h-12 mr-3 overflow-hidden rounded-md">
+            <img
+              src={post.image || "/placeholder.svg?height=48&width=48"}
+              alt=""
+              width={48}
+              height={48}
+              className="object-cover w-full h-full"
+            />
+          </div>
+          <div className="flex-1">
+            <div className="flex items-center justify-between">
+              <p>
+                <span
+                  className="text-[#039AE4] font-medium text-[14px] leading-[150%] cursor-pointer hover:underline"
+                  onClick={() => setSelectedPostId(post.id)}
+                >
+                  Edit
+                </span>
+              </p>
+              <span className="text-[#121826] font-semibold leading-[150%] text-[14px]">
+                {format(new Date(post.created_at), 'MMMM dd, yyyy')}
+              </span>
+            </div>
+            <div className="text-[#121826] font-semibold text-sm flex items-center justify-between">
+              <span>Posted by {post.user_id}</span>
+              <button type="button" className="bg-red-200 text-red-500 p-1 rounded cursor-pointer" onClick={() => handleDelete(post.id)}>
+                <Trash className="size-4"/>
+              </button>
+            </div>
+          </div>
+        </div>
+        <CardContent className="lg:p-4 p-3">
+          <h3 className="text-[#121826] font-semibold text-base line-clamp-2">
+            {post.title}
+          </h3>
+          <p className="text-[#121826] text-sm mt-3 line-clamp-4">
+            {post.description}
+          </p>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  if (newsStatus === 'pending') {
+    return (
+      <div className="w-full h-[40vh] flex items-center justify-center">
+        <Loader2 className="animate-spin"/>
+      </div>
+    )
+  };
+
+  if (newsStatus === 'error') {
+    return (
+      <div className="w-full h-[40vh] flex justify-center py-20">
+        {activeTab === 'published' && <p className="text-sm lg:text-base">An error occured while loading published news items</p>}
+        {activeTab === 'draft' && <p className="text-sm lg:text-base">An error occured while loading draft news items</p>}
+        {activeTab === 'trash' && <p className="text-sm lg:text-base">An error occured while loading trashed news items</p>}
+      </div>
+    )
+  };
+
+  if (newsStatus === 'success' && newsData &&  newsData.length < 1) {
+    return (
+      <div className="w-full h-[40vh] flex justify-center py-20">
+        {activeTab === 'published' && <p className="text-sm lg:text-base">There is no published news items yet, create some</p>}
+        {activeTab === 'draft' && <p className="text-sm lg:text-base">There is no draft news items yet, create some</p>}
+        {activeTab === 'trash' && <p className="text-sm lg:text-base">There is no trashed news items yet.</p>}
+      </div>
+    )
+  }
+
   return (
     <section className="w-full pt-8 pb-14">
       <div className="">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {blogPosts.map((post) => (
+          {newsData && newsData.length > 0 && newsData.map((post) => (
             <BlogCard
               key={post.id}
               post={post}
@@ -82,59 +173,9 @@ export default function ManageNews() {
         <AddNews
           setShowAddNews={() => setSelectedPostId(null)}
           post={selectedPost}
-          handleSave={handleSave}
+          handleSave={() => handleSave(selectedPost)}
         />
       )}
     </section>
-  );
-}
-
-function BlogCard({
-  post,
-  setSelectedPostId,
-}: {
-  post: BlogPost;
-  setSelectedPostId: (id: number | null) => void;
-}) {
-  return (
-    <Card className="overflow-hidden h-full border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow w-full">
-      <div className="flex items-center p-4 border-b border-gray-100">
-        <div className="w-12 h-12 mr-3 overflow-hidden rounded-md">
-          <img
-            src={post.thumbnail || "/placeholder.svg?height=48&width=48"}
-            alt=""
-            width={48}
-            height={48}
-            className="object-cover w-full h-full"
-          />
-        </div>
-        <div className="flex-1">
-          <div className="flex items-center justify-between">
-            <p>
-              <span
-                className="text-[#039AE4] font-medium text-[14px] leading-[150%] cursor-pointer hover:underline"
-                onClick={() => setSelectedPostId(post.id)}
-              >
-                Edit
-              </span>
-            </p>
-            <span className="text-[#121826] font-semibold leading-[150%] text-[14px]">
-              {post.date}
-            </span>
-          </div>
-          <p className="text-[#121826] font-semibold leading-[150%] text-[14px]">
-            Posted by {post.author}
-          </p>
-        </div>
-      </div>
-      <CardContent className="p-4">
-        <h3 className="text-[#121826] font-semibold text-base">
-          {post.title}
-        </h3>
-        <p className="text-[#121826] text-sm mt-3">
-          {post.description}
-        </p>
-      </CardContent>
-    </Card>
   );
 }

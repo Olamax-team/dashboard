@@ -3,28 +3,19 @@ import { ImagePlus, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-
-type BlogPost = {
-  id: number;
-  description: string;
-  title: string;
-  date: string;
-  author: string;
-  thumbnail: string;
-  link?: string;
-};
+import { NewsProps } from "@/lib/types";
 
 type AddNewsProps = {
   setShowAddNews: (isOpen: boolean) => void;
-  post: BlogPost;
-  handleSave: (updatepost: BlogPost) => void;
+  post: NewsProps;
+  handleSave: () => void;
 };
 
 export default function AddNews({setShowAddNews,post, handleSave}: AddNewsProps) {
   const [title, setTitle] = useState(post.title);
   const [link, setLink] = useState("");
   const [description, setDescription] = useState(post.description);
-  const [image, setImage] = useState(post.thumbnail);
+  const [image, setImage] = useState(post.image);
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -39,22 +30,14 @@ export default function AddNews({setShowAddNews,post, handleSave}: AddNewsProps)
   };
 
   const handleSubmit = () => {
-    const updatedPost = {
-      ...post,
-      title: title,
-      description: description,
-      thumbnail: image,
-      link: link,
-    };
-    // console.log({ title, link, description, image });
-    handleSave(updatedPost);
+    handleSave();
     setShowAddNews(false);
   };
 
   useEffect(() => {
     setTitle(post.title);
     setDescription(post.description);
-    setImage(post.thumbnail);
+    setImage(post.image);
   }, [post]);
 
   return (

@@ -176,16 +176,3 @@ const SellingTab = () => {
 };
 
 export default SellingTab;
-
-// const SellingTab = () => {
-//   return (
-//     <div>
-//       {pathname === '/dashboard' && <Buying visibleColumns={visibleColumns} />}
-//       {pathname === '/dashboard/selling' && <Selling visibleColumns={visibleColumns} />}
-//       {pathname === '/dashboard/top-up' && <TopUp />}
-//       {pathname === '/dashboard/bills' && <Bills/>}
-//     </div>
-//   )
-// }
-
-// export default SellingTab
