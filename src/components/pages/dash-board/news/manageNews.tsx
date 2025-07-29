@@ -11,7 +11,7 @@ import { format } from "date-fns";
 import { useAdminDetails } from "@/store/admin-details-store";
 
 
-export default function ManageNews({activeTab}:{activeTab:string}) {
+export default function ManageNews({activeTab, setActiveTab}:{activeTab:string, setActiveTab: React.Dispatch<React.SetStateAction<string>>}) {
   const [selectedPostId, setSelectedPostId] = useState<number | null>(null);
 
   const { token } = useAdminDetails();
@@ -29,14 +29,10 @@ export default function ManageNews({activeTab}:{activeTab:string}) {
     queryFn: () => apiRequestHandler(getNews)
   });
 
-  const newsData:NewsProps[] = newsDataResponse?.data?.news || [];
+  const newsData:NewsProps[] = activeTab === 'trash' ? newsDataResponse?.data?.trash || [] :   newsDataResponse?.data?.news || [];
 
   // Fetch the selected post data by ID
   const selectedPost = newsData.find((post) => post.id === selectedPostId);
-
-  const handleSave = (blog:NewsProps) => {
-    console.log(blog)
-  };
 
   // const handleDeleteImage = async (id:number) => {
   //   const pictureconfig = {
@@ -58,30 +54,61 @@ export default function ManageNews({activeTab}:{activeTab:string}) {
   //   })
   // };
 
-  const handleDelete = async (id:number) => {
-    const postconfig = {
-      method: 'get',
-      maxBodyLength: Infinity,
-      url: `https://api.olamax.io/api/admin/delete-news/${id}`,
-      headers: {
-        'Content-Type':'application/json',
-        'Authorization': `Bearer ${token}`
-      },
+  
+  const BlogCard = ({post,setSelectedPostId}: {post: NewsProps; setSelectedPostId: (id: number | null) => void;}) =>{
+
+    const isTrash = post && post.is_trash === 1;
+
+    const handleDelete = async () => {
+  
+      const postconfig = {
+        method: 'get',
+        maxBodyLength: Infinity,
+        url: `https://api.olamax.io/api/admin/delete-news/${post.id}`,
+        headers: {
+          'Content-Type':'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+      };
+
+      const formData = {
+        type: 'selected',
+        ids: [post.id]
+      }
+
+      const deleteconfig = {
+        method: 'post',
+        maxBodyLength: Infinity,
+        url: `https://api.olamax.io/api/admin/news/destroy`,
+        headers: {
+          'Authorization': `Bearer ${token}`
+        },
+        data: formData,
+      }
+
+      if (isTrash) {
+        const deletePostTotally  = () => axios.request(deleteconfig)
+        await apiRequestHandler(deletePostTotally)
+        .then((response) => {
+          if (response && response.status === 200) {
+            queryClient.invalidateQueries({ queryKey: ['news', 'trash'] });
+          }
+        })
+      }
+
+
+  
+      const deletePost = () => axios.request(postconfig);
+      await apiRequestHandler(deletePost)
+      .then((response) => {
+        if (response && response.status === 200) {
+         queryClient.invalidateQueries({ queryKey: ['news', 'published'] });
+        }
+      })
     };
 
-    const deletePost = () => axios.request(postconfig);
-    await apiRequestHandler(deletePost)
-    .then((response) => {
-      if (response && response.status === 200) {
-       queryClient.invalidateQueries({ queryKey: ['news', 'published'] });
-      }
-    })
-  };
-
-  const BlogCard = ({post,setSelectedPostId}: {post: NewsProps; setSelectedPostId: (id: number | null) => void;}) =>{
-    
     return (
-      <Card className="overflow-hidden h-full border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow w-full">
+      <Card className="overflow-hidden h-full rounded-lg shadow-sm hover:shadow-md transition-shadow w-full">
         <div className="flex items-center p-4 border-b border-gray-100">
           <div className="w-12 h-12 mr-3 overflow-hidden rounded-md">
             <img
@@ -107,8 +134,8 @@ export default function ManageNews({activeTab}:{activeTab:string}) {
               </span>
             </div>
             <div className="text-[#121826] font-semibold text-sm flex items-center justify-between">
-              <span>Posted by {post.user_id}</span>
-              <button type="button" className="bg-red-200 text-red-500 p-1 rounded cursor-pointer" onClick={() => handleDelete(post.id)}>
+              <span>Posted by {post.news_by}</span>
+              <button type="button" className="bg-red-200 text-red-500 p-1 rounded cursor-pointer" onClick={() => handleDelete()}>
                 <Trash className="size-4"/>
               </button>
             </div>
@@ -173,7 +200,7 @@ export default function ManageNews({activeTab}:{activeTab:string}) {
         <AddNews
           setShowAddNews={() => setSelectedPostId(null)}
           post={selectedPost}
-          handleSave={() => handleSave(selectedPost)}
+          setActiveTab={setActiveTab}
         />
       )}
     </section>

@@ -1,10 +1,5 @@
 import React, { useState } from "react";
-import {
-  HiFilter,
-  HiOutlineSortDescending,
-  HiOutlineSortAscending,
-  HiDownload,
-} from "react-icons/hi";
+import { HiFilter,HiOutlineSortDescending,HiOutlineSortAscending,HiDownload,} from "react-icons/hi";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import ManageNews from "./manageNews";
@@ -20,7 +15,7 @@ const TabNews = () => {
     setSortOrder(sortOrder === "ascending" ? "descending" : "ascending");
   };
 
-  const [showCreateNewNews, setShowCreateNews] = React.useState(false);
+  const [showCreateNews, setShowCreateNews] = React.useState(false);
   const [activeTab, setActiveTab] = React.useState("published");
 
   return (
@@ -66,7 +61,7 @@ const TabNews = () => {
 
           {/* Filter Icon and Label only */}
           <div className="flex items-center p-3 gap-1">
-            <h2 className="font-normal text-[12px] xl:text-[16px] leading-[150%]">
+            <h2 className="font-normal text-xs xl:text-base">
               Filter
             </h2>
             <HiFilter className="size-6" />
@@ -95,9 +90,9 @@ const TabNews = () => {
           </div>
         </div>
       </div>
-      {showCreateNewNews && <CreateNews setShowCreateNews={setShowCreateNews}/>}
+      {showCreateNews && <CreateNews setShowCreateNews={setShowCreateNews} setActiveTab={setActiveTab}/>}
       <div className="w-full">
-        <ManageNews activeTab={activeTab}/>
+        <ManageNews activeTab={activeTab} setActiveTab={setActiveTab}/>
       </div>
     </React.Fragment>
   );

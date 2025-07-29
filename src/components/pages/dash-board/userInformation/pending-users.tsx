@@ -17,7 +17,7 @@ const PendingUsers = ({visibleFilter }: {visibleFilter: Record<string, boolean>}
 
   const userConfig = useApiConfigWithToken({
     method: 'post',
-    url: 'admin/users'
+    url: 'admin/users?status=pending'
   });
 
   const fetchUsers = () => axios.request(userConfig);
@@ -32,6 +32,8 @@ const PendingUsers = ({visibleFilter }: {visibleFilter: Record<string, boolean>}
       data: Partial<userDetailsProps>[];
     };
   };
+
+  console.log(usersResponse)
 
 
   const {  deleteUser, blockUser} = useFetch();

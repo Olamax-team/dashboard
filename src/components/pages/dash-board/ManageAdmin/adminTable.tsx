@@ -6,12 +6,14 @@ import { AdminUserData } from "@/lib/types";
 import { useApiConfigWithToken } from "@/lib/use-api-config";
 import { cn } from "@/lib/utils";
 import { useAdminDetails } from "@/store/admin-details-store";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { Loader2 } from "lucide-react";
 import { useState } from "react";
 import { HiMiniEllipsisVertical } from "react-icons/hi2";
 import { toast } from "sonner";
+import React from "react";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 
 const AdminTable = ({ visibleFilter }: {visibleFilter: Record<string, boolean>}) => {
@@ -20,11 +22,157 @@ const AdminTable = ({ visibleFilter }: {visibleFilter: Record<string, boolean>})
   
   
   const AdminCard = ({user}:{user:AdminUserData}) => {
-    const [active, setActive] = useState(false);
 
-    const toggleUserStatus = (role:boolean) => {
-      setActive(role);
+    const assignRole = async (user: AdminUserData, role:string) => {
+    const roleId = allRoles.find((item) => item.name === role)?.id;
+
+    const assign: () => Promise<any> = () => axios.request({
+      method: 'post',
+      maxBodyLength: Infinity,
+      url: `https://api.olamax.io/api/admin/assign-role`,
+      headers: {
+        'Content-Type':'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      data: {
+        user_id: user.user_id,
+        role_id: roleId,
+        role: role,
+        is_active: 1,
+      },
+    });
+
+    const assignRoleResult = await apiRequestHandler(assign);
+    if (assignRoleResult && assignRoleResult.status === 200) {
+      toast.success(assignRoleResult.data.message);
+      queryClient.invalidateQueries({ queryKey: ['all-users'] })
+    }
+  };
+
+  // const toggleRole = async (userId: number, role:string) => {
+  //   const roleId = allRoles.find((item) => item.name === role)?.id
+
+  //   const assign: () => Promise<any> = () => axios.request({
+  //     method: 'post',
+  //     maxBodyLength: Infinity,
+  //     url: `https://api.olamax.io/api/admin/toggle-role-status`,
+  //     headers: {
+  //       'Content-Type':'application/json',
+  //       'Authorization': `Bearer ${token}`
+  //     },
+  //     data: {
+  //       user_id: userId,
+  //       role_id: roleId,
+  //       is_active: false
+  //     },
+  //   });
+
+  //   const assignRoleResult = await apiRequestHandler(assign);
+  //   if (assignRoleResult && assignRoleResult.status === 200) {
+  //     toast.success(assignRoleResult.data.message);
+  //     queryClient.invalidateQueries({ queryKey: ['all-users'] })
+  //   }
+  // };
+    
+    const adminRoles = user.roles
+    
+    const [currentRole, setCurrentRole] = React.useState(adminRoles[0].role);
+    const [active, setActive] = useState(user.roles.find((item) => item.role === currentRole)?.is_active);
+
+
+    React.useEffect(() => {
+      const roleState = user.roles.find((item) => item.role === currentRole)?.is_active;
+      setActive(roleState);
+    }, [currentRole, user.roles]);
+
+    const activateRole = async (value: boolean) => {
+      setActive(value); // optimistic update
+      const roleId = allRoles.find((item) => item.name === currentRole)?.id;
+
+      const assign = () =>
+        axios.request({
+          method: 'post',
+          url: `https://api.olamax.io/api/admin/toggle-role-status`,
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          data: {
+            user_id: user.user_id,
+            role_id: roleId,
+            is_active: value,
+          },
+        });
+
+      const result = await apiRequestHandler(assign);
+      if (result?.status === 200) {
+        toast.success(result.data.message);
+        queryClient.invalidateQueries({ queryKey: ['all-users'] });
+      } else {
+        setActive(!value); // revert if error
+      }
     };
+
+    const resetAdminLogin = async (userId:number) => {
+
+      const assign: () => Promise<any> = () => axios.request({
+        method: 'post',
+        maxBodyLength: Infinity,
+        url: `https://api.olamax.io/api/admin/reset-admin-login`,
+        headers: {
+          'Content-Type':'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        data: {
+          user_id: userId,
+        },
+      });
+
+      const assignRoleResult = await apiRequestHandler(assign);
+
+      if (assignRoleResult && assignRoleResult.status === 200) {
+        toast.success('New admin login details generated');
+      }
+    }
+
+    const removeAdminRights = async (userId:number) => {
+
+      const assign: () => Promise<any> = () => axios.request({
+        method: 'delete',
+        maxBodyLength: Infinity,
+        url: `https://api.olamax.io/api/admin/remove-admin/user/${userId}`,
+        headers: {
+          'Content-Type':'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+      });
+
+      const assignRoleResult = await apiRequestHandler(assign);
+      if (assignRoleResult && assignRoleResult.status === 200) {
+        toast.success(assignRoleResult.data.message);
+        queryClient.invalidateQueries({ queryKey: ['all-users'] })
+      }
+    }
+
+    const removeRoles = async (role:string, userId:number) => {
+      const roleId = allRoles.find((item) => item.name === role)?.id
+
+      const assign: () => Promise<any> = () => axios.request({
+        method: 'delete',
+        maxBodyLength: Infinity,
+        url: `https://api.olamax.io/api/admin/remove-role/role/${roleId}/${userId}`,
+        headers: {
+          'Content-Type':'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+      });
+
+      const assignRoleResult = await apiRequestHandler(assign);
+      if (assignRoleResult && assignRoleResult.status === 200) {
+        toast.success(assignRoleResult.data.message);
+        queryClient.invalidateQueries({ queryKey: ['all-users'] })
+      }
+    }
 
     return (
       <TableRow
@@ -51,25 +199,37 @@ const AdminTable = ({ visibleFilter }: {visibleFilter: Record<string, boolean>})
         )}
         {visibleFilter.role && (
           <TableCell className="py-2 text-center border-r border-gray-300 text-sm capitalize">
-            {user.roles.map(role => role.role).join(', ')}
+            <Select value={currentRole} onValueChange={(value) => setCurrentRole(value)}>
+              <SelectTrigger className="w-full h-11">
+                <SelectValue placeholder="Select Role" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectLabel>Roles</SelectLabel>
+                  {user.roles.map((item) => (
+                    <SelectItem value={item.role}>{item.role}</SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
           </TableCell>
         )}
         {visibleFilter.status && (
           <TableCell className="py-2 text-center border-r border-gray-300 text-sm capitalize">
-            {user.roles.map(role => role.is_active).join(', ')}
+            {user.roles.find((item) => item.role === currentRole)?.is_active ? 'active' : 'inactive'}
           </TableCell>
         )}
 
         {visibleFilter.roleDescription && (
           <TableCell className="py-2 text-center border-r border-gray-300 text-sm">
-            {user.roles.map(role => role.access_right).join(', ')}
+            {user.roles.find((item) => item.role === currentRole)?.access_right}
           </TableCell>
         )}
         {visibleFilter.action && (
           <TableCell className="text-center py-2 border-r border-gray-300">
               <Switch
               checked={active}
-              onCheckedChange={() =>toggleUserStatus(!active)}
+              onCheckedChange={activateRole}
               className="data-[state=checked]:bg-[#1FAF38] data-[state=unchecked]:bg-[#c3f0ca]"
             />
           </TableCell>
@@ -97,7 +257,7 @@ const AdminTable = ({ visibleFilter }: {visibleFilter: Record<string, boolean>})
                     key={role.id}
                     onClick={(e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
                     e.stopPropagation();
-                    assignRole(user.user_id, role.name);
+                    assignRole(user, role.name);
                     }}
                     className={cn(
                       "capitalize rounded-lg py-2 px-2 text-sm pl-3 text-[#000000] hover:bg-blue-50 focus:ring-2 focus:ring-black transition-all duration-150",
@@ -107,8 +267,16 @@ const AdminTable = ({ visibleFilter }: {visibleFilter: Record<string, boolean>})
                     <span className="text-sm">Assign {role.name}</span>
                   </DropdownMenuItem>
                   ))}
-                  <DropdownMenuItem className="capitalize rounded-lg py-2 px-2 text-sm pl-3 text-[#000000] hover:bg-blue-50 focus:ring-2 focus:ring-black transition-all duration-150" onClick={() => toggleRole(user.user_id)}>
-                    <span className="text-sm">Remove Admin</span>
+                  {user.roles.map((item) => (
+                    <DropdownMenuItem className="capitalize rounded-lg py-2 px-2 text-sm pl-3 text-[#000000] hover:bg-blue-50 focus:ring-2 focus:ring-black transition-all duration-150" onClick={() => removeRoles(item.role, user.user_id)}>
+                      <span className="text-sm">Remove {item.role}</span>
+                    </DropdownMenuItem>
+                  ))}
+                  <DropdownMenuItem onClick={() => resetAdminLogin(user.user_id)}>
+                    <span className="text-sm">Reset Login Details</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => removeAdminRights(user.user_id)}>
+                    <span className="text-sm">Remove Admin Rights</span>
                   </DropdownMenuItem>
               </DropdownMenuRadioGroup>
             </DropdownMenuContent>
@@ -118,11 +286,12 @@ const AdminTable = ({ visibleFilter }: {visibleFilter: Record<string, boolean>})
     )
   }
 
-
   const userConfig = useApiConfigWithToken({
     method: 'get',
     url: 'admin/list-admin'
   });
+
+  const queryClient = useQueryClient();
 
   const fetchUsers = () => axios.request(userConfig);
 
@@ -157,53 +326,6 @@ const AdminTable = ({ visibleFilter }: {visibleFilter: Record<string, boolean>})
       name: 'author'
     }
   ];
-
-  const assignRole = async (userId: number, role: string) => {
-
-    const assign: () => Promise<any> = () => axios.request({
-      method: 'post',
-      maxBodyLength: Infinity,
-      url: `https://api.olamax.io/api/admin/assign-role`,
-      headers: {
-        'Content-Type':'application/json',
-        'Authorization': `Bearer ${token}`
-      },
-      data: {
-        user_id: userId,
-        role: role,
-      },
-    });
-
-    const assignRoleResult = await apiRequestHandler(assign);
-    if (assignRoleResult && assignRoleResult.status === 200) {
-      console.log(assignRoleResult);
-      toast.success(assignRoleResult.data.message);
-    }
-  };
-
-  const toggleRole = async (userId: number) => {
-
-    const assign: () => Promise<any> = () => axios.request({
-      method: 'post',
-      maxBodyLength: Infinity,
-      url: `https://api.olamax.io/api/admin/toggle-role-status`,
-      headers: {
-        'Content-Type':'application/json',
-        'Authorization': `Bearer ${token}`
-      },
-      data: {
-        user_id: userId,
-        role_id: 3,
-      },
-    });
-
-    const assignRoleResult = await apiRequestHandler(assign);
-    console.log(assignRoleResult);
-    if (assignRoleResult && assignRoleResult.status === 200) {
-      console.log(assignRoleResult);
-      toast.success(assignRoleResult.data.message);
-    }
-  };
 
   if (status === 'pending') {
     return (

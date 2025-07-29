@@ -399,7 +399,46 @@ export interface BlockedUserReport {
   updated_at: string;
 }
 
+// export interface KYCUserDetails {
+//   user_id: number;
+//   uid: string;
+//   email: string;
+//   referral_code: string;
+//   verification_method: string;
+//   fname: string;
+//   mname: string | null;
+//   status: string;
+//   phone_number: string;
+//   gender: string;
+//   dateOfBirth: string;
+//   nationality: string;
+//   documents_id: number;
+//   kyc_documents_back: string;
+//   kyc_documents_hold: string;
+//   kyc_documents_short_video: string;
+//   kyc_documents_front: string;
+//   kyc_documents_address_file: string | null;
+//   kyc_documents_created_at: string;
+//   kyc_documents_updated_at: string;
+//   kyc_documents_video_status: string;
+//   kyc_documents_address_status: string | null;
+//   kyc_documents_status: string;
+//   kyc_user_details_id: number;
+//   kyc_user_details_status: string | null;
+//   bvn_status: string;
+//   kyc_fname: string;
+//   kyc_lname: string;
+//   kyc_gender: string;
+//   kyc_dateOfBirth: string;
+//   kyc_phone_number: string;
+//   kyc_picture: string;
+//   kyc_user_details_created_at: string;
+//   kyc_user_details_updated_at: string;
+// }
+
+
 export interface UserKYCData {
+bvn_status: string;
   user_id: number;
   uid: string;
   email: string;
@@ -464,8 +503,10 @@ export interface NewsProps {
   id: number;
   description: string;
   title: string;
-  link: string;
+  link: string | null;
   image: string;
+  news_by: string;
+  news_by_image: string;
   created_at: string; // ISO date string
   updated_at: string; // ISO date string
   user_id: number;
@@ -473,5 +514,23 @@ export interface NewsProps {
   is_publish: number; // 0 or 1
   is_trash: number;   // 0 or 1
 }
+
+export interface AnnouncementProps {
+  id: number;
+  description: string;
+  title: string | null;
+  link: string | null;
+  image: string;
+  announcement_by: string;
+  announcement_by_image: string;
+  created_at: string; // ISO date string
+  updated_at: string; // ISO date string
+  user_id: number;
+  updated_by_id: number | null;
+  is_publish: number; // consider `boolean` if backend allows
+  is_trash: number;   // same here
+}
+
+
 
 

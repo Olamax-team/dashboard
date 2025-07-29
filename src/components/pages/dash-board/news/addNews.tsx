@@ -4,21 +4,39 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { NewsProps } from "@/lib/types";
+import { useAdminDetails } from "@/store/admin-details-store";
+import axios from "axios";
+import { useQueryClient } from "@tanstack/react-query";
 
 type AddNewsProps = {
   setShowAddNews: (isOpen: boolean) => void;
   post: NewsProps;
-  handleSave: () => void;
+  setActiveTab: React.Dispatch<React.SetStateAction<string>>
 };
 
-export default function AddNews({setShowAddNews,post, handleSave}: AddNewsProps) {
+export default function AddNews({setShowAddNews, post, setActiveTab}: AddNewsProps) {
+
+  const { token } = useAdminDetails();
+
   const [title, setTitle] = useState(post.title);
   const [link, setLink] = useState("");
   const [description, setDescription] = useState(post.description);
   const [image, setImage] = useState(post.image);
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const [updatingPost, setUpdatingPost] = useState(false);
+  const [updatingDraft, setUpdatingDraft] = useState(false);
+  const [deleting, setDeleting] = useState(false)
+
+  const isPublished = post && post.is_publish === 0 && post.is_trash === 0;
+  const isDraft = post && post.is_publish === 1 && post.is_trash === 0;
+  const isTrash = post && post.is_trash === 1;
+
+  const queryClient = useQueryClient();
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+
       const reader = new FileReader();
       reader.onload = (event) => {
         if (event.target?.result) {
@@ -26,13 +44,116 @@ export default function AddNews({setShowAddNews,post, handleSave}: AddNewsProps)
         }
       };
       reader.readAsDataURL(e.target.files[0]);
+
+      const formData = new FormData();
+      formData.append("image", file);
+
+      const config = {
+        method: 'post',
+        maxBodyLength: Infinity,
+        url: `https://api.olamax.io/api/admin/news/${post.id}/update-image`,
+        headers: {
+          'Authorization': `Bearer ${token}`
+        },
+        data: formData,
+      }
+
+      const response = await axios.request(config);
+
+      if (response && response.status === 200) {
+        setImage(response.data.news.image)
+      }
     }
   };
 
-  const handleSubmit = () => {
-    handleSave();
-    setShowAddNews(false);
+  const updatePost = async () => {
+    const formData = {
+      id: post.id,
+      description: description,
+      title: title,
+      link: link,
+      is_publish: '0',
+      is_trash: '0'
+    };
+
+    const config = {
+      method: 'post',
+      maxBodyLength: Infinity,
+      url: `https://api.olamax.io/api/admin/update-news`,
+      headers: {
+        'Authorization': `Bearer ${token}`
+      },
+      data: formData,
+    }
+
+    setUpdatingPost(true);
+    const response = await axios.request(config);
+
+    if (response && response.status === 200) {
+      queryClient.invalidateQueries({ queryKey: ['news'] })
+      setShowAddNews(false);
+      setUpdatingPost(false)
+      setActiveTab('published')
+    }
   };
+
+  const updateDraft = async () => {
+
+    const formData = {
+      id: post.id,
+      description: description,
+      title: title,
+      link: link,
+      is_publish: '1',
+      is_trash: '0'
+    };
+
+    const config = {
+      method: 'post',
+      maxBodyLength: Infinity,
+      url: `https://api.olamax.io/api/admin/update-news`,
+      headers: {
+        'Authorization': `Bearer ${token}`
+      },
+      data: formData,
+    }
+
+    setUpdatingDraft(true)
+    const response = await axios.request(config);
+
+    if (response && response.status === 200) {
+      queryClient.invalidateQueries({ queryKey: ['news'] })
+      setShowAddNews(false)
+      setActiveTab('draft')
+      setUpdatingDraft(false);
+    }
+  };
+
+  const totallyDelete = async () => {
+
+    const formData = {
+      type: 'selected',
+      ids: [post.id]
+    }
+
+    const config = {
+      method: 'post',
+      maxBodyLength: Infinity,
+      url: `https://api.olamax.io/api/admin/news/destroy`,
+      headers: {
+        'Authorization': `Bearer ${token}`
+      },
+      data: formData,
+    }
+
+    setDeleting(true);
+    const response = await axios.request(config);
+
+    if (response && response.status === 200) {
+      queryClient.invalidateQueries({ queryKey: ['news'] })
+      setDeleting(false)
+    }
+  }
 
   useEffect(() => {
     setTitle(post.title);
@@ -99,15 +220,33 @@ export default function AddNews({setShowAddNews,post, handleSave}: AddNewsProps)
               className="min-h-[120px] max-h-[320px] border-0 bg-gray-100 rounded px-2 shadow-none focus-visible:ring-0 focus-visible:outline-none resize-none text-sm md:py-2"
             />
           </div>
-
-          <div className="flex justify-center pt-4">
-            <Button
-              onClick={handleSubmit}
-              className="bg-[#039AE4] hover:bg-[#039AE4] text-white px-8 md:px-12 text-sm h-10"
-            >
-              Update Post
-            </Button>
-          </div>
+          { isPublished &&
+            <div className="flex justify-center pt-4">
+              <Button onClick={updatePost} className="bg-[#039AE4] hover:bg-[#039AE4] text-white px-8 md:px-12 text-sm h-10">
+                {updatingPost ? 'Updating Post...' : 'Update Post'}
+              </Button>
+            </div>
+          }
+          { isDraft &&
+            <div className="flex justify- pt-4 justify-between items-center">
+              <button className="bg-[#039AE4] text-white px-8 md:px-12 text-sm h-10 flex items-center gap-2 cursor-pointer rounded-md" onClick={updatePost}>
+                {updatingPost ? 'Publishing post...' : 'Publish Post'}
+              </button>
+              <button className="border-primary border px-8 md:px-12 text-sm h-10 rounded-md cursor-pointer flex items-center gap-2" onClick={updateDraft}>
+                {updatingDraft ? 'Updating Draft...' : 'Update Draft'}
+              </button>
+            </div>
+          }
+          { isTrash &&
+            <div className="flex justify- pt-4 justify-between items-center">
+              <button className="bg-[#039AE4] text-white px-8 md:px-12 text-sm h-10 flex items-center gap-2 cursor-pointer rounded-md" onClick={updatePost}>
+                { updatingPost ? 'Restoring as Post...' : 'Restore as Post'}
+              </button>
+              <button className="border-primary border px-8 md:px-12 text-sm h-10 rounded-md cursor-pointer flex items-center gap-2" onClick={totallyDelete}>
+                {deleting ? 'Deleting Post...' : 'Delete Post'}
+              </button>
+            </div>
+          }
         </div>
       </div>
     </div>

@@ -16,7 +16,7 @@ const UnverifiedUsers = ({ visibleFilter}: { visibleFilter: Record<string, boole
 
   const userConfig = useApiConfigWithToken({
     method: 'post',
-    url: 'admin/users'
+    url: 'admin/users?status=Unverified'
   });
 
   const fetchUsers = () => axios.request(userConfig);
@@ -31,6 +31,8 @@ const UnverifiedUsers = ({ visibleFilter}: { visibleFilter: Record<string, boole
       data: Partial<userDetailsProps>[];
     };
   }
+
+  console.log(usersResponse)
 
   const { blockUser, deleteUser } = useFetch();
 

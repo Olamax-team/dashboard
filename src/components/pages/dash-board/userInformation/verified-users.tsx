@@ -36,6 +36,8 @@ const VerifiedUsers = ({visibleFilter}: {visibleFilter: Record<string, boolean>}
     queryFn: () =>apiRequestHandler(fetchUsers)
   });
 
+  console.log(usersResponse)
+
   interface UsersResponse {
     data: {
       data: Partial<userDetailsProps>[];
@@ -78,6 +80,7 @@ const VerifiedUsers = ({visibleFilter}: {visibleFilter: Record<string, boolean>}
       data: {
         user_id: userId,
         role: role,
+        is_active: true,
       },
     });
 

@@ -1,5 +1,3 @@
-
-// import DashboardLayout from '@/layout/dash-board-layout'
 import DashboardLayout from '@/layout/dash-board-layout'
 import PageHeader from '../escrow/pageHeader'
 import TabAnnouncement from './tabAnnouncement'

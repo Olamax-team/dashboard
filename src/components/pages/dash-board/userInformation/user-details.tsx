@@ -95,7 +95,10 @@ export default function UserDetails() {
 
   const [detailStatus, setDetailStatus] = React.useState<string>(userKycDetail ? userKycDetail.status : '');
   const [videoStatus, setVideoStatus] = React.useState<string>(userKycDetail ? userKycDetail.kyc_documents_video_status : '');
-  const [documentStatus, setDocumentStatus] = React.useState<string>(userKycDetail?.kyc_documents_status);
+  const [documentStatus, setDocumentStatus] = React.useState<string>(userKycDetail? userKycDetail.kyc_documents_status : '' );
+  const [bvnStatus, setBvnStatus] = React.useState<string>(userKycDetail? userKycDetail.bvn_status : '');
+
+  console.log(userKycDetail);
 
   const updateUserKyc = async (status:string) => {
       const formdata = {
@@ -196,6 +199,39 @@ export default function UserDetails() {
     }
   };
 
+  const updateBvnKyc = async (status:string) => {
+
+    const formdata = {
+      user_id: Number(id),
+      label: 'kyc_user_details',
+      target: 'bvn_kyc_status',
+      status: status
+    }
+      if (status === 'reject') {
+      setFormData(formdata);
+      onOpen();
+      setBvnStatus(status);
+    } else {
+      const config = {
+        method: 'put',
+        maxBodyLength: Infinity,
+        url: `https://api.olamax.io/api/update-kyc-status`,
+        headers: {
+          'Content-Type':'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        data: formdata,
+      };
+  
+      const updateUser = () => axios.request(config);
+      const response = await apiRequestHandler(updateUser);
+      if (response && response.status === 200) {
+        toast.success(status === 'verified' ? 'BVN successfully verified' : 'User status updated successfully');
+        setVideoStatus(status);
+      };
+    }
+  }
+
   if (userDetailStatus === 'pending' && userKycStatus === 'pending') {
    return (
     <DashboardLayout>
@@ -267,6 +303,22 @@ export default function UserDetails() {
             <div className="bg-white rounded-lg p-6 shadow-sm">
               <div className="mb-6">
                 <h3 className="text-lg font-bold  leading-[150%] text-[#1C1C1C]">
+                  BVN Details
+                </h3>
+                <div className="w-full flex items-center justify-between gap-4">
+                  <p className="text-sm text-[#5C5C5C] leading-[22px] flex-1">
+                    User's BVN Information
+                  </p>
+                </div>
+                <div>
+                  <p className="capitalize">Surname: {userKycDetail.kyc_fname}</p>
+                  <p className="capitalize">Last Name: {userKycDetail.kyc_lname}</p>
+                  <p className="capitalize">Gender: {userKycDetail.kyc_gender}</p>
+                  <p className="capitalize">Date of Birth: {userKycDetail.kyc_dateOfBirth}</p>
+                </div>
+              </div>
+              <div className="mb-6">
+                <h3 className="text-lg font-bold  leading-[150%] text-[#1C1C1C]">
                   Personal Details
                 </h3>
                 { userKycDetail && userKycDetail.status !== 'verified' &&
@@ -331,7 +383,7 @@ export default function UserDetails() {
               <div className="grid grid-cols-2 gap-4">
                 <div className="w-full">
                   <label className="block text-[16px] font-medium text-[#1C1C1C] leading-[100%] mb-2">
-                    Last Name
+                    Surname
                   </label>
                   <input
                     value={extractFirstName(userDetail.last_name)  ?? ''}
@@ -422,6 +474,29 @@ export default function UserDetails() {
   
             {/* ID Card Information */}
             <div className="bg-white rounded-lg p-6 shadow-sm">
+                <h3 className="text-lg font-bold  leading-[150%] text-[#1C1C1C]">
+                  BVN Status
+                </h3>
+                <div className="w-full flex items-center justify-between gap-4 mb-3">
+                  <p className="text-sm text-[#5C5C5C] leading-[22px] flex-1">
+                    Manage User's BVN Status
+                  </p>
+                  <div className="flex-1">
+                    <Select value={bvnStatus} onValueChange={(value) => updateBvnKyc(value)}>
+                      <SelectTrigger className="w-full h-11">
+                        <SelectValue placeholder="Select KYC Status" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                          <SelectLabel>Status</SelectLabel>
+                          <SelectItem value="reject">Reject</SelectItem>
+                          <SelectItem value="verified">Verified</SelectItem>
+                          <SelectItem value="pending">Pending</SelectItem>
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
               <div className="mb-3">
                 <h3 className="text-lg font-bold  leading-[150%] text-[#1C1C1C]">
                   Document Information
