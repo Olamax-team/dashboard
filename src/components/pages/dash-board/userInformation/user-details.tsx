@@ -311,10 +311,10 @@ export default function UserDetails() {
                   </p>
                 </div>
                 <div>
-                  <p className="capitalize">Surname: {userKycDetail.kyc_fname}</p>
-                  <p className="capitalize">Last Name: {userKycDetail.kyc_lname}</p>
-                  <p className="capitalize">Gender: {userKycDetail.kyc_gender}</p>
-                  <p className="capitalize">Date of Birth: {userKycDetail.kyc_dateOfBirth}</p>
+                  <p className="capitalize">Surname: {userKycDetail?.kyc_fname}</p>
+                  <p className="capitalize">Last Name: {userKycDetail?.kyc_lname}</p>
+                  <p className="capitalize">Gender: {userKycDetail?.kyc_gender}</p>
+                  <p className="capitalize">Date of Birth: {userKycDetail?.kyc_dateOfBirth}</p>
                 </div>
               </div>
               <div className="mb-6">
